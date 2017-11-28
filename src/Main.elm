@@ -1,48 +1,47 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
-
-
----- MODEL ----
+import Bluetooth
+import FeatherIcons
+import Html exposing (Html, button, div, text)
+import Html.Events exposing (onClick)
 
 
 type alias Model =
     {}
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( {}, Cmd.none )
-
-
-
----- UPDATE ----
+type alias BluetoothError =
+    String
 
 
 type Msg
-    = NoOp
+    = RequestDevice
+    | Error BluetoothError
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        RequestDevice ->
+            ( model, Bluetooth.requestDevice () )
 
-
-
----- VIEW ----
+        _ ->
+            Debug.crash "TODO"
 
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
-        ]
+    div [] [ button [ onClick RequestDevice ] [ text "Connect", FeatherIcons.bluetooth ] ]
 
 
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    Bluetooth.error Error
 
----- PROGRAM ----
+
+init : ( Model, Cmd Msg )
+init =
+    ( {}, Cmd.none )
 
 
 main : Program Never Model Msg
@@ -51,5 +50,5 @@ main =
         { view = view
         , init = init
         , update = update
-        , subscriptions = always Sub.none
+        , subscriptions = subscriptions
         }
