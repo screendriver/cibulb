@@ -12,7 +12,10 @@ ports.requestDevice.subscribe(() => {
     .requestDevice({
       acceptAllDevices: true,
     })
-    .then(device => console.log(device))
+    .then(device => Promise.all([device, device.gatt.connect()]))
+    .then(([device, gattServer]) => {
+      ports.device.send({ id: device.id, name: device.name });
+    })
     .catch(error => ports.error.send(error.toString()));
 });
 

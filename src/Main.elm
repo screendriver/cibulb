@@ -7,7 +7,7 @@ import Html.Events exposing (onClick)
 
 
 type alias Model =
-    {}
+    { connectedDevice : Maybe Bluetooth.BluetoothDevice }
 
 
 type alias BluetoothError =
@@ -17,6 +17,7 @@ type alias BluetoothError =
 type Msg
     = RequestDevice
     | Error BluetoothError
+    | DevicePaired Bluetooth.BluetoothDevice
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -25,23 +26,28 @@ update msg model =
         RequestDevice ->
             ( model, Bluetooth.requestDevice () )
 
+        DevicePaired device ->
+            ( { model | connectedDevice = Just device }, Cmd.none )
+
         _ ->
             Debug.crash "TODO"
 
 
 view : Model -> Html Msg
 view model =
-    div [] [ button [ onClick RequestDevice ] [ text "Connect", FeatherIcons.bluetooth ] ]
+    div []
+        [ button [ onClick RequestDevice ] [ text "Connect", FeatherIcons.bluetooth ]
+        ]
 
 
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Bluetooth.error Error
+    Sub.batch [ Bluetooth.error Error, Bluetooth.device DevicePaired ]
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( {}, Cmd.none )
+    ( { connectedDevice = Nothing }, Cmd.none )
 
 
 main : Program Never Model Msg
