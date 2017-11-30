@@ -2,12 +2,15 @@ module Main exposing (..)
 
 import Bluetooth
 import FeatherIcons
-import Html exposing (Html, button, div, text)
+import Html exposing (Html, button, div, p, text)
+import Html.Attributes exposing (class)
 import Html.Events exposing (onClick)
 
 
 type alias Model =
-    { connectedDevice : Maybe Bluetooth.BluetoothDevice }
+    { connectedDevice : Maybe Bluetooth.BluetoothDevice
+    , errorMessage : Maybe String
+    }
 
 
 type alias BluetoothError =
@@ -18,6 +21,7 @@ type Msg
     = RequestDevice
     | Error BluetoothError
     | DevicePaired Bluetooth.BluetoothDevice
+    | Disconnect
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -29,15 +33,32 @@ update msg model =
         DevicePaired device ->
             ( { model | connectedDevice = Just device }, Cmd.none )
 
-        _ ->
-            Debug.crash "TODO"
+        Disconnect ->
+            model.connectedDevice
+                |> Maybe.map (\{ id } -> ( model, Bluetooth.disconnect id ))
+                |> Maybe.withDefault ( model, Cmd.none )
+
+        Error error ->
+            ( { model | errorMessage = Just error }, Cmd.none )
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick RequestDevice ] [ text "Connect", FeatherIcons.bluetooth ]
+        [ errorView model
+        , button [ onClick RequestDevice ] [ text "Connect", FeatherIcons.bluetooth ]
+        , button [ onClick Disconnect ] [ text "Disconnect", FeatherIcons.bluetooth ]
         ]
+
+
+errorView : Model -> Html Msg
+errorView { errorMessage } =
+    case errorMessage of
+        Nothing ->
+            div [] []
+
+        Just message ->
+            p [ class "errorMessage" ] [ text message ]
 
 
 subscriptions : Model -> Sub Msg
@@ -47,7 +68,7 @@ subscriptions _ =
 
 init : ( Model, Cmd Msg )
 init =
-    ( { connectedDevice = Nothing }, Cmd.none )
+    ( { connectedDevice = Nothing, errorMessage = Nothing }, Cmd.none )
 
 
 main : Program Never Model Msg

@@ -4,19 +4,28 @@ import registerServiceWorker from './registerServiceWorker';
 
 const { ports } = Main.fullscreen();
 
-ports.requestDevice.subscribe(() => {
+let gattServer;
+
+ports.requestDevice.subscribe(async () => {
   if (!navigator.bluetooth) {
     ports.error.send('Web Bluetooth is not supported on this platform');
   }
-  navigator.bluetooth
-    .requestDevice({
+  try {
+    const device = await navigator.bluetooth.requestDevice({
       acceptAllDevices: true,
-    })
-    .then(device => Promise.all([device, device.gatt.connect()]))
-    .then(([device, gattServer]) => {
-      ports.device.send({ id: device.id, name: device.name });
-    })
-    .catch(error => ports.error.send(error.toString()));
+    });
+    gattServer = await device.gatt.connect();
+    ports.device.send({ id: device.id, name: device.name });
+  } catch (error) {
+    ports.error.send(error.toString());
+  }
+});
+
+ports.disconnect.subscribe(() => {
+  if (gattServer) {
+    gattServer.disconnect();
+    ports.disconnected.send(true);
+  }
 });
 
 registerServiceWorker();
