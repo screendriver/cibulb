@@ -1,0 +1,13 @@
+{
+  "name": "ci-light-bulb",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Christian Rackerseder <git@echooff.de>",
+  "scripts": {
+    "build": "elm-app build",
+    "test": "elm-app test"
+  },
+  "devDependencies": {
+    "create-elm-app": "1.10.0"
+  }
+}
