@@ -2,9 +2,10 @@ module Main exposing (..)
 
 import Bluetooth
 import FeatherIcons
-import Html exposing (Html, button, div, p, text)
-import Html.Attributes exposing (class, disabled)
+import Html exposing (Html, a, button, div, footer, img, p, text)
+import Html.Attributes exposing (class, disabled, href, src, target, title)
 import Html.Events exposing (onClick)
+import LightBulb exposing (lightBulb)
 import Maybe.Extra
 
 
@@ -49,15 +50,21 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
+    div [ class "main" ]
         [ errorView model
         , connectedDeviceView model
-        , button [ onClick RequestDevice ] [ text "Connect", FeatherIcons.bluetooth ]
+        , lightBulb
+        , button
+            [ disabled (Maybe.Extra.isJust model.connectedDevice)
+            , onClick RequestDevice
+            ]
+            [ text "Connect", FeatherIcons.bluetooth ]
         , button
             [ disabled (Maybe.Extra.isNothing model.connectedDevice)
             , onClick Disconnect
             ]
             [ text "Disconnect", FeatherIcons.bluetooth ]
+        , footerView model
         ]
 
 
@@ -78,7 +85,19 @@ connectedDeviceView { connectedDevice } =
             div [] []
 
         Just device ->
-            div [] [ p [] [ text device.id ], p [] [ text device.name ] ]
+            div [] [ p [] [ text device.name ] ]
+
+
+footerView : Model -> Html Msg
+footerView model =
+    footer []
+        [ text "Icons made by "
+        , a [ href "http://www.freepik.com", title "Freepik" ] [ text "Freepik" ]
+        , text " from "
+        , a [ href "https://www.flaticon.com/", title "Flaticon" ] [ text "www.flaticon.com" ]
+        , text " is licensed by "
+        , a [ href "http://creativecommons.org/licenses/by/3.0/", title "Creative Commons BY 3.0", target "_blank" ] [ text "CC 3.0 BY" ]
+        ]
 
 
 subscriptions : Model -> Sub Msg
@@ -92,7 +111,11 @@ subscriptions _ =
 
 init : ( Model, Cmd Msg )
 init =
-    ( { connectedDevice = Nothing, errorMessage = Nothing }, Cmd.none )
+    ( { connectedDevice = Nothing
+      , errorMessage = Nothing
+      }
+    , Cmd.none
+    )
 
 
 main : Program Never Model Msg

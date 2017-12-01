@@ -1,12 +1,35 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 
 body {
+  background: #6504d4;
+  background: linear-gradient(to bottom, #6504d4, #42024b);
+  background-attachment: fixed;
   font-family: 'Roboto', sans-serif;
-  margin: 0;
-  text-align: center;
-  color: #293c4b;
+}
+
+div.main {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
 }
 
 p.errorMessage {
   color: red;
+}
+
+svg.lightBulb {
+  height: 50vh;
+}
+
+footer {
+  bottom: 1rem;
+  color: white;
+  font-size: 0.7rem;
+  position: absolute;
+}
+
+footer a {
+  color: #ececec;
 }
