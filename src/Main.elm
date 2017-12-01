@@ -3,8 +3,9 @@ module Main exposing (..)
 import Bluetooth
 import FeatherIcons
 import Html exposing (Html, button, div, p, text)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, disabled)
 import Html.Events exposing (onClick)
+import Maybe.Extra
 
 
 type alias Model =
@@ -22,13 +23,14 @@ type Msg
     | Error BluetoothError
     | DevicePaired Bluetooth.BluetoothDevice
     | Disconnect
+    | Disconnected ()
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         RequestDevice ->
-            ( model, Bluetooth.requestDevice () )
+            ( { model | errorMessage = Nothing }, Bluetooth.requestDevice () )
 
         DevicePaired device ->
             ( { model | connectedDevice = Just device }, Cmd.none )
@@ -38,6 +40,9 @@ update msg model =
                 |> Maybe.map (\{ id } -> ( model, Bluetooth.disconnect id ))
                 |> Maybe.withDefault ( model, Cmd.none )
 
+        Disconnected _ ->
+            ( { model | connectedDevice = Nothing }, Cmd.none )
+
         Error error ->
             ( { model | errorMessage = Just error }, Cmd.none )
 
@@ -46,8 +51,13 @@ view : Model -> Html Msg
 view model =
     div []
         [ errorView model
+        , connectedDeviceView model
         , button [ onClick RequestDevice ] [ text "Connect", FeatherIcons.bluetooth ]
-        , button [ onClick Disconnect ] [ text "Disconnect", FeatherIcons.bluetooth ]
+        , button
+            [ disabled (Maybe.Extra.isNothing model.connectedDevice)
+            , onClick Disconnect
+            ]
+            [ text "Disconnect", FeatherIcons.bluetooth ]
         ]
 
 
@@ -61,9 +71,23 @@ errorView { errorMessage } =
             p [ class "errorMessage" ] [ text message ]
 
 
+connectedDeviceView : Model -> Html Msg
+connectedDeviceView { connectedDevice } =
+    case connectedDevice of
+        Nothing ->
+            div [] []
+
+        Just device ->
+            div [] [ p [] [ text device.id ], p [] [ text device.name ] ]
+
+
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.batch [ Bluetooth.error Error, Bluetooth.device DevicePaired ]
+    Sub.batch
+        [ Bluetooth.error Error
+        , Bluetooth.paired DevicePaired
+        , Bluetooth.disconnected Disconnected
+        ]
 
 
 init : ( Model, Cmd Msg )

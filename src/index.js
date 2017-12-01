@@ -12,10 +12,10 @@ ports.requestDevice.subscribe(async () => {
   }
   try {
     const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true,
+      filters: [{ services: ['battery_service'] }],
     });
     gattServer = await device.gatt.connect();
-    ports.device.send({ id: device.id, name: device.name });
+    ports.paired.send({ id: device.id, name: device.name });
   } catch (error) {
     ports.error.send(error.toString());
   }
@@ -24,7 +24,7 @@ ports.requestDevice.subscribe(async () => {
 ports.disconnect.subscribe(() => {
   if (gattServer) {
     gattServer.disconnect();
-    ports.disconnected.send(true);
+    ports.disconnected.send(null);
   }
 });
 

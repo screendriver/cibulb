@@ -14,13 +14,13 @@ type alias BluetoothDevice =
 port requestDevice : () -> Cmd msg
 
 
-port device : (BluetoothDevice -> msg) -> Sub msg
+port paired : (BluetoothDevice -> msg) -> Sub msg
 
 
 port disconnect : DeviceId -> Cmd msg
 
 
-port disconnected : (Bool -> msg) -> Sub msg
+port disconnected : (() -> msg) -> Sub msg
 
 
 port error : (String -> msg) -> Sub msg
