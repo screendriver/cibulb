@@ -23,6 +23,25 @@ svg.lightBulb {
   height: 50vh;
 }
 
+@keyframes power {
+  0% {
+    opacity: 1;
+  }
+  10% {
+    opacity: 1;
+  }
+  15% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+svg.lightBulb > .lightBulbWire {
+  animation: power 1s ease infinite;
+}
+
 footer {
   bottom: 1rem;
   color: white;
