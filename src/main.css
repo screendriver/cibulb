@@ -21,6 +21,12 @@ p.errorMessage {
 
 svg.lightBulb {
   height: 50vh;
+  transition: transform 0.3s;
+}
+
+svg.lightBulb:hover {
+  cursor: pointer;
+  transform: scale(1.1);
 }
 
 @keyframes power {

@@ -50,22 +50,22 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "main" ]
-        [ errorView model
-        , connectedDeviceView model
-        , lightBulb
-        , button
-            [ disabled (Maybe.Extra.isJust model.connectedDevice)
-            , onClick RequestDevice
+    let
+        isConnected =
+            Maybe.Extra.isJust model.connectedDevice
+
+        lightBulbMsg =
+            if isConnected then
+                Disconnect
+            else
+                RequestDevice
+    in
+        div [ class "main" ]
+            [ connectedDeviceView model
+            , lightBulb isConnected lightBulbMsg
+            , errorView model
+            , footerView model
             ]
-            [ text "Connect", FeatherIcons.bluetooth ]
-        , button
-            [ disabled (Maybe.Extra.isNothing model.connectedDevice)
-            , onClick Disconnect
-            ]
-            [ text "Disconnect", FeatherIcons.bluetooth ]
-        , footerView model
-        ]
 
 
 errorView : Model -> Html Msg
