@@ -27,18 +27,23 @@ type Msg
     | Disconnected ()
 
 
+deviceName : String
+deviceName =
+    "icolorlive"
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         RequestDevice ->
-            ( { model | errorMessage = Nothing }, Bluetooth.requestDevice () )
+            ( { model | errorMessage = Nothing }, Bluetooth.requestDevice deviceName )
 
         DevicePaired device ->
             ( { model | connectedDevice = Just device }, Cmd.none )
 
         Disconnect ->
             model.connectedDevice
-                |> Maybe.map (\{ id } -> ( model, Bluetooth.disconnect id ))
+                |> Maybe.map (\_ -> ( model, Bluetooth.disconnect () ))
                 |> Maybe.withDefault ( model, Cmd.none )
 
         Disconnected _ ->

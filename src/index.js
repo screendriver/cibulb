@@ -6,13 +6,13 @@ const { ports } = Main.fullscreen();
 
 let gattServer;
 
-ports.requestDevice.subscribe(async () => {
+ports.requestDevice.subscribe(async deviceName => {
   if (!navigator.bluetooth) {
     ports.error.send('Web Bluetooth is not supported on this platform');
   }
   try {
     const device = await navigator.bluetooth.requestDevice({
-      filters: [{ services: ['battery_service'] }],
+      filters: [{ name: deviceName }],
     });
     gattServer = await device.gatt.connect();
     ports.paired.send({ id: device.id, name: device.name });
@@ -25,6 +25,8 @@ ports.disconnect.subscribe(() => {
   if (gattServer) {
     gattServer.disconnect();
     ports.disconnected.send(null);
+  } else {
+    ports.error.send("Can't disconnect because no device connected");
   }
 });
 
