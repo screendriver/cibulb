@@ -1,16 +1,16 @@
 module Main exposing (..)
 
 import Bluetooth
-import FeatherIcons
 import Html exposing (Html, a, button, div, footer, img, p, text)
 import Html.Attributes exposing (class, disabled, href, src, target, title)
-import Html.Events exposing (onClick)
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
+import Time exposing (Time, millisecond)
 
 
 type alias Model =
     { connectedDevice : Maybe Bluetooth.BluetoothDevice
+    , deviceBlink : Bool
     , errorMessage : Maybe String
     }
 
@@ -23,6 +23,7 @@ type Msg
     = RequestDevice
     | Error BluetoothError
     | DevicePaired Bluetooth.BluetoothDevice
+    | DeviceBlinkTick Time
     | Disconnect
     | Disconnected ()
 
@@ -39,7 +40,12 @@ update msg model =
             ( { model | errorMessage = Nothing }, Bluetooth.requestDevice deviceName )
 
         DevicePaired device ->
-            ( { model | connectedDevice = Just device }, Cmd.none )
+            ( { model
+                | connectedDevice = Just device
+                , deviceBlink = True
+              }
+            , Cmd.none
+            )
 
         Disconnect ->
             model.connectedDevice
@@ -51,6 +57,9 @@ update msg model =
 
         Error error ->
             ( { model | errorMessage = Just error }, Cmd.none )
+
+        _ ->
+            Debug.crash "TODO"
 
 
 view : Model -> Html Msg
@@ -97,26 +106,49 @@ footerView : Model -> Html Msg
 footerView model =
     footer []
         [ text "Icons made by "
-        , a [ href "http://www.freepik.com", title "Freepik" ] [ text "Freepik" ]
+        , a
+            [ href "http://www.freepik.com"
+            , title "Freepik"
+            ]
+            [ text "Freepik" ]
         , text " from "
-        , a [ href "https://www.flaticon.com/", title "Flaticon" ] [ text "www.flaticon.com" ]
+        , a
+            [ href "https://www.flaticon.com/"
+            , title "Flaticon"
+            ]
+            [ text "www.flaticon.com" ]
         , text " is licensed by "
-        , a [ href "http://creativecommons.org/licenses/by/3.0/", title "Creative Commons BY 3.0", target "_blank" ] [ text "CC 3.0 BY" ]
+        , a
+            [ href "http://creativecommons.org/licenses/by/3.0/"
+            , title "Creative Commons BY 3.0"
+            , target "_blank"
+            ]
+            [ text "CC 3.0 BY" ]
         ]
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.batch
-        [ Bluetooth.error Error
-        , Bluetooth.paired DevicePaired
-        , Bluetooth.disconnected Disconnected
-        ]
+subscriptions { deviceBlink } =
+    let
+        defaultSubs =
+            [ Bluetooth.error Error
+            , Bluetooth.paired DevicePaired
+            , Bluetooth.disconnected Disconnected
+            ]
+
+        subs =
+            if deviceBlink then
+                Time.every (500 * millisecond) DeviceBlinkTick :: defaultSubs
+            else
+                defaultSubs
+    in
+        Sub.batch subs
 
 
 init : ( Model, Cmd Msg )
 init =
     ( { connectedDevice = Nothing
+      , deviceBlink = False
       , errorMessage = Nothing
       }
     , Cmd.none
