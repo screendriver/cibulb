@@ -9,8 +9,10 @@ import Time exposing (Time, millisecond)
 
 
 type alias Model =
-    { connectedDevice : Maybe Bluetooth.BluetoothDevice
-    , deviceBlink : Bool
+    { bulbId : Maybe Bluetooth.BulbId
+    , flash : Bool
+    , flashColor : String
+    , flashCount : Int
     , errorMessage : Maybe String
     }
 
@@ -20,62 +22,63 @@ type alias BluetoothError =
 
 
 type Msg
-    = RequestDevice
+    = Connect
     | Error BluetoothError
-    | DevicePaired Bluetooth.BluetoothDevice
-    | DeviceBlinkTick Time
+    | Connected Bluetooth.BulbId
+    | FlashTick Time
     | Disconnect
     | Disconnected ()
 
 
-deviceName : String
-deviceName =
+bulbName : String
+bulbName =
     "icolorlive"
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        RequestDevice ->
-            ( { model | errorMessage = Nothing }, Bluetooth.requestDevice deviceName )
+        Connect ->
+            ( { model | errorMessage = Nothing }, Bluetooth.connect bulbName )
 
-        DevicePaired device ->
+        Connected bulbId ->
             ( { model
-                | connectedDevice = Just device
-                , deviceBlink = True
+                | bulbId = Just bulbId
+                , flash = True
+                , flashColor = "FFFF00"
               }
             , Cmd.none
             )
 
+        FlashTick _ ->
+            flash model
+
         Disconnect ->
-            model.connectedDevice
+            model.bulbId
                 |> Maybe.map (\_ -> ( model, Bluetooth.disconnect () ))
                 |> Maybe.withDefault ( model, Cmd.none )
 
         Disconnected _ ->
-            ( { model | connectedDevice = Nothing }, Cmd.none )
+            ( { model | bulbId = Nothing }, Cmd.none )
 
         Error error ->
             ( { model | errorMessage = Just error }, Cmd.none )
-
-        _ ->
-            Debug.crash "TODO"
 
 
 view : Model -> Html Msg
 view model =
     let
         isConnected =
-            Maybe.Extra.isJust model.connectedDevice
+            Maybe.Extra.isJust model.bulbId
 
         lightBulbMsg =
             if isConnected then
                 Disconnect
             else
-                RequestDevice
+                Connect
     in
         div [ class "main" ]
-            [ connectedDeviceView model
+            [ bulbIdView model
             , lightBulb isConnected lightBulbMsg
             , errorView model
             , footerView model
@@ -92,14 +95,14 @@ errorView { errorMessage } =
             p [ class "errorMessage" ] [ text message ]
 
 
-connectedDeviceView : Model -> Html Msg
-connectedDeviceView { connectedDevice } =
-    case connectedDevice of
+bulbIdView : Model -> Html Msg
+bulbIdView { bulbId } =
+    case bulbId of
         Nothing ->
             div [] []
 
-        Just device ->
-            div [] [ p [] [ text device.name ] ]
+        Just id ->
+            div [] [ p [] [ text id ] ]
 
 
 footerView : Model -> Html Msg
@@ -127,18 +130,33 @@ footerView model =
         ]
 
 
+flash : Model -> ( Model, Cmd msg )
+flash model =
+    let
+        flash =
+            model.flashCount < 5
+
+        flashCount =
+            if flash then
+                model.flashCount + 1
+            else
+                0
+    in
+        ( { model | flash = flash, flashCount = flashCount }, Cmd.none )
+
+
 subscriptions : Model -> Sub Msg
-subscriptions { deviceBlink } =
+subscriptions { flash } =
     let
         defaultSubs =
             [ Bluetooth.error Error
-            , Bluetooth.paired DevicePaired
+            , Bluetooth.connected Connected
             , Bluetooth.disconnected Disconnected
             ]
 
         subs =
-            if deviceBlink then
-                Time.every (500 * millisecond) DeviceBlinkTick :: defaultSubs
+            if flash then
+                Time.every (500 * millisecond) FlashTick :: defaultSubs
             else
                 defaultSubs
     in
@@ -147,8 +165,10 @@ subscriptions { deviceBlink } =
 
 init : ( Model, Cmd Msg )
 init =
-    ( { connectedDevice = Nothing
-      , deviceBlink = False
+    ( { bulbId = Nothing
+      , flash = True
+      , flashColor = ""
+      , flashCount = 0
       , errorMessage = Nothing
       }
     , Cmd.none

@@ -1,20 +1,18 @@
 port module Bluetooth exposing (..)
 
 
-type alias DeviceName =
+type alias BulbName =
     String
 
 
-type alias BluetoothDevice =
-    { id : String
-    , name : String
-    }
+type alias BulbId =
+    String
 
 
-port requestDevice : DeviceName -> Cmd msg
+port connect : BulbName -> Cmd msg
 
 
-port paired : (BluetoothDevice -> msg) -> Sub msg
+port connected : (BulbId -> msg) -> Sub msg
 
 
 port disconnect : () -> Cmd msg

@@ -1,21 +1,21 @@
-import './main.css';
-import { Main } from './Main.elm';
-import registerServiceWorker from './registerServiceWorker';
+import "./main.css";
+import { Main } from "./Main.elm";
+import registerServiceWorker from "./registerServiceWorker";
 
 const { ports } = Main.fullscreen();
 
 let gattServer;
 
-ports.requestDevice.subscribe(async deviceName => {
+ports.connect.subscribe(async bulbName => {
   if (!navigator.bluetooth) {
-    ports.error.send('Web Bluetooth is not supported on this platform');
+    ports.error.send("Web Bluetooth is not supported on this platform");
   }
   try {
     const device = await navigator.bluetooth.requestDevice({
-      filters: [{ name: deviceName }],
+      filters: [{ name: bulbName }]
     });
     gattServer = await device.gatt.connect();
-    ports.paired.send({ id: device.id, name: device.name });
+    ports.connected.send(device.id);
   } catch (error) {
     ports.error.send(error.toString());
   }
