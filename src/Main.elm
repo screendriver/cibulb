@@ -169,7 +169,7 @@ bulbIdView { bulbId } =
             div [] []
 
         Just id ->
-            div [] [ p [] [ text id ], button [ onClick (SetBulbMode Colored) ] [ text "Hallo" ] ]
+            div [] [ p [] [ text id ] ]
 
 
 footerView : Model -> Html Msg
