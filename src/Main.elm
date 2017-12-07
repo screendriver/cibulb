@@ -1,18 +1,17 @@
 module Main exposing (..)
 
 import Bluetooth
+import Delay
 import Html exposing (Html, a, button, div, footer, img, p, text)
 import Html.Attributes exposing (class, disabled, href, src, target, title)
+import Html.Events exposing (onClick)
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
-import Time exposing (Time, millisecond)
+import Time exposing (second)
 
 
 type alias Model =
     { bulbId : Maybe Bluetooth.BulbId
-    , flash : Bool
-    , flashColor : String
-    , flashCount : Int
     , errorMessage : Maybe String
     }
 
@@ -21,13 +20,31 @@ type alias BluetoothError =
     String
 
 
+type Color
+    = Off
+    | Blue
+    | Yellow
+    | Green
+    | Red
+
+
+type alias RGB =
+    ( Int, Int, Int )
+
+
+type BulbMode
+    = White
+    | Colored
+
+
 type Msg
     = Connect
     | Error BluetoothError
     | Connected Bluetooth.BulbId
-    | FlashTick Time
+    | TurnOff
     | Disconnect
     | Disconnected ()
+    | SetBulbMode BulbMode
 
 
 bulbName : String
@@ -35,23 +52,67 @@ bulbName =
     "icolorlive"
 
 
+service : String
+service =
+    "f000ffa0-0451-4000-b000-000000000000"
+
+
+changeModeCharacteristic : String
+changeModeCharacteristic =
+    "f000ffa3-0451-4000-b000-000000000000"
+
+
+
+-- 4d43 (0x4F43) changes to color
+-- 4d57 (0x4F57) changes to white
+
+
+changeColorCharacteristic : String
+changeColorCharacteristic =
+    "f000ffa4-0451-4000-b000-000000000000"
+
+
+getRgb : Color -> RGB
+getRgb color =
+    case color of
+        Off ->
+            ( 0, 0, 0 )
+
+        Blue ->
+            ( 0, 0, 255 )
+
+        Yellow ->
+            ( 255, 255, 0 )
+
+        Green ->
+            ( 20, 242, 0 )
+
+        Red ->
+            ( 255, 0, 0 )
+
+
+changeColor : Color -> Cmd msg
+changeColor color =
+    Bluetooth.writeValue
+        (Bluetooth.WriteParams service changeColorCharacteristic (getRgb color))
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Connect ->
-            ( { model | errorMessage = Nothing }, Bluetooth.connect bulbName )
-
-        Connected bulbId ->
-            ( { model
-                | bulbId = Just bulbId
-                , flash = True
-                , flashColor = "FFFF00"
-              }
-            , Cmd.none
+            ( { model | errorMessage = Nothing }
+            , Bluetooth.connect (Bluetooth.Bulb bulbName service)
             )
 
-        FlashTick _ ->
-            flash model
+        Connected bulbId ->
+            { model | bulbId = Just bulbId }
+                ! [ changeColor Blue
+                  , Delay.after 20 second TurnOff
+                  ]
+
+        TurnOff ->
+            ( model, changeColor Off )
 
         Disconnect ->
             model.bulbId
@@ -63,6 +124,12 @@ update msg model =
 
         Error error ->
             ( { model | errorMessage = Just error }, Cmd.none )
+
+        SetBulbMode _ ->
+            ( model
+            , Bluetooth.writeValue
+                (Bluetooth.WriteParams service changeColorCharacteristic (getRgb Red))
+            )
 
 
 view : Model -> Html Msg
@@ -102,7 +169,7 @@ bulbIdView { bulbId } =
             div [] []
 
         Just id ->
-            div [] [ p [] [ text id ] ]
+            div [] [ p [] [ text id ], button [ onClick (SetBulbMode Colored) ] [ text "Hallo" ] ]
 
 
 footerView : Model -> Html Msg
@@ -130,45 +197,18 @@ footerView model =
         ]
 
 
-flash : Model -> ( Model, Cmd msg )
-flash model =
-    let
-        flash =
-            model.flashCount < 5
-
-        flashCount =
-            if flash then
-                model.flashCount + 1
-            else
-                0
-    in
-        ( { model | flash = flash, flashCount = flashCount }, Cmd.none )
-
-
 subscriptions : Model -> Sub Msg
-subscriptions { flash } =
-    let
-        defaultSubs =
-            [ Bluetooth.error Error
-            , Bluetooth.connected Connected
-            , Bluetooth.disconnected Disconnected
-            ]
-
-        subs =
-            if flash then
-                Time.every (500 * millisecond) FlashTick :: defaultSubs
-            else
-                defaultSubs
-    in
-        Sub.batch subs
+subscriptions _ =
+    Sub.batch
+        [ Bluetooth.error Error
+        , Bluetooth.connected Connected
+        , Bluetooth.disconnected Disconnected
+        ]
 
 
 init : ( Model, Cmd Msg )
 init =
     ( { bulbId = Nothing
-      , flash = True
-      , flashColor = ""
-      , flashCount = 0
       , errorMessage = Nothing
       }
     , Cmd.none
