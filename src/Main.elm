@@ -93,8 +93,9 @@ getRgb color =
 
 changeColor : Color -> Cmd msg
 changeColor color =
-    Bluetooth.writeValue
-        (Bluetooth.WriteParams service changeColorCharacteristic (getRgb color))
+    getRgb color
+        |> Bluetooth.WriteParams service changeColorCharacteristic
+        |> Bluetooth.writeValue
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
