@@ -4,7 +4,7 @@
   "main": "index.js",
   "author": "Christian Rackerseder <git@echooff.de>",
   "scripts": {
-    "build": "elm-app build",
+    "build": "yarn run test && elm-app build",
     "test": "elm-app test"
   },
   "devDependencies": {
