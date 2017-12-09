@@ -4,7 +4,6 @@ import Bluetooth
 import Delay
 import Html exposing (Html, a, button, div, footer, img, p, text)
 import Html.Attributes exposing (class, disabled, href, src, target, title)
-import Html.Events exposing (onClick)
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
 import Time exposing (second)
@@ -103,7 +102,7 @@ update msg model =
     case msg of
         Connect ->
             ( { model | errorMessage = Nothing }
-            , Bluetooth.connect (Bluetooth.Bulb bulbName service)
+            , Bluetooth.connect <| Bluetooth.Bulb bulbName service
             )
 
         Connected bulbId ->
@@ -128,8 +127,9 @@ update msg model =
 
         SetBulbMode _ ->
             ( model
-            , Bluetooth.writeValue
-                (Bluetooth.WriteParams service changeColorCharacteristic (getRgb Red))
+            , getRgb Red
+                |> Bluetooth.WriteParams service changeColorCharacteristic
+                |> Bluetooth.writeValue
             )
 
 
