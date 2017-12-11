@@ -20,11 +20,11 @@ type alias CiJob =
 
 
 type alias Model =
-    { ciURL : String
+    { bulbId : Maybe Bluetooth.BulbId
+    , ciURL : String
     , ciJobName : String
-    , bulbId : Maybe Bluetooth.BulbId
+    , ciStatus : CiStatus
     , errorMessage : Maybe String
-    , ciColor : String
     }
 
 
@@ -32,7 +32,15 @@ type alias BluetoothError =
     String
 
 
-type Color
+type CiStatus
+    = None
+    | Passed
+    | Broken
+    | Disabled
+    | Aborted
+
+
+type BulbColor
     = Off
     | Blue
     | Yellow
@@ -57,8 +65,8 @@ type Msg
     | Disconnect
     | Disconnected ()
     | SetBulbMode BulbMode
-    | FetchCIStatus
-    | CIStatusFetched (Result Http.Error (List CiJob))
+    | FetchCiJobs
+    | CiJobsFetched (Result Http.Error (List CiJob))
 
 
 bulbName : String
@@ -86,7 +94,7 @@ changeColorCharacteristic =
     "f000ffa4-0451-4000-b000-000000000000"
 
 
-getRgb : Color -> RGB
+getRgb : BulbColor -> RGB
 getRgb color =
     case color of
         Off ->
@@ -105,7 +113,7 @@ getRgb color =
             ( 255, 0, 0 )
 
 
-changeColor : Color -> Cmd msg
+changeColor : BulbColor -> Cmd msg
 changeColor color =
     getRgb color
         |> Bluetooth.WriteParams service changeColorCharacteristic
@@ -124,13 +132,32 @@ decodeCiStatus =
         )
 
 
-getCiColor : String -> Cmd Msg
-getCiColor url =
+getCiJobs : String -> Cmd Msg
+getCiJobs url =
     let
         ŕequest =
             Http.get url decodeCiStatus
     in
-        Http.send CIStatusFetched ŕequest
+        Http.send CiJobsFetched ŕequest
+
+
+ciStatusFromColor : String -> CiStatus
+ciStatusFromColor color =
+    case color of
+        "red" ->
+            Broken
+
+        "green" ->
+            Passed
+
+        "disabled" ->
+            Disabled
+
+        "aborted" ->
+            Aborted
+
+        _ ->
+            None
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -168,13 +195,18 @@ update msg model =
                 |> Bluetooth.writeValue
             )
 
-        FetchCIStatus ->
-            ( model, getCiColor model.ciURL )
+        FetchCiJobs ->
+            ( model, getCiJobs model.ciURL )
 
-        CIStatusFetched (Ok jobs) ->
+        CiJobsFetched (Ok jobs) ->
             jobs
                 |> List.filter (\job -> job.name == model.ciJobName)
-                |> List.map (\job -> ( { model | ciColor = job.color }, Cmd.none ))
+                |> List.map
+                    (\job ->
+                        ( { model | ciStatus = ciStatusFromColor job.color }
+                        , Cmd.none
+                        )
+                    )
                 |> List.head
                 |> Maybe.withDefault ( model, Cmd.none )
 
@@ -258,13 +290,13 @@ subscriptions _ =
 
 init : Flags -> ( Model, Cmd Msg )
 init { ciURL, ciJobName } =
-    ( { ciURL = ciURL
+    ( { bulbId = Nothing
+      , ciURL = ciURL
       , ciJobName = ciJobName
-      , bulbId = Nothing
+      , ciStatus = None
       , errorMessage = Nothing
-      , ciColor = ""
       }
-    , getCiColor ciURL
+    , getCiJobs ciURL
     )
 
 
