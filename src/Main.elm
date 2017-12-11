@@ -5,18 +5,23 @@ import Delay
 import Html exposing (Html, a, button, div, footer, img, p, text)
 import Html.Attributes exposing (class, disabled, href, src, target, title)
 import Http
-import Json.Decode
+import Json.Decode as Decode
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
 import Time exposing (second)
 
 
 type alias Flags =
-    { ciURL : String }
+    { ciURL : String, ciJobName : String }
+
+
+type alias CiJob =
+    { name : String, color : String }
 
 
 type alias Model =
     { ciURL : String
+    , ciJobName : String
     , bulbId : Maybe Bluetooth.BulbId
     , errorMessage : Maybe String
     , ciColor : String
@@ -53,7 +58,7 @@ type Msg
     | Disconnected ()
     | SetBulbMode BulbMode
     | FetchCIStatus
-    | CIStatusFetched (Result Http.Error String)
+    | CIStatusFetched (Result Http.Error (List CiJob))
 
 
 bulbName : String
@@ -107,16 +112,23 @@ changeColor color =
         |> Bluetooth.writeValue
 
 
-decodeCiStatus : Json.Decode.Decoder String
+decodeCiStatus : Decode.Decoder (List CiJob)
 decodeCiStatus =
-    Json.Decode.at [ "data", "image_url" ] Json.Decode.string
+    Decode.field "jobs"
+        (Decode.list
+            (Decode.map2
+                CiJob
+                (Decode.field "name" Decode.string)
+                (Decode.field "color" Decode.string)
+            )
+        )
 
 
-getCiColor : Cmd Msg
-getCiColor =
+getCiColor : String -> Cmd Msg
+getCiColor url =
     let
         ŕequest =
-            Http.get "http://" decodeCiStatus
+            Http.get url decodeCiStatus
     in
         Http.send CIStatusFetched ŕequest
 
@@ -157,13 +169,17 @@ update msg model =
             )
 
         FetchCIStatus ->
-            ( model, getCiColor )
+            ( model, getCiColor model.ciURL )
 
-        CIStatusFetched (Ok result) ->
-            ( { model | ciColor = result }, Cmd.none )
+        CIStatusFetched (Ok jobs) ->
+            jobs
+                |> List.filter (\job -> job.name == model.ciJobName)
+                |> List.map (\job -> ( { model | ciColor = job.color }, Cmd.none ))
+                |> List.head
+                |> Maybe.withDefault ( model, Cmd.none )
 
-        CIStatusFetched (Err _) ->
-            ( model, Cmd.none )
+        _ ->
+            Debug.crash "TODO"
 
 
 view : Model -> Html Msg
@@ -241,13 +257,14 @@ subscriptions _ =
 
 
 init : Flags -> ( Model, Cmd Msg )
-init { ciURL } =
+init { ciURL, ciJobName } =
     ( { ciURL = ciURL
+      , ciJobName = ciJobName
       , bulbId = Nothing
       , errorMessage = Nothing
       , ciColor = ""
       }
-    , Cmd.none
+    , getCiColor ciURL
     )
 
 
