@@ -4,6 +4,8 @@ import Bluetooth
 import Delay
 import Html exposing (Html, a, button, div, footer, img, p, text)
 import Html.Attributes exposing (class, disabled, href, src, target, title)
+import Html.Events exposing (onClick)
+import Http
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
 import Time exposing (second)
@@ -12,6 +14,7 @@ import Time exposing (second)
 type alias Model =
     { bulbId : Maybe Bluetooth.BulbId
     , errorMessage : Maybe String
+    , ciColor : String
     }
 
 
@@ -44,6 +47,8 @@ type Msg
     | Disconnect
     | Disconnected ()
     | SetBulbMode BulbMode
+    | FetchCIStatus
+    | CIStatusFetched (Result Http.Error String)
 
 
 bulbName : String
@@ -97,6 +102,20 @@ changeColor color =
         |> Bluetooth.writeValue
 
 
+decodeCiStatus : Decode.Decoder String
+decodeCiStatus =
+    Decode.at [ "data", "image_url" ] Decode.string
+
+
+getCiColor : Cmd msg
+getCiColor =
+    let
+        ŕequest =
+            Http.get "http://" decodeCiStatus
+    in
+        Http.send CIStatusFetched ŕequest
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -131,6 +150,15 @@ update msg model =
                 |> Bluetooth.WriteParams service changeColorCharacteristic
                 |> Bluetooth.writeValue
             )
+
+        FetchCIStatus ->
+            ( model, getCiColor )
+
+        CIStatusFetched (Ok result) ->
+            ( { model | ciColor = result }, Cmd.none )
+
+        CIStatusFetched (Err _) ->
+            ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -211,6 +239,7 @@ init : ( Model, Cmd Msg )
 init =
     ( { bulbId = Nothing
       , errorMessage = Nothing
+      , ciColor = ""
       }
     , Cmd.none
     )
