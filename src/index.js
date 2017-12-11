@@ -3,7 +3,9 @@ import './main.css';
 import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
-const { ports } = Main.fullscreen();
+const { ports } = Main.fullscreen({
+  ciURL: process.env.ELM_APP_CI_URL,
+});
 
 let gattServer;
 

@@ -4,15 +4,20 @@ import Bluetooth
 import Delay
 import Html exposing (Html, a, button, div, footer, img, p, text)
 import Html.Attributes exposing (class, disabled, href, src, target, title)
-import Html.Events exposing (onClick)
 import Http
+import Json.Decode
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
 import Time exposing (second)
 
 
+type alias Flags =
+    { ciURL : String }
+
+
 type alias Model =
-    { bulbId : Maybe Bluetooth.BulbId
+    { ciURL : String
+    , bulbId : Maybe Bluetooth.BulbId
     , errorMessage : Maybe String
     , ciColor : String
     }
@@ -102,12 +107,12 @@ changeColor color =
         |> Bluetooth.writeValue
 
 
-decodeCiStatus : Decode.Decoder String
+decodeCiStatus : Json.Decode.Decoder String
 decodeCiStatus =
-    Decode.at [ "data", "image_url" ] Decode.string
+    Json.Decode.at [ "data", "image_url" ] Json.Decode.string
 
 
-getCiColor : Cmd msg
+getCiColor : Cmd Msg
 getCiColor =
     let
         ŕequest =
@@ -235,9 +240,10 @@ subscriptions _ =
         ]
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( { bulbId = Nothing
+init : Flags -> ( Model, Cmd Msg )
+init { ciURL } =
+    ( { ciURL = ciURL
+      , bulbId = Nothing
       , errorMessage = Nothing
       , ciColor = ""
       }
@@ -245,9 +251,9 @@ init =
     )
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-    Html.program
+    Html.programWithFlags
         { view = view
         , init = init
         , update = update
