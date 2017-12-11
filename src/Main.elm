@@ -8,7 +8,7 @@ import Http
 import Json.Decode as Decode
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
-import Time exposing (second)
+import Time exposing (Time, second, minute)
 
 
 type alias Flags =
@@ -65,7 +65,7 @@ type Msg
     | Disconnect
     | Disconnected ()
     | SetBulbMode BulbMode
-    | FetchCiJobs
+    | FetchCiJobs Time
     | CiJobsFetched (Result Http.Error (List CiJob))
 
 
@@ -204,7 +204,7 @@ update msg model =
         SetBulbMode _ ->
             ( model, changeColor Red )
 
-        FetchCiJobs ->
+        FetchCiJobs _ ->
             ( model, getCiJobs model.ciURL )
 
         CiJobsFetched (Ok jobs) ->
@@ -289,12 +289,21 @@ footerView model =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Sub.batch
-        [ Bluetooth.error Error
-        , Bluetooth.connected Connected
-        , Bluetooth.disconnected Disconnected
-        ]
+subscriptions model =
+    let
+        defaultSubs =
+            [ Bluetooth.error Error
+            , Bluetooth.connected Connected
+            , Bluetooth.disconnected Disconnected
+            ]
+
+        subs =
+            if Maybe.Extra.isJust model.bulbId then
+                Time.every minute FetchCiJobs :: defaultSubs
+            else
+                defaultSubs
+    in
+        Sub.batch subs
 
 
 init : Flags -> ( Model, Cmd Msg )
