@@ -132,8 +132,8 @@ decodeCiStatus =
         )
 
 
-getCiJobs : String -> Cmd Msg
-getCiJobs url =
+fetchCiJobs : String -> Cmd Msg
+fetchCiJobs url =
     let
         ŕequest =
             Http.get url decodeCiStatus
@@ -205,7 +205,7 @@ update msg model =
             ( model, changeColor Red )
 
         FetchCiJobs _ ->
-            ( model, getCiJobs model.ciURL )
+            ( model, fetchCiJobs model.ciURL )
 
         CiJobsFetched (Ok jobs) ->
             jobs
