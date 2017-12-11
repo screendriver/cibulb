@@ -160,6 +160,19 @@ ciStatusFromColor color =
             None
 
 
+ciStatusToBulbColor : CiStatus -> BulbColor
+ciStatusToBulbColor status =
+    case status of
+        Broken ->
+            Red
+
+        Passed ->
+            Green
+
+        _ ->
+            Off
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -179,7 +192,7 @@ update msg model =
 
         Disconnect ->
             model.bulbId
-                |> Maybe.map (\_ -> ( model, Bluetooth.disconnect () ))
+                |> Maybe.map (\_ -> model ! [ changeColor Off, Bluetooth.disconnect () ])
                 |> Maybe.withDefault ( model, Cmd.none )
 
         Disconnected _ ->
@@ -189,11 +202,7 @@ update msg model =
             ( { model | errorMessage = Just error }, Cmd.none )
 
         SetBulbMode _ ->
-            ( model
-            , getRgb Red
-                |> Bluetooth.WriteParams service changeColorCharacteristic
-                |> Bluetooth.writeValue
-            )
+            ( model, changeColor Red )
 
         FetchCiJobs ->
             ( model, getCiJobs model.ciURL )
@@ -204,7 +213,7 @@ update msg model =
                 |> List.map
                     (\job ->
                         ( { model | ciStatus = ciStatusFromColor job.color }
-                        , Cmd.none
+                        , ciStatusFromColor job.color |> ciStatusToBulbColor |> changeColor
                         )
                     )
                 |> List.head
@@ -296,7 +305,7 @@ init { ciURL, ciJobName } =
       , ciStatus = None
       , errorMessage = Nothing
       }
-    , getCiJobs ciURL
+    , Cmd.none
     )
 
 
