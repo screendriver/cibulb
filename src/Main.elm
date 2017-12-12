@@ -147,7 +147,7 @@ ciStatusFromColor color =
         "red" ->
             Broken
 
-        "green" ->
+        "blue" ->
             Passed
 
         "disabled" ->
