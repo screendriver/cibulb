@@ -201,10 +201,10 @@ getCiStatus jobs =
     in
         if List.any isBroken statusList then
             Broken
-        else if List.any isPassed statusList then
-            Passed
         else if List.any isRunning statusList then
             Running
+        else if List.all isPassed statusList then
+            Passed
         else
             Unknown
 
