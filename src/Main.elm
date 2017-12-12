@@ -46,6 +46,7 @@ type BulbColor
     | Yellow
     | Green
     | Red
+    | Pink
 
 
 type alias RGB =
@@ -112,6 +113,9 @@ getRgb color =
         Red ->
             ( 255, 0, 0 )
 
+        Pink ->
+            ( 255, 0, 228 )
+
 
 changeColor : BulbColor -> Cmd msg
 changeColor color =
@@ -170,7 +174,7 @@ ciStatusToBulbColor status =
             Green
 
         _ ->
-            Off
+            Pink
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
