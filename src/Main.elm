@@ -32,7 +32,7 @@ type alias BluetoothError =
 
 
 type CiStatus
-    = None
+    = Unknown
     | Passed
     | Broken
     | Disabled
@@ -166,7 +166,7 @@ ciStatusFromColor color =
             Running
 
         _ ->
-            None
+            Unknown
 
 
 ciStatusToBulbColor : CiStatus -> BulbColor
@@ -183,6 +183,31 @@ ciStatusToBulbColor status =
 
         _ ->
             Pink
+
+
+getCiStatus : List CiJob -> CiStatus
+getCiStatus jobs =
+    let
+        statusList =
+            List.map (\{ color } -> ciStatusFromColor color) jobs
+
+        isBroken status =
+            status == Broken
+
+        isPassed status =
+            status == Passed
+
+        isRunning status =
+            status == Running
+    in
+        if List.any isBroken statusList then
+            Broken
+        else if List.any isPassed statusList then
+            Passed
+        else if List.any isRunning statusList then
+            Running
+        else
+            Unknown
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -209,16 +234,13 @@ update msg model =
             ( model, fetchCiJobs model.ciURL )
 
         CiJobsFetched (Ok jobs) ->
-            jobs
-                |> List.filter (\job -> job.name == model.ciJobName)
-                |> List.map
-                    (\job ->
-                        ( { model | ciStatus = ciStatusFromColor job.color }
-                        , ciStatusFromColor job.color |> ciStatusToBulbColor |> changeColor
-                        )
-                    )
-                |> List.head
-                |> Maybe.withDefault ( model, Cmd.none )
+            let
+                ciStatus =
+                    getCiStatus jobs
+            in
+                ( { model | ciStatus = ciStatus }
+                , ciStatusToBulbColor ciStatus |> changeColor
+                )
 
         CiJobsFetched (Err err) ->
             ( model, Cmd.none )
@@ -319,7 +341,7 @@ init { ciURL, ciJobName } =
     ( { bulbId = Nothing
       , ciURL = ciURL
       , ciJobName = ciJobName
-      , ciStatus = None
+      , ciStatus = Unknown
       , errorMessage = Nothing
       }
     , Cmd.none
