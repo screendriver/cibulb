@@ -199,7 +199,9 @@ getCiStatus jobs =
         isRunning status =
             status == Running
     in
-        if List.any isBroken statusList then
+        if List.isEmpty statusList then
+            Unknown
+        else if List.any isBroken statusList then
             Broken
         else if List.any isRunning statusList then
             Running
