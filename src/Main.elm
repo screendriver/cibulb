@@ -64,7 +64,6 @@ type Msg
     | Connected Bluetooth.BulbId
     | Disconnect
     | Disconnected ()
-    | SetBulbMode BulbMode
     | FetchCiJobs Time
     | CiJobsFetched (Result Http.Error (List CiJob))
     | ValueWritten Bluetooth.WriteParams
@@ -205,9 +204,6 @@ update msg model =
 
         Error error ->
             ( { model | errorMessage = Just error }, Cmd.none )
-
-        SetBulbMode _ ->
-            ( model, changeColor Red )
 
         FetchCiJobs _ ->
             ( model, fetchCiJobs model.ciURL )
