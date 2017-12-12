@@ -37,6 +37,7 @@ type CiStatus
     | Broken
     | Disabled
     | Aborted
+    | Running
 
 
 type BulbColor
@@ -159,6 +160,12 @@ ciStatusFromColor color =
         "aborted" ->
             Aborted
 
+        "red_anime" ->
+            Running
+
+        "blue_anime" ->
+            Running
+
         _ ->
             None
 
@@ -171,6 +178,9 @@ ciStatusToBulbColor status =
 
         Passed ->
             Green
+
+        Running ->
+            Yellow
 
         _ ->
             Pink
