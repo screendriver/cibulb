@@ -32,3 +32,6 @@ type alias WriteParams =
 
 
 port writeValue : WriteParams -> Cmd msg
+
+
+port valueWritten : (WriteParams -> msg) -> Sub msg

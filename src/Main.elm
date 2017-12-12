@@ -1,7 +1,6 @@
 module Main exposing (..)
 
 import Bluetooth
-import Delay
 import Html exposing (Html, a, button, div, footer, img, p, text)
 import Html.Attributes exposing (class, disabled, href, src, target, title)
 import Http
@@ -62,12 +61,12 @@ type Msg
     = Connect
     | Error BluetoothError
     | Connected Bluetooth.BulbId
-    | TurnOff
     | Disconnect
     | Disconnected ()
     | SetBulbMode BulbMode
     | FetchCiJobs Time
     | CiJobsFetched (Result Http.Error (List CiJob))
+    | ValueWritten Bluetooth.WriteParams
 
 
 bulbName : String
@@ -186,18 +185,10 @@ update msg model =
             )
 
         Connected bulbId ->
-            { model | bulbId = Just bulbId }
-                ! [ changeColor Blue
-                  , Delay.after 20 second TurnOff
-                  ]
-
-        TurnOff ->
-            ( model, changeColor Off )
+            ( { model | bulbId = Just bulbId }, changeColor Blue )
 
         Disconnect ->
-            model.bulbId
-                |> Maybe.map (\_ -> model ! [ changeColor Off, Bluetooth.disconnect () ])
-                |> Maybe.withDefault ( model, Cmd.none )
+            ( model, changeColor Off )
 
         Disconnected _ ->
             ( { model | bulbId = Nothing }, Cmd.none )
@@ -223,8 +214,14 @@ update msg model =
                 |> List.head
                 |> Maybe.withDefault ( model, Cmd.none )
 
-        _ ->
-            Debug.crash "TODO"
+        CiJobsFetched (Err err) ->
+            ( model, Cmd.none )
+
+        ValueWritten { value } ->
+            if value == getRgb Off then
+                ( model, Bluetooth.disconnect () )
+            else
+                ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -299,6 +296,7 @@ subscriptions model =
             [ Bluetooth.error Error
             , Bluetooth.connected Connected
             , Bluetooth.disconnected Disconnected
+            , Bluetooth.valueWritten ValueWritten
             ]
 
         subs =

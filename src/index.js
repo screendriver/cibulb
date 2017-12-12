@@ -34,6 +34,7 @@ ports.writeValue.subscribe(async params => {
       params.characteristic,
     );
     await characteristic.writeValue(new Uint8Array(params.value));
+    ports.valueWritten.send(params);
   } catch (error) {
     ports.error.send(error.toString());
   }
