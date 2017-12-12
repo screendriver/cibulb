@@ -7,7 +7,7 @@ import Http
 import Json.Decode as Decode
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
-import Time exposing (Time, second, minute)
+import Time exposing (Time, second)
 
 
 type alias Flags =
@@ -311,7 +311,7 @@ subscriptions model =
 
         subs =
             if Maybe.Extra.isJust model.bulbId then
-                Time.every minute FetchCiJobs :: defaultSubs
+                Time.every (10 * second) FetchCiJobs :: defaultSubs
             else
                 defaultSubs
     in
