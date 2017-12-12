@@ -11,7 +11,7 @@ import Time exposing (Time, second)
 
 
 type alias Flags =
-    { ciURL : String, ciJobName : String }
+    { ciURL : String }
 
 
 type alias CiJob =
@@ -21,7 +21,6 @@ type alias CiJob =
 type alias Model =
     { bulbId : Maybe Bluetooth.BulbId
     , ciURL : String
-    , ciJobName : String
     , ciStatus : CiStatus
     , errorMessage : Maybe String
     }
@@ -337,10 +336,9 @@ subscriptions model =
 
 
 init : Flags -> ( Model, Cmd Msg )
-init { ciURL, ciJobName } =
+init { ciURL } =
     ( { bulbId = Nothing
       , ciURL = ciURL
-      , ciJobName = ciJobName
       , ciStatus = Unknown
       , errorMessage = Nothing
       }
