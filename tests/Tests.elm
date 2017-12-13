@@ -82,5 +82,13 @@ suite =
                 \_ ->
                     getCiStatus [ Main.CiJob "" "blue", Main.CiJob "" "blue" ]
                         |> Expect.equal Main.Passed
+            , test "ignore 'disabled' builds" <|
+                \_ ->
+                    getCiStatus [ Main.CiJob "" "disabled", Main.CiJob "" "blue" ]
+                        |> Expect.equal Main.Passed
+            , test "ignore 'aborted' builds" <|
+                \_ ->
+                    getCiStatus [ Main.CiJob "" "aborted", Main.CiJob "" "blue" ]
+                        |> Expect.equal Main.Passed
             ]
         ]

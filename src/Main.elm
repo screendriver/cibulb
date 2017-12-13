@@ -188,7 +188,9 @@ getCiStatus : List CiJob -> CiStatus
 getCiStatus jobs =
     let
         statusList =
-            List.map (\{ color } -> ciStatusFromColor color) jobs
+            jobs
+                |> List.map (\{ color } -> ciStatusFromColor color)
+                |> List.filter (\ciStatus -> ciStatus /= Disabled && ciStatus /= Aborted)
 
         isBroken status =
             status == Broken
