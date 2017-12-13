@@ -10,8 +10,12 @@ import Maybe.Extra
 import Time exposing (Time, second)
 
 
+type alias Branch =
+    String
+
+
 type alias Flags =
-    { ciURL : String, branchBlacklist : List String }
+    { ciURL : String, branchBlacklist : List Branch }
 
 
 type alias CiJob =
@@ -21,7 +25,7 @@ type alias CiJob =
 type alias Model =
     { bulbId : Maybe Bluetooth.BulbId
     , ciURL : String
-    , branchBlacklist : List String
+    , branchBlacklist : List Branch
     , ciStatus : CiStatus
     , errorMessage : Maybe String
     }
@@ -185,11 +189,12 @@ ciStatusToBulbColor status =
             Pink
 
 
-getCiStatus : List CiJob -> CiStatus
-getCiStatus jobs =
+getCiStatus : List Branch -> List CiJob -> CiStatus
+getCiStatus branches jobs =
     let
         statusList =
             jobs
+                |> List.filter (\{ name } -> not <| List.member name branches)
                 |> List.map (\{ color } -> ciStatusFromColor color)
                 |> List.filter (\ciStatus -> ciStatus /= Disabled && ciStatus /= Aborted)
 
@@ -240,7 +245,7 @@ update msg model =
         CiJobsFetched (Ok jobs) ->
             let
                 ciStatus =
-                    getCiStatus jobs
+                    getCiStatus model.branchBlacklist jobs
             in
                 ( { model | ciStatus = ciStatus }
                 , ciStatusToBulbColor ciStatus |> changeColor

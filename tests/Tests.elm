@@ -65,30 +65,34 @@ suite =
         , describe "getCiStatus"
             [ test "Unknown when list is empty" <|
                 \_ ->
-                    getCiStatus [] |> Expect.equal Main.Unknown
+                    getCiStatus [] [] |> Expect.equal Main.Unknown
             , test "Unknown when any list item has unknown color" <|
                 \_ ->
-                    getCiStatus [ Main.CiJob "" "blue", Main.CiJob "" "foo" ]
+                    getCiStatus [] [ Main.CiJob "" "blue", Main.CiJob "" "foo" ]
                         |> Expect.equal Main.Unknown
             , test "Broken when any list item has red color" <|
                 \_ ->
-                    getCiStatus [ Main.CiJob "" "blue", Main.CiJob "" "red" ]
+                    getCiStatus [] [ Main.CiJob "" "blue", Main.CiJob "" "red" ]
                         |> Expect.equal Main.Broken
             , test "Running when any list item has a running color" <|
                 \_ ->
-                    getCiStatus [ Main.CiJob "" "blue", Main.CiJob "" "red_anime" ]
+                    getCiStatus [] [ Main.CiJob "" "blue", Main.CiJob "" "red_anime" ]
                         |> Expect.equal Main.Running
             , test "Passed when all list item has a blue color" <|
                 \_ ->
-                    getCiStatus [ Main.CiJob "" "blue", Main.CiJob "" "blue" ]
+                    getCiStatus [] [ Main.CiJob "" "blue", Main.CiJob "" "blue" ]
                         |> Expect.equal Main.Passed
             , test "ignore 'disabled' builds" <|
                 \_ ->
-                    getCiStatus [ Main.CiJob "" "disabled", Main.CiJob "" "blue" ]
+                    getCiStatus [] [ Main.CiJob "" "disabled", Main.CiJob "" "blue" ]
                         |> Expect.equal Main.Passed
             , test "ignore 'aborted' builds" <|
                 \_ ->
-                    getCiStatus [ Main.CiJob "" "aborted", Main.CiJob "" "blue" ]
+                    getCiStatus [] [ Main.CiJob "" "aborted", Main.CiJob "" "blue" ]
+                        |> Expect.equal Main.Passed
+            , test "filter out blacklist branches" <|
+                \_ ->
+                    getCiStatus [ "debug" ] [ Main.CiJob "debug" "red", Main.CiJob "" "blue" ]
                         |> Expect.equal Main.Passed
             ]
         ]
