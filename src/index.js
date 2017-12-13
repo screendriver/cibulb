@@ -5,6 +5,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 const { ports } = Main.fullscreen({
   ciURL: process.env.ELM_APP_CI_URL,
+  branchBlacklist: process.env.ELM_APP_BRANCH_BLACKLIST.split(','),
 });
 
 let gattServer;
