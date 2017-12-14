@@ -169,6 +169,9 @@ ciStatusFromColor color =
         "blue_anime" ->
             Running
 
+        "notbuilt_anime" ->
+            Running
+
         _ ->
             Unknown
 
