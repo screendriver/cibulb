@@ -39,19 +39,19 @@ suite =
             , test "0 0 255 when Color is Blue" <|
                 \_ ->
                     getRgb Main.Blue
-                        |> Expect.equal ( 0, 0, 255 )
+                        |> Expect.equal ( 0, 0, 26 )
             , test "0 0 255 when Color is Yellow" <|
                 \_ ->
                     getRgb Main.Yellow
-                        |> Expect.equal ( 255, 255, 0 )
+                        |> Expect.equal ( 26, 26, 0 )
             , test "0 0 255 when Color is Green" <|
                 \_ ->
                     getRgb Main.Green
-                        |> Expect.equal ( 20, 242, 0 )
+                        |> Expect.equal ( 0, 26, 0 )
             , test "0 0 255 when Color is Red" <|
                 \_ ->
                     getRgb Main.Red
-                        |> Expect.equal ( 255, 0, 0 )
+                        |> Expect.equal ( 26, 0, 0 )
             ]
         , test "changeColor should call a port" <|
             \_ ->
