@@ -5,6 +5,7 @@
   "author": "Christian Rackerseder <git@echooff.de>",
   "scripts": {
     "build": "elm-app build",
+    "serve": "elm-app start",
     "test": "elm-app test"
   },
   "devDependencies": {
