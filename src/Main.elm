@@ -15,7 +15,7 @@ type alias Branch =
 
 
 type alias Flags =
-    { ciURL : String, branchBlacklist : List Branch }
+    { ciURL : String, branchBlacklist : String }
 
 
 type alias CiJob =
@@ -348,11 +348,21 @@ subscriptions model =
         Sub.batch subs
 
 
+getBranchBlacklist : String -> List Branch
+getBranchBlacklist blacklist =
+    case String.trim blacklist of
+        "" ->
+            []
+
+        trimmed ->
+            String.split "," trimmed
+
+
 init : Flags -> ( Model, Cmd Msg )
 init { ciURL, branchBlacklist } =
     ( { bulbId = Nothing
       , ciURL = ciURL
-      , branchBlacklist = branchBlacklist
+      , branchBlacklist = getBranchBlacklist branchBlacklist
       , ciStatus = Unknown
       , errorMessage = Nothing
       }

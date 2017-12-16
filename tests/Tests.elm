@@ -11,6 +11,7 @@ import Main
         , getRgb
         , changeColor
         , getCiStatus
+        , getBranchBlacklist
         )
 import Test exposing (..)
 import Fuzz exposing (..)
@@ -117,5 +118,31 @@ suite =
                         , Main.CiJob "master" "blue"
                         ]
                         |> Expect.equal Main.Passed
+            ]
+        , describe "getBranchBlacklist"
+            [ test "return an empty list when string is empty" <|
+                \_ ->
+                    getBranchBlacklist ""
+                        |> List.isEmpty
+                        |> Expect.true "Expected the list to be empty."
+            , test "parses the given branches and return a list of branches" <|
+                \_ ->
+                    getBranchBlacklist "foo,bar"
+                        |> Expect.equal [ "foo", "bar" ]
+            , fuzz string "can handle random strings" <|
+                \randomString ->
+                    let
+                        branchBlacklist =
+                            getBranchBlacklist randomString
+                    in
+                        case String.trim randomString of
+                            "" ->
+                                branchBlacklist
+                                    |> List.isEmpty
+                                    |> Expect.true "Expected the list to be empty."
+
+                            other ->
+                                String.split "," other
+                                    |> Expect.equal branchBlacklist
             ]
         ]
