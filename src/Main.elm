@@ -15,7 +15,11 @@ type alias Branch =
 
 
 type alias Flags =
-    { ciURL : String, branchBlacklist : String }
+    { gitHubApiUrl : String
+    , gitHubOwner : String
+    , gitHubRepo : String
+    , gitHubBranchBlacklist : String
+    }
 
 
 type alias CiJob =
@@ -23,9 +27,11 @@ type alias CiJob =
 
 
 type alias Model =
-    { bulbId : Maybe Bluetooth.BulbId
-    , ciURL : String
-    , branchBlacklist : List Branch
+    { gitHubApiUrl : String
+    , gitHubOwner : String
+    , gitHubRepo : String
+    , gitHubBranchBlacklist : List Branch
+    , bulbId : Maybe Bluetooth.BulbId
     , ciStatus : CiStatus
     , errorMessage : Maybe String
     }
@@ -243,12 +249,12 @@ update msg model =
             ( { model | errorMessage = Just error }, Cmd.none )
 
         FetchCiJobs _ ->
-            ( model, fetchCiJobs model.ciURL )
+            ( model, fetchCiJobs model.gitHubApiUrl )
 
         CiJobsFetched (Ok jobs) ->
             let
                 ciStatus =
-                    getCiStatus model.branchBlacklist jobs
+                    getCiStatus model.gitHubBranchBlacklist jobs
             in
                 ( { model | ciStatus = ciStatus }
                 , ciStatusToBulbColor ciStatus |> changeColor
@@ -359,10 +365,12 @@ getBranchBlacklist blacklist =
 
 
 init : Flags -> ( Model, Cmd Msg )
-init { ciURL, branchBlacklist } =
-    ( { bulbId = Nothing
-      , ciURL = ciURL
-      , branchBlacklist = getBranchBlacklist branchBlacklist
+init { gitHubApiUrl, gitHubOwner, gitHubRepo, gitHubBranchBlacklist } =
+    ( { gitHubApiUrl = gitHubApiUrl
+      , gitHubOwner = gitHubOwner
+      , gitHubRepo = gitHubRepo
+      , gitHubBranchBlacklist = getBranchBlacklist gitHubBranchBlacklist
+      , bulbId = Nothing
       , ciStatus = Unknown
       , errorMessage = Nothing
       }

@@ -4,8 +4,10 @@ import { Main } from './Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
 const { ports } = Main.fullscreen({
-  ciURL: process.env.ELM_APP_CI_URL,
-  branchBlacklist: process.env.ELM_APP_BRANCH_BLACKLIST,
+  gitHubApiUrl: process.env.ELM_APP_GITHUB_API_URL,
+  gitHubOwner: process.env.ELM_APP_GITHUB_OWNER,
+  gitHubRepo: process.env.ELM_APP_GITHUB_REPO,
+  gitHubBranchBlacklist: process.env.ELM_APP_GITHUB_BRANCH_BLACKLIST,
 });
 
 let gattServer;
