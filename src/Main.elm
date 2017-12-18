@@ -212,10 +212,10 @@ getCiStatus branches jobs =
     in
         if List.isEmpty statusList then
             Unknown
-        else if List.any isBroken statusList then
-            Broken
         else if List.any isRunning statusList then
             Running
+        else if List.any isBroken statusList then
+            Broken
         else if List.all isPassed statusList then
             Passed
         else
