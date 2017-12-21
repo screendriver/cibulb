@@ -8,10 +8,7 @@ import Json.Decode as Decode
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
 import Time exposing (Time, second)
-
-
-type alias Branch =
-    String
+import Url exposing (Url, (</>), (<?>), (@), root, s, int, bool)
 
 
 type alias Flags =
@@ -22,15 +19,15 @@ type alias Flags =
     }
 
 
-type alias CiJob =
-    { name : String, color : String }
+type alias Branch =
+    { name : String }
 
 
 type alias Model =
     { gitHubApiUrl : String
     , gitHubOwner : String
     , gitHubRepo : String
-    , gitHubBranchBlacklist : List Branch
+    , gitHubBranchBlacklist : List String
     , bulbId : Maybe Bluetooth.BulbId
     , ciStatus : CiStatus
     , errorMessage : Maybe String
@@ -74,8 +71,8 @@ type Msg
     | Connected Bluetooth.BulbId
     | Disconnect
     | Disconnected ()
-    | FetchCiJobs Time
-    | CiJobsFetched (Result Http.Error (List CiJob))
+    | FetchBranches Time
+    | BranchesFetched (Result Http.Error (List Branch))
     | ValueWritten Bluetooth.WriteParams
 
 
@@ -133,25 +130,29 @@ changeColor color =
         |> Bluetooth.writeValue
 
 
-decodeCiStatus : Decode.Decoder (List CiJob)
+decodeCiStatus : Decode.Decoder (List Branch)
 decodeCiStatus =
     Decode.field "jobs"
         (Decode.list
-            (Decode.map2
-                CiJob
+            (Decode.map
+                Branch
                 (Decode.field "name" Decode.string)
-                (Decode.field "color" Decode.string)
             )
         )
 
 
-fetchCiJobs : String -> Cmd Msg
-fetchCiJobs url =
+branchesUrl : String -> String -> String -> Url ()
+branchesUrl gitHubApiUrl gitHubOwner gitHubRepo =
+    root </> s "repos" </> s gitHubOwner </> s gitHubRepo </> s "branches"
+
+
+fetchBranches : String -> Cmd Msg
+fetchBranches url =
     let
         ŕequest =
             Http.get url decodeCiStatus
     in
-        Http.send CiJobsFetched ŕequest
+        Http.send BranchesFetched ŕequest
 
 
 ciStatusFromColor : String -> CiStatus
@@ -198,15 +199,16 @@ ciStatusToBulbColor status =
             Pink
 
 
-getCiStatus : List Branch -> List CiJob -> CiStatus
+getCiStatus : List String -> List Branch -> CiStatus
 getCiStatus branches jobs =
     let
         statusList =
-            jobs
-                |> List.filter (\{ name } -> not <| List.member name branches)
-                |> List.map (\{ color } -> ciStatusFromColor color)
-                |> List.filter (\ciStatus -> ciStatus /= Disabled && ciStatus /= Aborted)
+            []
 
+        -- jobs
+        --     |> List.filter (\{ name } -> not <| List.member name branches)
+        --     |> List.map (\{ color } -> ciStatusFromColor color)
+        --     |> List.filter (\ciStatus -> ciStatus /= Disabled && ciStatus /= Aborted)
         isBroken status =
             status == Broken
 
@@ -248,10 +250,10 @@ update msg model =
         Error error ->
             ( { model | errorMessage = Just error }, Cmd.none )
 
-        FetchCiJobs _ ->
-            ( model, fetchCiJobs model.gitHubApiUrl )
+        FetchBranches _ ->
+            ( model, fetchBranches model.gitHubApiUrl )
 
-        CiJobsFetched (Ok jobs) ->
+        BranchesFetched (Ok jobs) ->
             let
                 ciStatus =
                     getCiStatus model.gitHubBranchBlacklist jobs
@@ -260,7 +262,7 @@ update msg model =
                 , ciStatusToBulbColor ciStatus |> changeColor
                 )
 
-        CiJobsFetched (Err err) ->
+        BranchesFetched (Err err) ->
             ( model, Cmd.none )
 
         ValueWritten { value } ->
@@ -347,14 +349,14 @@ subscriptions model =
 
         subs =
             if Maybe.Extra.isJust model.bulbId then
-                Time.every (10 * second) FetchCiJobs :: defaultSubs
+                Time.every (10 * second) FetchBranches :: defaultSubs
             else
                 defaultSubs
     in
         Sub.batch subs
 
 
-getBranchBlacklist : String -> List Branch
+getBranchBlacklist : String -> List String
 getBranchBlacklist blacklist =
     case String.trim blacklist of
         "" ->

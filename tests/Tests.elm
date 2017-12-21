@@ -2,6 +2,7 @@ module Tests exposing (..)
 
 import Bluetooth
 import Expect
+import Fuzz exposing (..)
 import Main
     exposing
         ( bulbName
@@ -12,9 +13,10 @@ import Main
         , changeColor
         , getCiStatus
         , getBranchBlacklist
+        , branchesUrl
         )
 import Test exposing (..)
-import Fuzz exposing (..)
+import Url exposing (Url)
 
 
 suite : Test
@@ -64,61 +66,6 @@ suite =
                 in
                     changeColor Main.Red
                         |> Expect.equal calledPort
-        , describe "getCiStatus"
-            [ fuzz (list string) "Unknown when list is empty" <|
-                \branches ->
-                    getCiStatus branches []
-                        |> Expect.equal Main.Unknown
-            , fuzz (list string) "Unknown when any list item has unknown color" <|
-                \branches ->
-                    getCiStatus branches
-                        [ Main.CiJob "master" "blue"
-                        , Main.CiJob "master" "foo"
-                        ]
-                        |> Expect.equal Main.Unknown
-            , fuzz (list string) "Broken when any list item has red color" <|
-                \branches ->
-                    getCiStatus branches
-                        [ Main.CiJob "master" "blue"
-                        , Main.CiJob "master" "red"
-                        ]
-                        |> Expect.equal Main.Broken
-            , fuzz (list string) "Running when any list item has a running color" <|
-                \branches ->
-                    getCiStatus branches
-                        [ Main.CiJob "master" "blue"
-                        , Main.CiJob "master" "red_anime"
-                        ]
-                        |> Expect.equal Main.Running
-            , fuzz (list string) "Passed when all list item has a blue color" <|
-                \branches ->
-                    getCiStatus []
-                        [ Main.CiJob "master" "blue"
-                        , Main.CiJob "master" "blue"
-                        ]
-                        |> Expect.equal Main.Passed
-            , fuzz (list string) "ignore 'disabled' builds" <|
-                \branches ->
-                    getCiStatus []
-                        [ Main.CiJob "master" "disabled"
-                        , Main.CiJob "master" "blue"
-                        ]
-                        |> Expect.equal Main.Passed
-            , fuzz (list string) "ignore 'aborted' builds" <|
-                \branches ->
-                    getCiStatus []
-                        [ Main.CiJob "master" "aborted"
-                        , Main.CiJob "master" "blue"
-                        ]
-                        |> Expect.equal Main.Passed
-            , fuzz (list string) "filter out blacklist branches" <|
-                \branches ->
-                    getCiStatus ("debug" :: branches)
-                        [ Main.CiJob "debug" "red"
-                        , Main.CiJob "master" "blue"
-                        ]
-                        |> Expect.equal Main.Passed
-            ]
         , describe "getBranchBlacklist"
             [ test "return an empty list when string is empty" <|
                 \_ ->
@@ -144,5 +91,12 @@ suite =
                             other ->
                                 String.split "," other
                                     |> Expect.equal branchBlacklist
+            ]
+        , describe "branchesUrl"
+            [ test "return the absolute URL to branches" <|
+                \_ ->
+                    branchesUrl "http://foo.bar/" "me" "myproject"
+                        |> Url.toString ()
+                        |> Expect.equal "http://foo.bar/repos/me/myproject/branches"
             ]
         ]
