@@ -8,7 +8,7 @@ import Json.Decode as Decode
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
 import Time exposing (Time, second)
-import Url exposing (Url, (</>), (<?>), (@), root, s, int, bool)
+import Url exposing (Url, (</>), (<?>), (@), root, s, string, int, bool)
 
 
 type alias Flags =
@@ -141,9 +141,23 @@ decodeCiStatus =
         )
 
 
-branchesUrl : String -> String -> String -> Url ()
-branchesUrl gitHubApiUrl gitHubOwner gitHubRepo =
-    root </> s "repos" </> s gitHubOwner </> s gitHubRepo </> s "branches"
+branchesUrl : Url { gitHubOwner : String, gitHubRepo : String }
+branchesUrl =
+    root
+        </> s "repos"
+        </> string .gitHubOwner
+        </> string .gitHubRepo
+        </> s "branches"
+
+
+statusesUrl : Url { gitHubOwner : String, gitHubRepo : String, branch : String }
+statusesUrl =
+    root
+        </> s "repos"
+        </> string .gitHubOwner
+        </> string .gitHubRepo
+        </> s "statuses"
+        </> string .branch
 
 
 fetchBranches : String -> Cmd Msg

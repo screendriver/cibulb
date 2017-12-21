@@ -14,6 +14,7 @@ import Main
         , getCiStatus
         , getBranchBlacklist
         , branchesUrl
+        , statusesUrl
         )
 import Test exposing (..)
 import Url exposing (Url)
@@ -93,10 +94,24 @@ suite =
                                     |> Expect.equal branchBlacklist
             ]
         , describe "branchesUrl"
-            [ test "return the absolute URL to branches" <|
+            [ test "return the correct URL to branches" <|
                 \_ ->
-                    branchesUrl "http://foo.bar/" "me" "myproject"
-                        |> Url.toString ()
-                        |> Expect.equal "http://foo.bar/repos/me/myproject/branches"
+                    branchesUrl
+                        |> Url.toString
+                            { gitHubOwner = "me"
+                            , gitHubRepo = "myproject"
+                            }
+                        |> Expect.equal "/repos/me/myproject/branches"
+            ]
+        , describe "statusesUrl"
+            [ test "return the correct URL to statuses" <|
+                \_ ->
+                    statusesUrl
+                        |> Url.toString
+                            { gitHubOwner = "me"
+                            , gitHubRepo = "myproject"
+                            , branch = "thebranch"
+                            }
+                        |> Expect.equal "/repos/me/myproject/statuses/thebranch"
             ]
         ]
