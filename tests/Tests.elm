@@ -3,7 +3,6 @@ module Tests exposing (..)
 import Bluetooth
 import Expect
 import Fuzz exposing (..)
-import Http
 import Json.Decode as Decode
 import Main
     exposing
@@ -19,6 +18,7 @@ import Main
         , statusesUrl
         , fetchBranches
         , decodeBranches
+        , decodeStatuses
         )
 import Test exposing (..)
 import Url exposing (Url)
@@ -135,4 +135,16 @@ suite =
                                   }
                                 ]
                             )
+        , test "decodeStatuses" <|
+            \_ ->
+                let
+                    json =
+                        """
+                        [{
+                          "state": "success"
+                        }]
+                        """
+                in
+                    Decode.decodeString decodeStatuses json
+                        |> Expect.equal (Ok [ "success" ])
         ]

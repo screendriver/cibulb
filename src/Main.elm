@@ -140,6 +140,12 @@ decodeBranches =
         )
 
 
+decodeStatuses : Decode.Decoder (List String)
+decodeStatuses =
+    Decode.list
+        (Decode.field "state" Decode.string)
+
+
 branchesUrl : Url { gitHubOwner : String, gitHubRepo : String }
 branchesUrl =
     root
