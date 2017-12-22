@@ -23,6 +23,10 @@ type alias Branch =
     { name : String, commitSha : String }
 
 
+type alias Status =
+    String
+
+
 type alias Model =
     { gitHubApiUrl : String
     , gitHubOwner : String
@@ -73,6 +77,7 @@ type Msg
     | Disconnected ()
     | FetchBranches Time
     | BranchesFetched (Result Http.Error (List Branch))
+    | StatusesFetched (Result Http.Error (List Status))
     | ValueWritten Bluetooth.WriteParams
 
 
@@ -178,6 +183,28 @@ fetchBranches baseUrl gitHubOwner gitHubRepo =
         Http.send BranchesFetched ŕequest
 
 
+fetchStatuses : String -> String -> String -> String -> Cmd Msg
+fetchStatuses baseUrl gitHubOwner gitHubRepo commitRef =
+    let
+        url =
+            baseUrl
+                ++ statusesUrl
+                @ { gitHubOwner = gitHubOwner
+                  , gitHubRepo = gitHubRepo
+                  , commitRef = commitRef
+                  }
+
+        ŕequest =
+            Http.get url decodeStatuses
+    in
+        Http.send StatusesFetched ŕequest
+
+
+filterBlacklist : List String -> Branch -> Bool
+filterBlacklist blacklist { name } =
+    not <| List.member name blacklist
+
+
 ciStatusFromColor : String -> CiStatus
 ciStatusFromColor color =
     case color of
@@ -222,7 +249,7 @@ ciStatusToBulbColor status =
             Pink
 
 
-getCiStatus : List String -> List Branch -> CiStatus
+getCiStatus : List Status -> List Branch -> CiStatus
 getCiStatus branches jobs =
     let
         statusList =
@@ -276,16 +303,33 @@ update msg model =
         FetchBranches _ ->
             ( model, fetchBranches model.gitHubApiUrl model.gitHubOwner model.gitHubRepo )
 
-        BranchesFetched (Ok jobs) ->
+        BranchesFetched (Ok branches) ->
+            model
+                ! (branches
+                    |> List.filter (filterBlacklist model.gitHubBranchBlacklist)
+                    |> List.map
+                        (\{ commitSha } ->
+                            fetchStatuses
+                                model.gitHubApiUrl
+                                model.gitHubOwner
+                                model.gitHubRepo
+                                commitSha
+                        )
+                  )
+
+        BranchesFetched (Err err) ->
+            ( model, Cmd.none )
+
+        StatusesFetched (Ok statuses) ->
             let
                 ciStatus =
-                    getCiStatus model.gitHubBranchBlacklist jobs
+                    getCiStatus statuses
             in
                 ( { model | ciStatus = ciStatus }
                 , ciStatusToBulbColor ciStatus |> changeColor
                 )
 
-        BranchesFetched (Err err) ->
+        StatusesFetched (Err err) ->
             ( model, Cmd.none )
 
         ValueWritten { value } ->
@@ -379,8 +423,8 @@ subscriptions model =
         Sub.batch subs
 
 
-getBranchBlacklist : String -> List String
-getBranchBlacklist blacklist =
+parseBranchBlacklist : String -> List String
+parseBranchBlacklist blacklist =
     case String.trim blacklist of
         "" ->
             []
@@ -394,7 +438,7 @@ init { gitHubApiUrl, gitHubOwner, gitHubRepo, gitHubBranchBlacklist } =
     ( { gitHubApiUrl = gitHubApiUrl
       , gitHubOwner = gitHubOwner
       , gitHubRepo = gitHubRepo
-      , gitHubBranchBlacklist = getBranchBlacklist gitHubBranchBlacklist
+      , gitHubBranchBlacklist = parseBranchBlacklist gitHubBranchBlacklist
       , bulbId = Nothing
       , ciStatus = Unknown
       , errorMessage = Nothing
