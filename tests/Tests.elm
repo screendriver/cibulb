@@ -111,9 +111,9 @@ suite =
                     |> Url.toString
                         { gitHubOwner = "me"
                         , gitHubRepo = "myproject"
-                        , branch = "thebranch"
+                        , commitRef = "e4a9c229538c1e0a645971cbfdc157fb486e0085"
                         }
-                    |> Expect.equal "/repos/me/myproject/statuses/thebranch"
+                    |> Expect.equal "/repos/me/myproject/commits/e4a9c229538c1e0a645971cbfdc157fb486e0085/statuses"
         , test "decodeBranches" <|
             \_ ->
                 let

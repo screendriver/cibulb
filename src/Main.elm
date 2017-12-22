@@ -155,14 +155,15 @@ branchesUrl =
         </> s "branches"
 
 
-statusesUrl : Url { gitHubOwner : String, gitHubRepo : String, branch : String }
+statusesUrl : Url { gitHubOwner : String, gitHubRepo : String, commitRef : String }
 statusesUrl =
     root
         </> s "repos"
         </> string .gitHubOwner
         </> string .gitHubRepo
+        </> s "commits"
+        </> string .commitRef
         </> s "statuses"
-        </> string .branch
 
 
 fetchBranches : String -> String -> String -> Cmd Msg
