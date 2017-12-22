@@ -3,6 +3,8 @@ module Tests exposing (..)
 import Bluetooth
 import Expect
 import Fuzz exposing (..)
+import Http
+import Json.Decode as Decode
 import Main
     exposing
         ( bulbName
@@ -15,6 +17,8 @@ import Main
         , getBranchBlacklist
         , branchesUrl
         , statusesUrl
+        , fetchBranches
+        , decodeBranches
         )
 import Test exposing (..)
 import Url exposing (Url)
@@ -93,25 +97,42 @@ suite =
                                 String.split "," other
                                     |> Expect.equal branchBlacklist
             ]
-        , describe "branchesUrl"
-            [ test "return the correct URL to branches" <|
-                \_ ->
-                    branchesUrl
-                        |> Url.toString
-                            { gitHubOwner = "me"
-                            , gitHubRepo = "myproject"
-                            }
-                        |> Expect.equal "/repos/me/myproject/branches"
-            ]
-        , describe "statusesUrl"
-            [ test "return the correct URL to statuses" <|
-                \_ ->
-                    statusesUrl
-                        |> Url.toString
-                            { gitHubOwner = "me"
-                            , gitHubRepo = "myproject"
-                            , branch = "thebranch"
-                            }
-                        |> Expect.equal "/repos/me/myproject/statuses/thebranch"
-            ]
+        , test "branchesUrl return the correct URL to branches" <|
+            \_ ->
+                branchesUrl
+                    |> Url.toString
+                        { gitHubOwner = "me"
+                        , gitHubRepo = "myproject"
+                        }
+                    |> Expect.equal "/repos/me/myproject/branches"
+        , test "statusesUrl return the correct URL to statuses" <|
+            \_ ->
+                statusesUrl
+                    |> Url.toString
+                        { gitHubOwner = "me"
+                        , gitHubRepo = "myproject"
+                        , branch = "thebranch"
+                        }
+                    |> Expect.equal "/repos/me/myproject/statuses/thebranch"
+        , test "decodeBranches" <|
+            \_ ->
+                let
+                    json =
+                        """
+                        [{
+                          "name": "the-branch",
+                          "commit": {
+                            "sha": "8a1d64f9ff90da2090ddf38bf20313ff4f8d1e01"
+                          }
+                        }]
+                        """
+                in
+                    Decode.decodeString decodeBranches json
+                        |> Expect.equal
+                            (Ok
+                                [ { name = "the-branch"
+                                  , commitSha = "8a1d64f9ff90da2090ddf38bf20313ff4f8d1e01"
+                                  }
+                                ]
+                            )
         ]

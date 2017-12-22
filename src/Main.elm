@@ -20,7 +20,7 @@ type alias Flags =
 
 
 type alias Branch =
-    { name : String }
+    { name : String, commitSha : String }
 
 
 type alias Model =
@@ -130,14 +130,13 @@ changeColor color =
         |> Bluetooth.writeValue
 
 
-decodeCiStatus : Decode.Decoder (List Branch)
-decodeCiStatus =
-    Decode.field "jobs"
-        (Decode.list
-            (Decode.map
-                Branch
-                (Decode.field "name" Decode.string)
-            )
+decodeBranches : Decode.Decoder (List Branch)
+decodeBranches =
+    Decode.list
+        (Decode.map2
+            Branch
+            (Decode.field "name" Decode.string)
+            (Decode.at [ "commit", "sha" ] Decode.string)
         )
 
 
@@ -160,11 +159,14 @@ statusesUrl =
         </> string .branch
 
 
-fetchBranches : String -> Cmd Msg
-fetchBranches url =
+fetchBranches : String -> String -> String -> Cmd Msg
+fetchBranches baseUrl gitHubOwner gitHubRepo =
     let
+        url =
+            baseUrl ++ branchesUrl @ { gitHubOwner = gitHubOwner, gitHubRepo = gitHubRepo }
+
         ŕequest =
-            Http.get url decodeCiStatus
+            Http.get url decodeBranches
     in
         Http.send BranchesFetched ŕequest
 
@@ -265,7 +267,7 @@ update msg model =
             ( { model | errorMessage = Just error }, Cmd.none )
 
         FetchBranches _ ->
-            ( model, fetchBranches model.gitHubApiUrl )
+            ( model, fetchBranches model.gitHubApiUrl model.gitHubOwner model.gitHubRepo )
 
         BranchesFetched (Ok jobs) ->
             let
