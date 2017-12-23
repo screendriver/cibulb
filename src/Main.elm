@@ -27,11 +27,16 @@ type alias Status =
     String
 
 
+type alias GitHub =
+    { apiUrl : String
+    , owner : String
+    , repo : String
+    , branchBlacklist : List String
+    }
+
+
 type alias Model =
-    { gitHubApiUrl : String
-    , gitHubOwner : String
-    , gitHubRepo : String
-    , gitHubBranchBlacklist : List String
+    { gitHub : GitHub
     , bulbId : Maybe Bluetooth.BulbId
     , ciStatus : CiStatus
     , errorMessage : Maybe String
@@ -171,11 +176,11 @@ statusesUrl =
         </> s "statuses"
 
 
-fetchBranches : String -> String -> String -> Cmd Msg
-fetchBranches baseUrl gitHubOwner gitHubRepo =
+fetchBranches : GitHub -> Cmd Msg
+fetchBranches { apiUrl, owner, repo } =
     let
         url =
-            baseUrl ++ branchesUrl @ { gitHubOwner = gitHubOwner, gitHubRepo = gitHubRepo }
+            apiUrl ++ branchesUrl @ { gitHubOwner = owner, gitHubRepo = repo }
 
         ŕequest =
             Http.get url decodeBranches
@@ -183,14 +188,14 @@ fetchBranches baseUrl gitHubOwner gitHubRepo =
         Http.send BranchesFetched ŕequest
 
 
-fetchStatuses : String -> String -> String -> String -> Cmd Msg
-fetchStatuses baseUrl gitHubOwner gitHubRepo commitRef =
+fetchStatuses : GitHub -> String -> Cmd Msg
+fetchStatuses { apiUrl, owner, repo } commitRef =
     let
         url =
-            baseUrl
+            apiUrl
                 ++ statusesUrl
-                @ { gitHubOwner = gitHubOwner
-                  , gitHubRepo = gitHubRepo
+                @ { gitHubOwner = owner
+                  , gitHubRepo = repo
                   , commitRef = commitRef
                   }
 
@@ -301,33 +306,31 @@ update msg model =
             ( { model | errorMessage = Just error }, Cmd.none )
 
         FetchBranches _ ->
-            ( model, fetchBranches model.gitHubApiUrl model.gitHubOwner model.gitHubRepo )
+            ( model, fetchBranches model.gitHub )
 
         BranchesFetched (Ok branches) ->
-            model
-                ! (branches
-                    |> List.filter (filterBlacklist model.gitHubBranchBlacklist)
-                    |> List.map
-                        (\{ commitSha } ->
-                            fetchStatuses
-                                model.gitHubApiUrl
-                                model.gitHubOwner
-                                model.gitHubRepo
-                                commitSha
-                        )
-                  )
+            let
+                { gitHub } =
+                    model
+            in
+                model
+                    ! (branches
+                        |> List.filter (filterBlacklist gitHub.branchBlacklist)
+                        |> List.map (\{ commitSha } -> fetchStatuses gitHub commitSha)
+                      )
 
         BranchesFetched (Err err) ->
             ( model, Cmd.none )
 
         StatusesFetched (Ok statuses) ->
-            let
-                ciStatus =
-                    getCiStatus statuses
-            in
-                ( { model | ciStatus = ciStatus }
-                , ciStatusToBulbColor ciStatus |> changeColor
-                )
+            -- let
+            --     ciStatus =
+            --         getCiStatus statuses
+            -- in
+            --     ( { model | ciStatus = ciStatus }
+            --     , ciStatusToBulbColor ciStatus |> changeColor
+            --     )
+            ( model, Cmd.none )
 
         StatusesFetched (Err err) ->
             ( model, Cmd.none )
@@ -435,10 +438,12 @@ parseBranchBlacklist blacklist =
 
 init : Flags -> ( Model, Cmd Msg )
 init { gitHubApiUrl, gitHubOwner, gitHubRepo, gitHubBranchBlacklist } =
-    ( { gitHubApiUrl = gitHubApiUrl
-      , gitHubOwner = gitHubOwner
-      , gitHubRepo = gitHubRepo
-      , gitHubBranchBlacklist = parseBranchBlacklist gitHubBranchBlacklist
+    ( { gitHub =
+            { apiUrl = gitHubApiUrl
+            , owner = gitHubOwner
+            , repo = gitHubRepo
+            , branchBlacklist = parseBranchBlacklist gitHubBranchBlacklist
+            }
       , bulbId = Nothing
       , ciStatus = Unknown
       , errorMessage = Nothing

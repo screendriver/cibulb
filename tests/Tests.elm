@@ -13,10 +13,9 @@ import Main
         , getRgb
         , changeColor
         , getCiStatus
-        , getBranchBlacklist
+        , parseBranchBlacklist
         , branchesUrl
         , statusesUrl
-        , fetchBranches
         , decodeBranches
         , decodeStatuses
         )
@@ -71,21 +70,21 @@ suite =
                 in
                     changeColor Main.Red
                         |> Expect.equal calledPort
-        , describe "getBranchBlacklist"
+        , describe "parseBranchBlacklist"
             [ test "return an empty list when string is empty" <|
                 \_ ->
-                    getBranchBlacklist ""
+                    parseBranchBlacklist ""
                         |> List.isEmpty
                         |> Expect.true "Expected the list to be empty."
             , test "parses the given branches and return a list of branches" <|
                 \_ ->
-                    getBranchBlacklist "foo,bar"
+                    parseBranchBlacklist "foo,bar"
                         |> Expect.equal [ "foo", "bar" ]
             , fuzz string "can handle random strings" <|
                 \randomString ->
                     let
                         branchBlacklist =
-                            getBranchBlacklist randomString
+                            parseBranchBlacklist randomString
                     in
                         case String.trim randomString of
                             "" ->
