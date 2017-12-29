@@ -1,12 +1,14 @@
 module Main exposing (..)
 
 import Bluetooth
+import Dict exposing (Dict)
 import Html exposing (Html, a, button, div, footer, img, p, text)
 import Html.Attributes exposing (class, disabled, href, src, target, title)
 import Http
 import Json.Decode as Decode
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
+import RemoteData exposing (WebData)
 import Time exposing (Time, second)
 import Url exposing (Url, (</>), (<?>), (@), root, s, string, int, bool)
 
@@ -19,41 +21,40 @@ type alias Flags =
     }
 
 
-type alias Branch =
-    { name : String, commitSha : String }
-
-
-type alias Status =
+type alias BranchName =
     String
+
+
+type alias BranchState =
+    String
+
+
+type alias Branches =
+    Dict BranchName (WebData BranchState)
+
+
+type alias State =
+    { id : Int, state : String }
 
 
 type alias GitHub =
     { apiUrl : String
     , owner : String
     , repo : String
-    , branchBlacklist : List String
+    , branchBlacklist : List BranchName
     }
 
 
 type alias Model =
     { gitHub : GitHub
     , bulbId : Maybe Bluetooth.BulbId
-    , ciStatus : CiStatus
     , errorMessage : Maybe String
+    , branches : WebData Branches
     }
 
 
 type alias BluetoothError =
     String
-
-
-type CiStatus
-    = Unknown
-    | Passed
-    | Broken
-    | Disabled
-    | Aborted
-    | Running
 
 
 type BulbColor
@@ -76,13 +77,14 @@ type BulbMode
 
 type Msg
     = Connect
-    | Error BluetoothError
+    | ConnectionError BluetoothError
     | Connected Bluetooth.BulbId
     | Disconnect
     | Disconnected ()
     | FetchBranches Time
-    | BranchesFetched (Result Http.Error (List Branch))
-    | StatusesFetched (Result Http.Error (List Status))
+    | BranchesFetched (WebData (List BranchName))
+    | StatusesFetched BranchName (WebData (List State))
+    | ChangeBulbColor BulbColor
     | ValueWritten Bluetooth.WriteParams
 
 
@@ -140,20 +142,19 @@ changeColor color =
         |> Bluetooth.writeValue
 
 
-decodeBranches : Decode.Decoder (List Branch)
-decodeBranches =
-    Decode.list
-        (Decode.map2
-            Branch
-            (Decode.field "name" Decode.string)
-            (Decode.at [ "commit", "sha" ] Decode.string)
-        )
+decodeBranchNames : Decode.Decoder (List BranchName)
+decodeBranchNames =
+    Decode.list <|
+        Decode.field "name" Decode.string
 
 
-decodeStatuses : Decode.Decoder (List String)
+decodeStatuses : Decode.Decoder (List State)
 decodeStatuses =
-    Decode.list
-        (Decode.field "state" Decode.string)
+    Decode.list <|
+        Decode.map2
+            State
+            (Decode.field "id" Decode.int)
+            (Decode.field "state" Decode.string)
 
 
 branchesUrl : Url { gitHubOwner : String, gitHubRepo : String }
@@ -165,14 +166,14 @@ branchesUrl =
         </> s "branches"
 
 
-statusesUrl : Url { gitHubOwner : String, gitHubRepo : String, commitRef : String }
+statusesUrl : Url { gitHubOwner : String, gitHubRepo : String, branchName : String }
 statusesUrl =
     root
         </> s "repos"
         </> string .gitHubOwner
         </> string .gitHubRepo
         </> s "commits"
-        </> string .commitRef
+        </> string .branchName
         </> s "statuses"
 
 
@@ -181,108 +182,80 @@ fetchBranches { apiUrl, owner, repo } =
     let
         url =
             apiUrl ++ branchesUrl @ { gitHubOwner = owner, gitHubRepo = repo }
-
-        ŕequest =
-            Http.get url decodeBranches
     in
-        Http.send BranchesFetched ŕequest
+        Http.get url decodeBranchNames
+            |> RemoteData.sendRequest
+            |> Cmd.map BranchesFetched
 
 
-fetchStatuses : GitHub -> String -> Cmd Msg
-fetchStatuses { apiUrl, owner, repo } commitRef =
+fetchStatuses : GitHub -> BranchName -> Cmd Msg
+fetchStatuses { apiUrl, owner, repo } branchName =
     let
         url =
             apiUrl
                 ++ statusesUrl
                 @ { gitHubOwner = owner
                   , gitHubRepo = repo
-                  , commitRef = commitRef
+                  , branchName = branchName
                   }
-
-        ŕequest =
-            Http.get url decodeStatuses
     in
-        Http.send StatusesFetched ŕequest
+        Http.get url decodeStatuses
+            |> RemoteData.sendRequest
+            |> Cmd.map (StatusesFetched branchName)
 
 
-filterBlacklist : List String -> Branch -> Bool
-filterBlacklist blacklist { name } =
-    not <| List.member name blacklist
-
-
-ciStatusFromColor : String -> CiStatus
-ciStatusFromColor color =
-    case color of
-        "red" ->
-            Broken
-
-        "blue" ->
-            Passed
-
-        "disabled" ->
-            Disabled
-
-        "aborted" ->
-            Aborted
-
-        "red_anime" ->
-            Running
-
-        "blue_anime" ->
-            Running
-
-        "notbuilt_anime" ->
-            Running
-
-        _ ->
-            Unknown
-
-
-ciStatusToBulbColor : CiStatus -> BulbColor
-ciStatusToBulbColor status =
-    case status of
-        Broken ->
-            Red
-
-        Passed ->
-            Green
-
-        Running ->
-            Yellow
-
-        _ ->
-            Pink
-
-
-getCiStatus : List Status -> List Branch -> CiStatus
-getCiStatus branches jobs =
+updateBranchState :
+    WebData Branches
+    -> BranchName
+    -> WebData BranchState
+    -> WebData Branches
+updateBranchState branches branchName webData =
     let
-        statusList =
-            []
+        updateState value =
+            Maybe.map (\_ -> webData) value
 
-        -- jobs
-        --     |> List.filter (\{ name } -> not <| List.member name branches)
-        --     |> List.map (\{ color } -> ciStatusFromColor color)
-        --     |> List.filter (\ciStatus -> ciStatus /= Disabled && ciStatus /= Aborted)
-        isBroken status =
-            status == Broken
-
-        isPassed status =
-            status == Passed
-
-        isRunning status =
-            status == Running
+        branchesDict =
+            RemoteData.withDefault Dict.empty branches
+                |> Dict.update branchName updateState
     in
-        if List.isEmpty statusList then
-            Unknown
-        else if List.any isRunning statusList then
-            Running
-        else if List.any isBroken statusList then
-            Broken
-        else if List.all isPassed statusList then
-            Passed
+        RemoteData.succeed branchesDict
+
+
+changeColorCmd : Branches -> Cmd Msg
+changeColorCmd branches =
+    let
+        states =
+            Dict.values branches
+
+        webDataNotSuccess state =
+            not (RemoteData.isSuccess state)
+
+        isPending state =
+            (RemoteData.withDefault "error" state) == "pending"
+
+        isFailure state =
+            (RemoteData.withDefault "error" state) == "failure"
+
+        isError state =
+            (RemoteData.withDefault "error" state) == "error"
+
+        isSuccess state =
+            (RemoteData.withDefault "error" state) == "success"
+    in
+        if List.isEmpty states then
+            changeColor Pink
+        else if List.any webDataNotSuccess states then
+            changeColor Pink
+        else if List.any isPending states then
+            changeColor Yellow
+        else if List.any isFailure states then
+            changeColor Red
+        else if List.any isError states then
+            changeColor Red
+        else if List.all isSuccess states then
+            changeColor Green
         else
-            Unknown
+            changeColor Pink
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -302,37 +275,75 @@ update msg model =
         Disconnected _ ->
             ( { model | bulbId = Nothing }, Cmd.none )
 
-        Error error ->
+        ConnectionError error ->
             ( { model | errorMessage = Just error }, Cmd.none )
 
         FetchBranches _ ->
             ( model, fetchBranches model.gitHub )
 
-        BranchesFetched (Ok branches) ->
+        BranchesFetched RemoteData.NotAsked ->
+            ( { model | branches = RemoteData.NotAsked }, Cmd.none )
+
+        BranchesFetched RemoteData.Loading ->
+            ( { model | branches = RemoteData.Loading }, Cmd.none )
+
+        BranchesFetched (RemoteData.Success branches) ->
             let
-                { gitHub } =
-                    model
+                filterBlacklist branchName =
+                    not <| List.member branchName model.gitHub.branchBlacklist
+
+                branchesDict =
+                    branches
+                        |> List.filter filterBlacklist
+                        |> List.map (\branch -> ( branch, RemoteData.Loading ))
+                        |> Dict.fromList
+
+                cmds =
+                    Dict.keys branchesDict
+                        |> List.map (fetchStatuses model.gitHub)
             in
-                model
-                    ! (branches
-                        |> List.filter (filterBlacklist gitHub.branchBlacklist)
-                        |> List.map (\{ commitSha } -> fetchStatuses gitHub commitSha)
-                      )
+                { model | branches = RemoteData.succeed branchesDict } ! cmds
 
-        BranchesFetched (Err err) ->
+        BranchesFetched (RemoteData.Failure err) ->
+            ( { model | branches = RemoteData.Failure err }, Cmd.none )
+
+        StatusesFetched branchName RemoteData.NotAsked ->
             ( model, Cmd.none )
 
-        StatusesFetched (Ok statuses) ->
-            -- let
-            --     ciStatus =
-            --         getCiStatus statuses
-            -- in
-            --     ( { model | ciStatus = ciStatus }
-            --     , ciStatusToBulbColor ciStatus |> changeColor
-            --     )
-            ( model, Cmd.none )
+        StatusesFetched branchName RemoteData.Loading ->
+            let
+                branches =
+                    updateBranchState model.branches branchName RemoteData.Loading
+            in
+                ( { model | branches = branches }, Cmd.none )
 
-        StatusesFetched (Err err) ->
+        StatusesFetched branchName (RemoteData.Success statuses) ->
+            let
+                firstState =
+                    statuses
+                        |> List.sortBy .id
+                        |> List.reverse
+                        |> List.head
+
+                updateState value =
+                    Maybe.map2 (\_ { state } -> RemoteData.succeed state) value firstState
+
+                branchesDict =
+                    RemoteData.withDefault Dict.empty model.branches
+                        |> Dict.update branchName updateState
+            in
+                ( { model | branches = RemoteData.succeed branchesDict }
+                , changeColorCmd branchesDict
+                )
+
+        StatusesFetched branchName (RemoteData.Failure err) ->
+            let
+                branches =
+                    updateBranchState model.branches branchName (RemoteData.Failure err)
+            in
+                ( { model | branches = branches }, Cmd.none )
+
+        ChangeBulbColor color ->
             ( model, Cmd.none )
 
         ValueWritten { value } ->
@@ -345,18 +356,17 @@ update msg model =
 view : Model -> Html Msg
 view model =
     let
-        isConnected =
+        flash =
             Maybe.Extra.isJust model.bulbId
 
         lightBulbMsg =
-            if isConnected then
+            if flash then
                 Disconnect
             else
                 Connect
     in
         div [ class "main" ]
-            [ bulbIdView model
-            , lightBulb isConnected lightBulbMsg
+            [ lightBulb flash lightBulbMsg
             , errorView model
             , footerView model
             ]
@@ -370,16 +380,6 @@ errorView { errorMessage } =
 
         Just message ->
             p [ class "errorMessage" ] [ text message ]
-
-
-bulbIdView : Model -> Html Msg
-bulbIdView { bulbId } =
-    case bulbId of
-        Nothing ->
-            div [] []
-
-        Just id ->
-            div [] [ p [] [ text id ] ]
 
 
 footerView : Model -> Html Msg
@@ -411,17 +411,19 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     let
         defaultSubs =
-            [ Bluetooth.error Error
+            [ Bluetooth.error ConnectionError
             , Bluetooth.connected Connected
             , Bluetooth.disconnected Disconnected
             , Bluetooth.valueWritten ValueWritten
             ]
 
         subs =
-            if Maybe.Extra.isJust model.bulbId then
-                Time.every (10 * second) FetchBranches :: defaultSubs
-            else
-                defaultSubs
+            case model.bulbId of
+                Just id ->
+                    Time.every (10 * second) FetchBranches :: defaultSubs
+
+                Nothing ->
+                    defaultSubs
     in
         Sub.batch subs
 
@@ -445,7 +447,7 @@ init { gitHubApiUrl, gitHubOwner, gitHubRepo, gitHubBranchBlacklist } =
             , branchBlacklist = parseBranchBlacklist gitHubBranchBlacklist
             }
       , bulbId = Nothing
-      , ciStatus = Unknown
+      , branches = RemoteData.NotAsked
       , errorMessage = Nothing
       }
     , Cmd.none

@@ -1,6 +1,7 @@
 module Tests exposing (..)
 
 import Bluetooth
+import Dict exposing (Dict)
 import Expect
 import Fuzz exposing (..)
 import Json.Decode as Decode
@@ -12,13 +13,14 @@ import Main
         , changeColorCharacteristic
         , getRgb
         , changeColor
-        , getCiStatus
         , parseBranchBlacklist
         , branchesUrl
         , statusesUrl
-        , decodeBranches
+        , decodeBranchNames
         , decodeStatuses
+        , changeColorCmd
         )
+import RemoteData
 import Test exposing (..)
 import Url exposing (Url)
 
@@ -110,40 +112,85 @@ suite =
                     |> Url.toString
                         { gitHubOwner = "me"
                         , gitHubRepo = "myproject"
-                        , commitRef = "e4a9c229538c1e0a645971cbfdc157fb486e0085"
+                        , branchName = "master"
                         }
-                    |> Expect.equal "/repos/me/myproject/commits/e4a9c229538c1e0a645971cbfdc157fb486e0085/statuses"
-        , test "decodeBranches" <|
+                    |> Expect.equal "/repos/me/myproject/commits/master/statuses"
+        , test "decodeBranchNames" <|
             \_ ->
                 let
                     json =
                         """
-                        [{
-                          "name": "the-branch",
-                          "commit": {
-                            "sha": "8a1d64f9ff90da2090ddf38bf20313ff4f8d1e01"
-                          }
-                        }]
+                        [{ "name": "the-branch" }]
                         """
                 in
-                    Decode.decodeString decodeBranches json
+                    Decode.decodeString decodeBranchNames json
                         |> Expect.equal
-                            (Ok
-                                [ { name = "the-branch"
-                                  , commitSha = "8a1d64f9ff90da2090ddf38bf20313ff4f8d1e01"
-                                  }
-                                ]
-                            )
+                            (Ok [ "the-branch" ])
         , test "decodeStatuses" <|
             \_ ->
                 let
                     json =
                         """
-                        [{
-                          "state": "success"
-                        }]
+                        [{ "id": 123, "state": "success" }]
                         """
                 in
                     Decode.decodeString decodeStatuses json
-                        |> Expect.equal (Ok [ "success" ])
+                        |> Expect.equal (Ok [ { id = 123, state = "success" } ])
+        , describe "changeColorCmd"
+            [ test "Cmd change color to Pink when Dict is empty" <|
+                \_ ->
+                    changeColorCmd Dict.empty
+                        |> Expect.equal (changeColor Main.Pink)
+            , test "Cmd change color to Pink when any WebData state is not successed" <|
+                \_ ->
+                    let
+                        branches =
+                            Dict.fromList
+                                [ ( "master", RemoteData.Loading ) ]
+                    in
+                        changeColorCmd branches
+                            |> Expect.equal (changeColor Main.Pink)
+            , test "Cmd change color to Yellow when any state is pending" <|
+                \_ ->
+                    let
+                        branches =
+                            Dict.fromList
+                                [ ( "master", RemoteData.succeed "pending" )
+                                , ( "wip", RemoteData.succeed "success" )
+                                ]
+                    in
+                        changeColorCmd branches
+                            |> Expect.equal (changeColor Main.Yellow)
+            , test "Cmd change color to Red when any state is failure" <|
+                \_ ->
+                    let
+                        branches =
+                            Dict.fromList
+                                [ ( "master", RemoteData.succeed "failure" )
+                                , ( "wip", RemoteData.succeed "success" )
+                                ]
+                    in
+                        changeColorCmd branches
+                            |> Expect.equal (changeColor Main.Red)
+            , test "Cmd change color to Red when any state is error" <|
+                \_ ->
+                    let
+                        branches =
+                            Dict.fromList
+                                [ ( "master", RemoteData.succeed "error" )
+                                , ( "wip", RemoteData.succeed "success" )
+                                ]
+                    in
+                        changeColorCmd branches
+                            |> Expect.equal (changeColor Main.Red)
+            , test "Cmd change color to Green when all states are success" <|
+                \_ ->
+                    let
+                        branches =
+                            Dict.fromList
+                                [ ( "master", RemoteData.succeed "success" ) ]
+                    in
+                        changeColorCmd branches
+                            |> Expect.equal (changeColor Main.Green)
+            ]
         ]
