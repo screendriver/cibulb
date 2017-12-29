@@ -242,15 +242,11 @@ changeColorCmd branches =
         isSuccess state =
             (RemoteData.withDefault "error" state) == "success"
     in
-        if List.isEmpty states then
-            changeColor Pink
-        else if List.any webDataNotSuccess states then
+        if List.isEmpty states || List.any webDataNotSuccess states then
             changeColor Pink
         else if List.any isPending states then
             changeColor Yellow
-        else if List.any isFailure states then
-            changeColor Red
-        else if List.any isError states then
+        else if List.any isFailure states || List.any isError states then
             changeColor Red
         else if List.all isSuccess states then
             changeColor Green
