@@ -19,10 +19,31 @@ import Main
         , decodeBranchNames
         , decodeStatuses
         , changeColorCmd
+        , Model
+        , GitHub
+        , update
         )
 import RemoteData
 import Test exposing (..)
 import Url exposing (Url)
+
+
+gitHubModel : GitHub
+gitHubModel =
+    { apiUrl = "https://github.com/api/v3/"
+    , owner = "screendriver"
+    , repo = "ci-light-bulb"
+    , branchBlacklist = []
+    }
+
+
+testModel : Model
+testModel =
+    { gitHub = gitHubModel
+    , bulbId = Nothing
+    , branches = RemoteData.NotAsked
+    , errorMessage = Nothing
+    }
 
 
 suite : Test
@@ -192,5 +213,39 @@ suite =
                     in
                         changeColorCmd branches
                             |> Expect.equal (changeColor Main.Green)
+            ]
+        , describe "update"
+            [ test "Connect Msg" <|
+                \_ ->
+                    update Main.Connect testModel
+                        |> Expect.equal
+                            ( { testModel | errorMessage = Nothing }
+                            , Bluetooth.connect <| Bluetooth.Bulb bulbName service
+                            )
+            , test "Connected Msg" <|
+                \_ ->
+                    update (Main.Connected "abc1234") testModel
+                        |> Expect.equal
+                            ( { testModel | bulbId = Just "abc1234" }
+                            , changeColor Main.Blue
+                            )
+            , test "Disconnect Msg" <|
+                \_ ->
+                    update Main.Disconnect testModel
+                        |> Expect.equal ( testModel, changeColor Main.Off )
+            , test "Disconnected Msg" <|
+                \_ ->
+                    update (Main.Disconnected ()) testModel
+                        |> Expect.equal
+                            ( { testModel | bulbId = Nothing }
+                            , Cmd.none
+                            )
+            , test "ConnectionError Msg" <|
+                \_ ->
+                    update (Main.ConnectionError "failed") testModel
+                        |> Expect.equal
+                            ( { testModel | errorMessage = Just "failed" }
+                            , Cmd.none
+                            )
             ]
         ]
