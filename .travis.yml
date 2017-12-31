@@ -4,4 +4,8 @@ node_js:
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
   - export PATH="$HOME/.yarn/bin:$PATH"
-cache: yarn
+cache:
+  yarn: true
+  directories:
+    - "elm-stuff"
+    - "tests/elm-stuff"
