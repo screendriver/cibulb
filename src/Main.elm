@@ -166,7 +166,12 @@ branchesUrl =
         </> s "branches"
 
 
-statusesUrl : Url { gitHubOwner : String, gitHubRepo : String, branchName : String }
+statusesUrl :
+    Url
+        { gitHubOwner : String
+        , gitHubRepo : String
+        , branchName : String
+        }
 statusesUrl =
     root
         </> s "repos"
@@ -335,7 +340,8 @@ update msg model =
         StatusesFetched branchName (RemoteData.Failure err) ->
             let
                 branches =
-                    updateBranchState model.branches branchName (RemoteData.Failure err)
+                    updateBranchState model.branches branchName <|
+                        RemoteData.Failure err
             in
                 ( { model | branches = branches }, Cmd.none )
 
