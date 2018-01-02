@@ -5,6 +5,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 const { ports } = Main.fullscreen({
   gitHubApiUrl: process.env.ELM_APP_GITHUB_API_URL,
+  gitHubApiToken: process.env.ELM_APP_GITHUP_API_TOKEN,
   gitHubOwner: process.env.ELM_APP_GITHUB_OWNER,
   gitHubRepo: process.env.ELM_APP_GITHUB_REPO,
   gitHubBranchBlacklist: process.env.ELM_APP_GITHUB_BRANCH_BLACKLIST,

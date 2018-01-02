@@ -13,8 +13,13 @@ import Time exposing (Time, second)
 import Url exposing (Url, (</>), (<?>), (@), root, s, string, int, bool)
 
 
+type alias ApiToken =
+    String
+
+
 type alias Flags =
     { gitHubApiUrl : String
+    , gitHubApiToken : ApiToken
     , gitHubOwner : String
     , gitHubRepo : String
     , gitHubBranchBlacklist : String
@@ -39,6 +44,7 @@ type alias State =
 
 type alias GitHub =
     { apiUrl : String
+    , apiToken : ApiToken
     , owner : String
     , repo : String
     , branchBlacklist : List BranchName
@@ -182,19 +188,32 @@ statusesUrl =
         </> s "statuses"
 
 
+httpRequest : ApiToken -> String -> Decode.Decoder a -> Http.Request a
+httpRequest apiToken url decoder =
+    Http.request
+        { method = "GET"
+        , headers = [ Http.header "Authorization" ("Bearer " ++ apiToken) ]
+        , url = url
+        , body = Http.emptyBody
+        , expect = Http.expectJson decoder
+        , timeout = Nothing
+        , withCredentials = False
+        }
+
+
 fetchBranches : GitHub -> Cmd Msg
-fetchBranches { apiUrl, owner, repo } =
+fetchBranches { apiUrl, apiToken, owner, repo } =
     let
         url =
             apiUrl ++ branchesUrl @ { gitHubOwner = owner, gitHubRepo = repo }
     in
-        Http.get url decodeBranchNames
+        httpRequest apiToken url decodeBranchNames
             |> RemoteData.sendRequest
             |> Cmd.map BranchesFetched
 
 
 fetchStatuses : GitHub -> BranchName -> Cmd Msg
-fetchStatuses { apiUrl, owner, repo } branchName =
+fetchStatuses { apiUrl, apiToken, owner, repo } branchName =
     let
         url =
             apiUrl
@@ -204,7 +223,7 @@ fetchStatuses { apiUrl, owner, repo } branchName =
                   , branchName = branchName
                   }
     in
-        Http.get url decodeStatuses
+        httpRequest apiToken url decodeStatuses
             |> RemoteData.sendRequest
             |> Cmd.map (StatusesFetched branchName)
 
@@ -441,9 +460,10 @@ parseBranchBlacklist blacklist =
 
 
 init : Flags -> ( Model, Cmd Msg )
-init { gitHubApiUrl, gitHubOwner, gitHubRepo, gitHubBranchBlacklist } =
+init { gitHubApiUrl, gitHubApiToken, gitHubOwner, gitHubRepo, gitHubBranchBlacklist } =
     ( { gitHub =
             { apiUrl = gitHubApiUrl
+            , apiToken = gitHubApiToken
             , owner = gitHubOwner
             , repo = gitHubRepo
             , branchBlacklist = parseBranchBlacklist gitHubBranchBlacklist
