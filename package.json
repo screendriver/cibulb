@@ -9,7 +9,7 @@
     "test": "elm-app test"
   },
   "devDependencies": {
-    "create-elm-app": "1.10.0",
+    "create-elm-app": "1.10.2",
     "elm-format": "0.6.1-alpha"
   }
 }

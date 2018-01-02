@@ -1,5 +1,9 @@
 # ci-light-bulb 💡
 
+[![Build Status](https://travis-ci.org/screendriver/ci-light-bulb.svg?branch=github)](https://travis-ci.org/screendriver/ci-light-bulb)
+
+---
+
 A Web App that connects [Jenkins](https://jenkins.io) builds to a smart
 light bulb over
 [Web Bluetooth](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API).
