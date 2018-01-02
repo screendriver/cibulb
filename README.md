@@ -4,15 +4,15 @@
 
 ---
 
-A Web App that connects [Jenkins](https://jenkins.io) builds to a smart
-light bulb over
+A Web App that connects [GitHub Statuses API](https://developer.github.com/v3/repos/statuses/)
+to a smart light bulb over
 [Web Bluetooth](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API).
 
 The bulb changes the color automatically according to the curret build status:
 
-* Yellow when the build currently runs
-* Red when the build failed
-* Green when the build was successful
+* Yellow when one of the builds are currently running
+* Red when of the builds failed
+* Green when all builds are successful
 * Pink when the build state is unknown (this should always indicate a bug 🐛
   in the App)
 
@@ -28,8 +28,11 @@ template:
 
 ### .env
 
-* `ELM_APP_CI_URL`: the URL to the Jenkins server
-* `ELM_APP_BRANCH_BLACKLIST`: branches that should be ignored
+* `ELM_APP_GITHUB_API_URL`: the URL to the GitHub server
+* `ELM_APP_GITHUP_API_TOKEN`: your API token
+* `ELM_APP_GITHUB_OWNER`: the owner of the repository
+* `ELM_APP_GITHUB_REPO`: the repository to watch
+* `ELM_APP_GITHUB_BRANCH_BLACKLIST`: branches that should be ignored
 
 ## Installation
 
