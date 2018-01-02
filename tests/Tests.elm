@@ -31,6 +31,7 @@ import Url exposing (Url)
 gitHubModel : GitHub
 gitHubModel =
     { apiUrl = "https://github.com/api/v3/"
+    , apiToken = "the-token"
     , owner = "screendriver"
     , repo = "ci-light-bulb"
     , branchBlacklist = []
@@ -162,7 +163,7 @@ suite =
                 \_ ->
                     changeColorCmd Dict.empty
                         |> Expect.equal (changeColor Main.Pink)
-            , test "Cmd change color to Pink when any WebData state is not successed" <|
+            , test "Cmd.none when any WebData state is not successed" <|
                 \_ ->
                     let
                         branches =
@@ -170,7 +171,7 @@ suite =
                                 [ ( "master", RemoteData.Loading ) ]
                     in
                         changeColorCmd branches
-                            |> Expect.equal (changeColor Main.Pink)
+                            |> Expect.equal Cmd.none
             , test "Cmd change color to Yellow when any state is pending" <|
                 \_ ->
                     let
