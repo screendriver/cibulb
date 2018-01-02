@@ -302,7 +302,7 @@ update msg model =
             ( { model | errorMessage = Just error }, Cmd.none )
 
         FetchBranches _ ->
-            ( model, fetchBranches model.gitHub )
+            ( { model | branches = RemoteData.NotAsked }, fetchBranches model.gitHub )
 
         BranchesFetched RemoteData.NotAsked ->
             ( { model | branches = RemoteData.NotAsked }, Cmd.none )
