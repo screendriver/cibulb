@@ -11,6 +11,16 @@ const { ports } = Main.fullscreen({
   gitHubBranchBlacklist: process.env.ELM_APP_GITHUB_BRANCH_BLACKLIST,
 });
 
+if ('Notification' in window) {
+  Notification.requestPermission().then(result => {
+    if (result === 'granted') {
+      ports.showNotification.subscribe(({ title, body, renotify, tag }) => {
+        new Notification(title, { body, renotify, tag });
+      });
+    }
+  });
+}
+
 let gattServer;
 
 ports.connect.subscribe(async ({ bulbName, service }) => {

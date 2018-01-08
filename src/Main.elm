@@ -8,6 +8,7 @@ import Http
 import Json.Decode as Decode
 import LightBulb exposing (lightBulb)
 import Maybe.Extra
+import Notification
 import RemoteData exposing (WebData)
 import Time exposing (Time, second)
 import Url exposing (Url, (</>), (<?>), (@), root, s, string, int, bool)
@@ -281,6 +282,16 @@ changeColorCmd branches =
             changeColor Pink
 
 
+showErrorNotification : String -> Cmd msg
+showErrorNotification text =
+    Notification.showNotification
+        { title = "Error"
+        , body = text
+        , renotify = True
+        , tag = "lightbulb"
+        }
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -299,7 +310,7 @@ update msg model =
             ( { model | bulbId = Nothing }, Cmd.none )
 
         ConnectionError error ->
-            ( { model | errorMessage = Just error }, Cmd.none )
+            ( { model | errorMessage = Just error }, showErrorNotification error )
 
         FetchBranches _ ->
             ( { model | branches = RemoteData.NotAsked }, fetchBranches model.gitHub )
