@@ -23,6 +23,7 @@ import Main
         , GitHub
         , update
         )
+import Notification
 import RemoteData
 import Test exposing (..)
 import Url exposing (Url)
@@ -243,10 +244,19 @@ suite =
                             )
             , test "ConnectionError Msg" <|
                 \_ ->
-                    update (Main.ConnectionError "failed") testModel
-                        |> Expect.equal
-                            ( { testModel | errorMessage = Just "failed" }
-                            , Cmd.none
-                            )
+                    let
+                        cmd =
+                            Notification.showNotification
+                                { title = "Error"
+                                , body = "failed"
+                                , renotify = True
+                                , tag = "lightbulb"
+                                }
+                    in
+                        update (Main.ConnectionError "failed") testModel
+                            |> Expect.equal
+                                ( { testModel | errorMessage = Just "failed" }
+                                , cmd
+                                )
             ]
         ]
