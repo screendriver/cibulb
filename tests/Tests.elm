@@ -22,6 +22,7 @@ import Main
         , Model
         , GitHub
         , update
+        , showNotification
         )
 import Notification
 import RemoteData
@@ -229,7 +230,10 @@ suite =
                     update (Main.Connected "abc1234") testModel
                         |> Expect.equal
                             ( { testModel | bulbId = Just "abc1234" }
-                            , changeColor Main.Blue
+                            , Cmd.batch
+                                [ changeColor Main.Blue
+                                , showNotification Main.Info "Connected"
+                                ]
                             )
             , test "Disconnect Msg" <|
                 \_ ->

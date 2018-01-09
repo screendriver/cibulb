@@ -82,6 +82,11 @@ type BulbMode
     | Colored
 
 
+type NotificationType
+    = Error
+    | Info
+
+
 type Msg
     = Connect
     | ConnectionError BluetoothError
@@ -282,14 +287,23 @@ changeColorCmd branches =
             changeColor Pink
 
 
-showErrorNotification : String -> Cmd msg
-showErrorNotification text =
-    Notification.showNotification
-        { title = "Error"
-        , body = text
-        , renotify = True
-        , tag = "lightbulb"
-        }
+showNotification : NotificationType -> String -> Cmd msg
+showNotification notificationType text =
+    let
+        title =
+            case notificationType of
+                Error ->
+                    "Error"
+
+                Info ->
+                    "Info"
+    in
+        Notification.showNotification
+            { title = title
+            , body = text
+            , renotify = True
+            , tag = "lightbulb"
+            }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -301,7 +315,10 @@ update msg model =
             )
 
         Connected bulbId ->
-            ( { model | bulbId = Just bulbId }, changeColor Blue )
+            { model | bulbId = Just bulbId }
+                ! [ changeColor Blue
+                  , showNotification Info "Connected"
+                  ]
 
         Disconnect ->
             ( model, changeColor Off )
@@ -310,7 +327,7 @@ update msg model =
             ( { model | bulbId = Nothing }, Cmd.none )
 
         ConnectionError error ->
-            ( { model | errorMessage = Just error }, showErrorNotification error )
+            ( { model | errorMessage = Just error }, showNotification Error error )
 
         FetchBranches _ ->
             ( { model | branches = RemoteData.NotAsked }, fetchBranches model.gitHub )
