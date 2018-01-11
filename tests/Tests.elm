@@ -46,6 +46,7 @@ testModel =
     , bulbId = Nothing
     , branches = RemoteData.NotAsked
     , errorMessage = Nothing
+    , writeValueInProgress = False
     }
 
 

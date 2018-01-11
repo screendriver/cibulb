@@ -57,6 +57,7 @@ type alias Model =
     , bulbId : Maybe Bluetooth.BulbId
     , errorMessage : Maybe String
     , branches : WebData Branches
+    , writeValueInProgress : Bool
     }
 
 
@@ -96,7 +97,6 @@ type Msg
     | FetchBranches Time
     | BranchesFetched (WebData (List BranchName))
     | StatusesFetched BranchName (WebData (List State))
-    | ChangeBulbColor BulbColor
     | ValueWritten Bluetooth.WriteParams
 
 
@@ -382,10 +382,21 @@ update msg model =
                 branchesDict =
                     RemoteData.withDefault Dict.empty model.branches
                         |> Dict.update branchName updateState
+
+                cmd =
+                    changeColorCmd branchesDict
             in
-                ( { model | branches = RemoteData.succeed branchesDict }
-                , changeColorCmd branchesDict
-                )
+                case model.writeValueInProgress of
+                    True ->
+                        ( model, Cmd.none )
+
+                    False ->
+                        ( { model
+                            | branches = RemoteData.succeed branchesDict
+                            , writeValueInProgress = cmd /= Cmd.none
+                          }
+                        , changeColorCmd branchesDict
+                        )
 
         StatusesFetched branchName (RemoteData.Failure err) ->
             let
@@ -395,14 +406,13 @@ update msg model =
             in
                 ( { model | branches = branches }, Cmd.none )
 
-        ChangeBulbColor color ->
-            ( model, Cmd.none )
-
         ValueWritten { value } ->
-            if value == getRgb Off then
-                ( model, Bluetooth.disconnect () )
-            else
-                ( model, Cmd.none )
+            ( { model | writeValueInProgress = False }
+            , if value == getRgb Off then
+                Bluetooth.disconnect ()
+              else
+                Cmd.none
+            )
 
 
 view : Model -> Html Msg
@@ -502,6 +512,7 @@ init { gitHubApiUrl, gitHubApiToken, gitHubOwner, gitHubRepo, gitHubBranchBlackl
       , bulbId = Nothing
       , branches = RemoteData.NotAsked
       , errorMessage = Nothing
+      , writeValueInProgress = False
       }
     , Cmd.none
     )
