@@ -23,23 +23,10 @@ type alias Flags =
     , gitHubApiToken : ApiToken
     , gitHubOwner : String
     , gitHubRepo : String
-    , gitHubBranchBlacklist : String
     }
 
 
-type alias BranchName =
-    String
-
-
-type alias BranchState =
-    String
-
-
-type alias Branches =
-    Dict BranchName (WebData BranchState)
-
-
-type alias State =
+type alias BuildStatus =
     { id : Int, state : String }
 
 
@@ -48,7 +35,6 @@ type alias GitHub =
     , apiToken : ApiToken
     , owner : String
     , repo : String
-    , branchBlacklist : List BranchName
     }
 
 
@@ -56,7 +42,7 @@ type alias Model =
     { gitHub : GitHub
     , bulbId : Maybe Bluetooth.BulbId
     , errorMessage : Maybe String
-    , branches : WebData Branches
+    , buildStatuses : WebData (List BuildStatus)
     , writeValueInProgress : Bool
     }
 
@@ -94,9 +80,8 @@ type Msg
     | Connected Bluetooth.BulbId
     | Disconnect
     | Disconnected ()
-    | FetchBranches Time
-    | BranchesFetched (WebData (List BranchName))
-    | StatusesFetched BranchName (WebData (List State))
+    | FetchBuildStatuses Time
+    | BuildStatusesFetched (WebData (List BuildStatus))
     | ValueWritten Bluetooth.WriteParams
 
 
@@ -154,43 +139,23 @@ changeColor color =
         |> Bluetooth.writeValue
 
 
-decodeBranchNames : Decode.Decoder (List BranchName)
-decodeBranchNames =
-    Decode.list <|
-        Decode.field "name" Decode.string
-
-
-decodeStatuses : Decode.Decoder (List State)
+decodeStatuses : Decode.Decoder (List BuildStatus)
 decodeStatuses =
     Decode.list <|
         Decode.map2
-            State
+            BuildStatus
             (Decode.field "id" Decode.int)
             (Decode.field "state" Decode.string)
 
 
-branchesUrl : Url { gitHubOwner : String, gitHubRepo : String }
-branchesUrl =
-    root
-        </> s "repos"
-        </> string .gitHubOwner
-        </> string .gitHubRepo
-        </> s "branches"
-
-
-statusesUrl :
-    Url
-        { gitHubOwner : String
-        , gitHubRepo : String
-        , branchName : String
-        }
+statusesUrl : Url { gitHubOwner : String, gitHubRepo : String }
 statusesUrl =
     root
         </> s "repos"
         </> string .gitHubOwner
         </> string .gitHubRepo
         </> s "commits"
-        </> string .branchName
+        </> s "master"
         </> s "statuses"
 
 
@@ -207,83 +172,33 @@ httpRequest apiToken url decoder =
         }
 
 
-fetchBranches : GitHub -> Cmd Msg
-fetchBranches { apiUrl, apiToken, owner, repo } =
+fetchBuildStatuses : GitHub -> Cmd Msg
+fetchBuildStatuses { apiUrl, apiToken, owner, repo } =
     let
         url =
-            apiUrl ++ branchesUrl @ { gitHubOwner = owner, gitHubRepo = repo }
-    in
-        httpRequest apiToken url decodeBranchNames
-            |> RemoteData.sendRequest
-            |> Cmd.map BranchesFetched
-
-
-fetchStatuses : GitHub -> BranchName -> Cmd Msg
-fetchStatuses { apiUrl, apiToken, owner, repo } branchName =
-    let
-        url =
-            apiUrl
-                ++ statusesUrl
-                @ { gitHubOwner = owner
-                  , gitHubRepo = repo
-                  , branchName = branchName
-                  }
+            apiUrl ++ statusesUrl @ { gitHubOwner = owner, gitHubRepo = repo }
     in
         httpRequest apiToken url decodeStatuses
             |> RemoteData.sendRequest
-            |> Cmd.map (StatusesFetched branchName)
+            |> Cmd.map BuildStatusesFetched
 
 
-updateBranchState :
-    WebData Branches
-    -> BranchName
-    -> WebData BranchState
-    -> WebData Branches
-updateBranchState branches branchName webData =
-    let
-        updateState value =
-            Maybe.map (\_ -> webData) value
-
-        branchesDict =
-            RemoteData.withDefault Dict.empty branches
-                |> Dict.update branchName updateState
-    in
-        RemoteData.succeed branchesDict
-
-
-changeColorCmd : Branches -> Cmd Msg
-changeColorCmd branches =
-    let
-        states =
-            Dict.values branches
-
-        webDataNotSuccess state =
-            not (RemoteData.isSuccess state)
-
-        isPending state =
-            (RemoteData.withDefault "error" state) == "pending"
-
-        isFailure state =
-            (RemoteData.withDefault "error" state) == "failure"
-
-        isError state =
-            (RemoteData.withDefault "error" state) == "error"
-
-        isSuccess state =
-            (RemoteData.withDefault "error" state) == "success"
-    in
-        if List.isEmpty states then
-            changeColor Pink
-        else if List.any webDataNotSuccess states then
-            -- not all states are fetched at the moment
-            Cmd.none
-        else if List.any isPending states then
+changeColorCmd : String -> Cmd Msg
+changeColorCmd state =
+    case String.toLower state of
+        "pending" ->
             changeColor Yellow
-        else if List.any isFailure states || List.any isError states then
+
+        "failure" ->
             changeColor Red
-        else if List.all isSuccess states then
+
+        "error" ->
+            changeColor Red
+
+        "success" ->
             changeColor Green
-        else
+
+        _ ->
             changeColor Pink
 
 
@@ -329,46 +244,16 @@ update msg model =
         ConnectionError error ->
             ( { model | errorMessage = Just error }, showNotification Error error )
 
-        FetchBranches _ ->
-            ( { model | branches = RemoteData.NotAsked }, fetchBranches model.gitHub )
+        FetchBuildStatuses _ ->
+            ( { model | buildStatuses = RemoteData.NotAsked }, fetchBuildStatuses model.gitHub )
 
-        BranchesFetched RemoteData.NotAsked ->
-            ( { model | branches = RemoteData.NotAsked }, Cmd.none )
+        BuildStatusesFetched RemoteData.NotAsked ->
+            ( { model | buildStatuses = RemoteData.NotAsked }, Cmd.none )
 
-        BranchesFetched RemoteData.Loading ->
-            ( { model | branches = RemoteData.Loading }, Cmd.none )
+        BuildStatusesFetched RemoteData.Loading ->
+            ( { model | buildStatuses = RemoteData.Loading }, Cmd.none )
 
-        BranchesFetched (RemoteData.Success branches) ->
-            let
-                filterBlacklist branchName =
-                    not <| List.member branchName model.gitHub.branchBlacklist
-
-                branchesDict =
-                    branches
-                        |> List.filter filterBlacklist
-                        |> List.map (\branch -> ( branch, RemoteData.Loading ))
-                        |> Dict.fromList
-
-                cmds =
-                    Dict.keys branchesDict
-                        |> List.map (fetchStatuses model.gitHub)
-            in
-                { model | branches = RemoteData.succeed branchesDict } ! cmds
-
-        BranchesFetched (RemoteData.Failure err) ->
-            ( { model | branches = RemoteData.Failure err }, Cmd.none )
-
-        StatusesFetched branchName RemoteData.NotAsked ->
-            ( model, Cmd.none )
-
-        StatusesFetched branchName RemoteData.Loading ->
-            let
-                branches =
-                    updateBranchState model.branches branchName RemoteData.Loading
-            in
-                ( { model | branches = branches }, Cmd.none )
-
-        StatusesFetched branchName (RemoteData.Success statuses) ->
+        BuildStatusesFetched (RemoteData.Success statuses) ->
             let
                 firstState =
                     statuses
@@ -376,15 +261,13 @@ update msg model =
                         |> List.reverse
                         |> List.head
 
-                updateState value =
-                    Maybe.map2 (\_ { state } -> RemoteData.succeed state) value firstState
-
-                branchesDict =
-                    RemoteData.withDefault Dict.empty model.branches
-                        |> Dict.update branchName updateState
-
                 cmd =
-                    changeColorCmd branchesDict
+                    case firstState of
+                        Nothing ->
+                            Cmd.none
+
+                        Just state ->
+                            changeColorCmd state.state
             in
                 case model.writeValueInProgress of
                     True ->
@@ -392,19 +275,14 @@ update msg model =
 
                     False ->
                         ( { model
-                            | branches = RemoteData.succeed branchesDict
+                            | buildStatuses = RemoteData.succeed statuses
                             , writeValueInProgress = cmd /= Cmd.none
                           }
-                        , changeColorCmd branchesDict
+                        , cmd
                         )
 
-        StatusesFetched branchName (RemoteData.Failure err) ->
-            let
-                branches =
-                    updateBranchState model.branches branchName <|
-                        RemoteData.Failure err
-            in
-                ( { model | branches = branches }, Cmd.none )
+        BuildStatusesFetched (RemoteData.Failure err) ->
+            ( { model | buildStatuses = (RemoteData.Failure err) }, Cmd.none )
 
         ValueWritten { value } ->
             ( { model | writeValueInProgress = False }
@@ -482,7 +360,7 @@ subscriptions model =
         subs =
             case model.bulbId of
                 Just id ->
-                    Time.every (10 * second) FetchBranches :: defaultSubs
+                    Time.every (10 * second) FetchBuildStatuses :: defaultSubs
 
                 Nothing ->
                     defaultSubs
@@ -490,28 +368,17 @@ subscriptions model =
         Sub.batch subs
 
 
-parseBranchBlacklist : String -> List String
-parseBranchBlacklist blacklist =
-    case String.trim blacklist of
-        "" ->
-            []
-
-        trimmed ->
-            String.split "," trimmed
-
-
 init : Flags -> ( Model, Cmd Msg )
-init { gitHubApiUrl, gitHubApiToken, gitHubOwner, gitHubRepo, gitHubBranchBlacklist } =
+init { gitHubApiUrl, gitHubApiToken, gitHubOwner, gitHubRepo } =
     ( { gitHub =
             { apiUrl = gitHubApiUrl
             , apiToken = gitHubApiToken
             , owner = gitHubOwner
             , repo = gitHubRepo
-            , branchBlacklist = parseBranchBlacklist gitHubBranchBlacklist
             }
       , bulbId = Nothing
-      , branches = RemoteData.NotAsked
       , errorMessage = Nothing
+      , buildStatuses = RemoteData.NotAsked
       , writeValueInProgress = False
       }
     , Cmd.none
