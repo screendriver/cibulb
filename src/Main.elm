@@ -282,7 +282,18 @@ update msg model =
                         )
 
         BuildStatusesFetched (RemoteData.Failure err) ->
-            ( { model | buildStatuses = (RemoteData.Failure err) }, Cmd.none )
+            case model.writeValueInProgress of
+                True ->
+                    ( model, Cmd.none )
+
+                False ->
+                    { model
+                        | buildStatuses = (RemoteData.Failure err)
+                        , writeValueInProgress = True
+                    }
+                        ! [ changeColorCmd "failure"
+                          , showNotification Error "Build statuses could not be fetched"
+                          ]
 
         ValueWritten { value } ->
             ( { model | writeValueInProgress = False }
