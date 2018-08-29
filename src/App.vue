@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <light-bulb @connect="onConnect" />
+    <the-error-message />
     <the-footer />
   </div>
 </template>
@@ -8,11 +9,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import LightBulb from './components/LightBulb.vue';
+import TheErrorMessage from './views/TheErrorMessage.vue';
 import TheFooter from './views/TheFooter.vue';
 
 @Component({
   components: {
     LightBulb,
+    TheErrorMessage,
     TheFooter,
   },
 })
@@ -30,10 +33,6 @@ body {
   background: linear-gradient(to bottom, #6504d4, #42024b);
   background-attachment: fixed;
   font-family: 'Roboto', sans-serif;
-}
-
-p.errorMessage {
-  color: red;
 }
 
 svg.lightBulb {
