@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/jest": "23.3.1",
+    "@types/web-bluetooth": "0.0.4",
     "@vue/cli-plugin-typescript": "3.0.1",
     "@vue/cli-plugin-unit-jest": "3.0.1",
     "@vue/cli-service": "3.0.1",
