@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { State, Mutations } from '@/store';
+import { State, Mutations, BulbNotification } from '@/store';
 
 const bulbName = 'icolorlive';
 const service = 'f000ffa0-0451-4000-b000-000000000000';
@@ -23,9 +23,16 @@ export async function connect(store: Store<State>) {
     });
     const gattServer = await device.gatt!.connect();
     store.commit(Mutations.CONNECTED, device.id);
+    const notification: BulbNotification = {
+      title: 'Info',
+      body: 'Connected',
+      renotify: true,
+      tag: 'lightbulb',
+    };
+    store.commit(Mutations.SHOW_NOTIFICATION, notification);
     return gattServer;
   } catch (error) {
-    store.commit(Mutations.ERROR, error);
+    store.commit(Mutations.ERROR, error.toString());
     return;
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <the-notification />
     <light-bulb @connect="onConnect" />
     <the-error-message />
     <the-footer />
@@ -8,6 +9,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import TheNotification from './views/TheNotification.vue';
 import LightBulb from './components/LightBulb.vue';
 import TheErrorMessage from './views/TheErrorMessage.vue';
 import TheFooter from './views/TheFooter.vue';
@@ -15,6 +17,7 @@ import { connect } from './bluetooth';
 
 @Component({
   components: {
+    TheNotification,
     LightBulb,
     TheErrorMessage,
     TheFooter,
