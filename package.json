@@ -2,6 +2,9 @@
   "name": "ci-light-bulb",
   "version": "0.1.0",
   "private": true,
+  "repository": "git@github.com:screendriver/ci-light-bulb.git",
+  "author": "Christian Rackerseder <git@echooff.de>",
+  "license": "MIT",
   "scripts": {
     "precommit": "pretty-quick --staged",
     "serve": "vue-cli-service serve",
