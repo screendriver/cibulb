@@ -11,6 +11,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import LightBulb from './components/LightBulb.vue';
 import TheErrorMessage from './views/TheErrorMessage.vue';
 import TheFooter from './views/TheFooter.vue';
+import { connect } from './bluetooth';
 
 @Component({
   components: {
@@ -21,6 +22,7 @@ import TheFooter from './views/TheFooter.vue';
 })
 export default class App extends Vue {
   public async onConnect() {
+    connect(this.$store);
   }
 }
 </script>
