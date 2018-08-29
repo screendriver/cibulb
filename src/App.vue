@@ -1,16 +1,19 @@
 <template>
   <div class="main">
     <light-bulb />
+    <the-footer />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import LightBulb from './components/LightBulb.vue';
+import TheFooter from './views/TheFooter.vue';
 
 @Component({
   components: {
     LightBulb,
+    TheFooter,
   },
 })
 export default class App extends Vue {}
