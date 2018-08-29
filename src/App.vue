@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <light-bulb />
+    <light-bulb @connect="onConnect" />
     <the-footer />
   </div>
 </template>
@@ -16,7 +16,10 @@ import TheFooter from './views/TheFooter.vue';
     TheFooter,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  public async onConnect() {
+  }
+}
 </script>
 
 <style>

@@ -10,6 +10,7 @@
   style="enable-background:new 0 0 512.008 512.008;"
   xml:space="preserve"
   class="lightBulb"
+  @click="$emit('connect')"
   >
     <g>
       <g>
