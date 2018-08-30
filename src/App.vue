@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <light-bulb @connect="onConnect" />
+    <light-bulb @click="onBulbClick" />
     <the-error-message />
     <the-footer />
   </div>
@@ -11,7 +11,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import LightBulb from './components/LightBulb.vue';
 import TheErrorMessage from './views/TheErrorMessage.vue';
 import TheFooter from './views/TheFooter.vue';
-import { connect } from './bluetooth';
+import { connect, disconnect } from './bluetooth';
 
 @Component({
   components: {
@@ -21,8 +21,14 @@ import { connect } from './bluetooth';
   },
 })
 export default class App extends Vue {
-  public async onConnect() {
-    connect(this.$store);
+  private gattServer?: BluetoothRemoteGATTServer;
+
+  public async onBulbClick() {
+    if (this.gattServer) {
+      disconnect(this.gattServer);
+    } else {
+      this.gattServer = await connect(this.$store);
+    }
   }
 }
 </script>
