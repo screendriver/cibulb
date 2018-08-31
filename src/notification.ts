@@ -11,7 +11,7 @@ export async function showNotification(title: string, body: string) {
   if (!isGranted) {
     return;
   }
-  new Notification(title, {
+  return new Notification(title, {
     body,
     renotify: true,
     tag: 'lightbulb',

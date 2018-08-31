@@ -21,13 +21,14 @@ import { connect, disconnect } from './bluetooth';
   },
 })
 export default class App extends Vue {
-  private gattServer?: BluetoothRemoteGATTServer;
+  private gattServer: BluetoothRemoteGATTServer | null = null;
 
   public async onBulbClick() {
     if (this.gattServer) {
-      disconnect(this.gattServer);
+      await disconnect(this.gattServer);
+      this.gattServer = null;
     } else {
-      this.gattServer = await connect(this.$store);
+      this.gattServer = (await connect(this.$store)) || null;
     }
   }
 }

@@ -32,6 +32,7 @@ export async function connect(store: Store<State>) {
   }
 }
 
-export function disconnect(gattServer: BluetoothRemoteGATTServer) {
+export async function disconnect(gattServer: BluetoothRemoteGATTServer) {
   gattServer.disconnect();
+  await showNotification('Info', 'Disconnected');
 }
