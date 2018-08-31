@@ -8,10 +8,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import LightBulb from './components/LightBulb.vue';
-import TheErrorMessage from './views/TheErrorMessage.vue';
-import TheFooter from './views/TheFooter.vue';
-import { connect, disconnect } from './bluetooth';
+import LightBulb from '@/components/LightBulb.vue';
+import TheErrorMessage from '@/views/TheErrorMessage.vue';
+import TheFooter from '@/views/TheFooter.vue';
+import { connect, disconnect } from '@/light-bulb';
+import { Mutations } from '@/store';
 
 @Component({
   components: {
