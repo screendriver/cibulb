@@ -1,3 +1,7 @@
+export enum NotificationTitle {
+  INFO = 'info',
+}
+
 async function isNotificationGranted(): Promise<boolean> {
   if ('Notification' in window) {
     const result = await Notification.requestPermission();
@@ -6,7 +10,7 @@ async function isNotificationGranted(): Promise<boolean> {
   return false;
 }
 
-export async function showNotification(title: string, body: string) {
+export async function showNotification(title: NotificationTitle, body: string) {
   const isGranted = await isNotificationGranted();
   if (!isGranted) {
     return;

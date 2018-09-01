@@ -1,5 +1,4 @@
 import { Store } from 'vuex';
-import { showNotification } from '@/notification';
 import { State, Mutations } from '@/store';
 
 const bulbName = 'icolorlive';
@@ -9,8 +8,16 @@ const changeModeCharacteristic = 'f000ffa3-0451-4000-b000-000000000000';
 // 4d57 (0x4F57) changes to white
 const changeColorCharacteristic = 'f000ffa4-0451-4000-b000-000000000000';
 
-export type BulbColor = 'off' | 'blue' | 'yellow' | 'green' | 'red' | 'pink';
+export const enum BulbColor {
+  OFF,
+  BLUE,
+  YELLOW,
+  GREEN,
+  RED,
+  PINK,
+}
 type BulbColorRgb = [number, number, number];
+type DeviceId = string;
 
 function assertUnreachable(_x: never): never {
   throw new Error("Didn't expect to get here");
@@ -18,17 +25,17 @@ function assertUnreachable(_x: never): never {
 
 function getRgb(color: BulbColor): BulbColorRgb {
   switch (color) {
-    case 'off':
+    case BulbColor.OFF:
       return [0, 0, 0];
-    case 'blue':
+    case BulbColor.BLUE:
       return [0, 0, 26];
-    case 'yellow':
+    case BulbColor.YELLOW:
       return [26, 26, 0];
-    case 'green':
+    case BulbColor.GREEN:
       return [0, 26, 0];
-    case 'red':
+    case BulbColor.RED:
       return [26, 0, 0];
-    case 'pink':
+    case BulbColor.PINK:
       return [26, 0, 26];
   }
   return assertUnreachable(color);
@@ -43,7 +50,6 @@ interface WriteParams {
 async function writeValue(
   gattServer: BluetoothRemoteGATTServer,
   params: WriteParams,
-  store: Store<State>,
 ) {
   try {
     const service = await gattServer.getPrimaryService(params.service);
@@ -51,52 +57,37 @@ async function writeValue(
       params.characteristic,
     );
     await characteristic.writeValue(new Uint8Array(params.value));
-    store.commit(Mutations.VALUE_WRITTEN, params);
+    // store.commit(Mutations.VALUE_WRITTEN, params);
   } catch (error) {
-    store.commit(Mutations.ERROR, error.toString());
+    // store.commit(Mutations.ERROR, error.toString());
   }
 }
 
-export async function connect(store: Store<State>) {
+export async function connect(): Promise<
+  [BluetoothRemoteGATTServer, DeviceId]
+> {
   if (!navigator.bluetooth) {
-    store.commit(
-      Mutations.ERROR,
-      'Web Bluetooth is not supported on this platform',
-    );
-    return;
+    throw new Error('Web Bluetooth is not supported on this platform');
   }
-  try {
-    const device = await navigator.bluetooth.requestDevice({
-      filters: [{ name: bulbName }],
-      optionalServices: [serviceName],
-    });
-    const gattServer = await device.gatt!.connect();
-    store.commit(Mutations.CONNECTED, device.id);
-    await showNotification('Info', 'Connected');
-    return gattServer;
-  } catch (error) {
-    store.commit(Mutations.ERROR, error.toString());
-    return;
-  }
+  const device = await navigator.bluetooth.requestDevice({
+    filters: [{ name: bulbName }],
+    optionalServices: [serviceName],
+  });
+  const gattServer = await device.gatt!.connect();
+  return [gattServer, device.id];
 }
 
-export async function disconnect(gattServer: BluetoothRemoteGATTServer) {
+export function disconnect(gattServer: BluetoothRemoteGATTServer) {
   gattServer.disconnect();
-  await showNotification('Info', 'Disconnected');
 }
 
 export function changeColor(
   color: BulbColor,
   gattServer: BluetoothRemoteGATTServer,
-  store: Store<State>,
 ) {
-  return writeValue(
-    gattServer,
-    {
-      service: serviceName,
-      characteristic: changeColorCharacteristic,
-      value: getRgb(color),
-    },
-    store,
-  );
+  return writeValue(gattServer, {
+    service: serviceName,
+    characteristic: changeColorCharacteristic,
+    value: getRgb(color),
+  });
 }
