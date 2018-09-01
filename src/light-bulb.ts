@@ -3,7 +3,7 @@ import { showNotification } from '@/notification';
 import { State, Mutations } from '@/store';
 
 const bulbName = 'icolorlive';
-const service = 'f000ffa0-0451-4000-b000-000000000000';
+const serviceName = 'f000ffa0-0451-4000-b000-000000000000';
 const changeModeCharacteristic = 'f000ffa3-0451-4000-b000-000000000000';
 // 4d43 (0x4F43) changes to color
 // 4d57 (0x4F57) changes to white
@@ -68,7 +68,7 @@ export async function connect(store: Store<State>) {
   try {
     const device = await navigator.bluetooth.requestDevice({
       filters: [{ name: bulbName }],
-      optionalServices: [service],
+      optionalServices: [serviceName],
     });
     const gattServer = await device.gatt!.connect();
     store.commit(Mutations.CONNECTED, device.id);
@@ -93,7 +93,7 @@ export function changeColor(
   return writeValue(
     gattServer,
     {
-      service,
+      service: serviceName,
       characteristic: changeColorCharacteristic,
       value: getRgb(color),
     },
