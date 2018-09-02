@@ -47,9 +47,9 @@ export default new Vuex.Store<State>({
         gattServer,
       }: { deviceId: string; gattServer: BluetoothRemoteGATTServer },
     ) {
+      state.connection = 'connected';
       state.deviceId = deviceId;
       state.gattServer = gattServer;
-      state.connection = 'connected';
     },
     [Mutations.DISCONNECTED](state: State) {
       state.deviceId = null;

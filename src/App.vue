@@ -26,10 +26,13 @@ export default class App extends Vue {
   public gattServer: BluetoothRemoteGATTServer | null = null;
 
   public async onBulbClick() {
-    if (this.$store.state.connection === 'connected') {
-      this.$store.dispatch(Actions.DISCONNECT);
-    } else {
-      this.$store.dispatch(Actions.CONNECT);
+    switch (this.$store.state.connection) {
+      case 'disconnected':
+        this.$store.dispatch(Actions.CONNECT);
+        break;
+      case 'connected':
+        this.$store.dispatch(Actions.DISCONNECT);
+        break;
     }
   }
 }
