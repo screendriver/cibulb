@@ -12,7 +12,7 @@ import LightBulb from '@/components/LightBulb.vue';
 import TheErrorMessage from '@/views/TheErrorMessage.vue';
 import TheFooter from '@/views/TheFooter.vue';
 import { connect, disconnect } from '@/light-bulb';
-import { Mutations } from '@/store';
+import { Actions, Mutations } from '@/store';
 import { showNotification, NotificationTitle } from '@/notification';
 
 @Component({
@@ -26,21 +26,10 @@ export default class App extends Vue {
   public gattServer: BluetoothRemoteGATTServer | null = null;
 
   public async onBulbClick() {
-    try {
-      if (this.gattServer) {
-        disconnect(this.gattServer);
-        this.gattServer = null;
-        this.$store.commit(Mutations.DISCONNECTED);
-        await showNotification(NotificationTitle.INFO, 'Disconnected');
-      } else {
-        this.$store.dispatch(Mutations.CONNECTING);
-        const [gattServer, deviceId] = await connect();
-        this.gattServer = gattServer;
-        this.$store.commit(Mutations.CONNECTED, deviceId);
-        await showNotification(NotificationTitle.INFO, 'Connected');
-      }
-    } catch (error) {
-      this.$store.commit(Mutations.ERROR, error.toString());
+    if (this.$store.state.connection === 'connected') {
+      this.$store.dispatch(Actions.DISCONNECT);
+    } else {
+      this.$store.dispatch(Actions.CONNECT);
     }
   }
 }

@@ -1,5 +1,6 @@
 export enum NotificationTitle {
   INFO = 'info',
+  ERROR = 'error',
 }
 
 async function isNotificationGranted(): Promise<boolean> {
