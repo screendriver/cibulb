@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { State, Mutations } from '@/store';
+import { State, Mutations, BuildStatus } from '@/store';
 
 const bulbName = 'icolorlive';
 const serviceName = 'f000ffa0-0451-4000-b000-000000000000';
@@ -79,6 +79,24 @@ export async function connect(): Promise<
 
 export function disconnect(gattServer: BluetoothRemoteGATTServer) {
   gattServer.disconnect();
+}
+
+export async function fetchBuildStatus(
+  apiUrl: string,
+  apiToken: string,
+  owner: string,
+  repo: string,
+  fetcher = fetch,
+): Promise<BuildStatus> {
+  const fullUrl = `${apiUrl}/repos/${owner}/${repo}/commits/master/statuses`;
+  const response = await fetcher(fullUrl, {
+    method: 'GET',
+    credentials: 'omit',
+    headers: {
+      Authorization: `Bearer ${apiToken}`,
+    },
+  });
+  return response.json();
 }
 
 export function changeColor(

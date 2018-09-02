@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { connect, disconnect } from '@/light-bulb';
+import { connect, disconnect, fetchBuildStatus } from '@/light-bulb';
 import { showNotification, NotificationTitle } from '@/notification';
 
 Vue.use(Vuex);
@@ -11,6 +11,12 @@ export interface State {
   errorMessage: string;
   deviceId: string | null;
   gattServer: BluetoothRemoteGATTServer | null;
+  buildStatus: BuildStatus | null;
+}
+
+export interface BuildStatus {
+  id: string;
+  state: string;
 }
 
 export enum Mutations {
@@ -25,6 +31,7 @@ export enum Mutations {
 export enum Actions {
   CONNECT = 'connect',
   DISCONNECT = 'disconnect',
+  FETCH_BUILD_STATUS = 'fetch-build-status',
 }
 
 export default new Vuex.Store<State>({
@@ -35,6 +42,7 @@ export default new Vuex.Store<State>({
     errorMessage: '',
     deviceId: null,
     gattServer: null,
+    buildStatus: null,
   },
   mutations: {
     [Mutations.CONNECTING](state: State) {
@@ -83,13 +91,35 @@ export default new Vuex.Store<State>({
     async [Actions.DISCONNECT]({ commit, state }) {
       if (!state.gattServer) {
         const message = "Can't disconnect because bulb is not connected";
-        await showNotification(NotificationTitle.ERROR, message);
         commit(Mutations.ERROR, message);
         return;
       }
       disconnect(state.gattServer);
       await showNotification(NotificationTitle.INFO, 'Disconnected');
       commit(Mutations.DISCONNECTED);
+    },
+    async [Actions.FETCH_BUILD_STATUS]({ commit }) {
+      const {
+        VUE_APP_GITHUB_API_URL,
+        VUE_APP_GITHUP_API_TOKEN,
+        VUE_APP_GITHUB_OWNER,
+        VUE_APP_GITHUB_REPO,
+      } = process.env;
+      if (
+        !VUE_APP_GITHUB_API_URL ||
+        !VUE_APP_GITHUP_API_TOKEN ||
+        !VUE_APP_GITHUB_OWNER ||
+        !VUE_APP_GITHUB_REPO
+      ) {
+        commit(Mutations.ERROR, 'Environment variables are missing');
+        return;
+      }
+      await fetchBuildStatus(
+        VUE_APP_GITHUB_API_URL,
+        VUE_APP_GITHUP_API_TOKEN,
+        VUE_APP_GITHUB_OWNER,
+        VUE_APP_GITHUB_REPO,
+      );
     },
   },
 });
