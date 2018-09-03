@@ -2,3 +2,8 @@
   publish = "dist/"
   command = "yarn test:unit && yarn build"
   environment = { YARN_VERSION = "1.9.4" }
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
