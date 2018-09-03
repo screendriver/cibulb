@@ -6,6 +6,7 @@ import {
   fetchBuildStatus,
   changeColor,
   BulbColor,
+  getColorFromStatus,
 } from '@/light-bulb';
 import { showNotification, NotificationTitle } from '@/notification';
 
@@ -23,7 +24,7 @@ export interface State {
 
 export interface BuildStatus {
   id: string;
-  state: string;
+  state: 'pending' | 'failure' | 'error' | 'success';
 }
 
 export enum Mutations {
@@ -32,6 +33,7 @@ export enum Mutations {
   CONNECTED = 'connected',
   DISCONNECTED = 'disconnected',
   COLOR_CHANGED = 'color-changed',
+  BUILD_STATUS = 'build-status',
   VALUE_WRITING = 'value-writing',
   VALUE_WRITTEN = 'value-written',
 }
@@ -73,6 +75,7 @@ export default new Vuex.Store<State>({
       state.deviceId = null;
       state.gattServer = null;
       state.connection = 'disconnected';
+      state.buildStatus = null;
     },
     [Mutations.ERROR](state: State, message: string) {
       state.errorMessage = message;
@@ -80,14 +83,14 @@ export default new Vuex.Store<State>({
     [Mutations.COLOR_CHANGED](state: State, color: BulbColor) {
       state.color = color;
     },
+    [Mutations.BUILD_STATUS](state: State, buildStatus: BuildStatus) {
+      state.buildStatus = buildStatus;
+    },
     [Mutations.VALUE_WRITING](state: State) {
       state.writeValueInProgress = true;
     },
     [Mutations.VALUE_WRITTEN](state: State) {
       state.writeValueInProgress = false;
-      // if value == getRgb Off {
-      // Bluetooth.disconnect ()
-      // }
     },
   },
   actions: {
@@ -117,10 +120,15 @@ export default new Vuex.Store<State>({
         commit(Mutations.ERROR, message);
         return;
       }
+      if (state.writeValueInProgress) {
+        return;
+      }
+      commit(Mutations.VALUE_WRITING);
       await changeColor(color, state.gattServer);
       commit(Mutations.COLOR_CHANGED, color);
+      commit(Mutations.VALUE_WRITTEN);
     },
-    async [Actions.FETCH_BUILD_STATUS]({ commit }) {
+    async [Actions.FETCH_BUILD_STATUS]({ commit, dispatch }) {
       const {
         VUE_APP_GITHUB_API_URL,
         VUE_APP_GITHUP_API_TOKEN,
@@ -136,12 +144,14 @@ export default new Vuex.Store<State>({
         commit(Mutations.ERROR, 'Environment variables are missing');
         return;
       }
-      await fetchBuildStatus(
+      const status = await fetchBuildStatus(
         VUE_APP_GITHUB_API_URL,
         VUE_APP_GITHUP_API_TOKEN,
         VUE_APP_GITHUB_OWNER,
         VUE_APP_GITHUB_REPO,
       );
+      commit(Mutations.BUILD_STATUS, status);
+      dispatch(Actions.CHANGE_COLOR, getColorFromStatus(status));
     },
   },
 });

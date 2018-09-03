@@ -51,16 +51,9 @@ async function writeValue(
   gattServer: BluetoothRemoteGATTServer,
   params: WriteParams,
 ) {
-  try {
-    const service = await gattServer.getPrimaryService(params.service);
-    const characteristic = await service.getCharacteristic(
-      params.characteristic,
-    );
-    await characteristic.writeValue(new Uint8Array(params.value));
-    // store.commit(Mutations.VALUE_WRITTEN, params);
-  } catch (error) {
-    // store.commit(Mutations.ERROR, error.toString());
-  }
+  const service = await gattServer.getPrimaryService(params.service);
+  const characteristic = await service.getCharacteristic(params.characteristic);
+  await characteristic.writeValue(new Uint8Array(params.value));
 }
 
 export async function connect(): Promise<
@@ -90,13 +83,13 @@ export async function fetchBuildStatus(
 ): Promise<BuildStatus> {
   const fullUrl = `${apiUrl}/repos/${owner}/${repo}/commits/master/statuses`;
   const response = await fetcher(fullUrl, {
-    method: 'GET',
-    credentials: 'omit',
     headers: {
       Authorization: `Bearer ${apiToken}`,
     },
   });
-  return response.json();
+  const statuses = await response.json();
+  const { id, state } = statuses[0];
+  return { id, state };
 }
 
 export function changeColor(
@@ -108,4 +101,18 @@ export function changeColor(
     characteristic: changeColorCharacteristic,
     value: getRgb(color),
   });
+}
+
+export function getColorFromStatus(status: BuildStatus): BulbColor {
+  switch (status.state) {
+    case 'pending':
+      return BulbColor.YELLOW;
+    case 'failure':
+    case 'error':
+      return BulbColor.RED;
+    case 'success':
+      return BulbColor.GREEN;
+    default:
+      return BulbColor.PINK;
+  }
 }
