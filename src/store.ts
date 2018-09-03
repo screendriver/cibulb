@@ -1,6 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { connect, disconnect, fetchBuildStatus } from '@/light-bulb';
+import {
+  connect,
+  disconnect,
+  fetchBuildStatus,
+  changeColor,
+  BulbColor,
+} from '@/light-bulb';
 import { showNotification, NotificationTitle } from '@/notification';
 
 Vue.use(Vuex);
@@ -12,6 +18,7 @@ export interface State {
   deviceId: string | null;
   gattServer: BluetoothRemoteGATTServer | null;
   buildStatus: BuildStatus | null;
+  color: BulbColor;
 }
 
 export interface BuildStatus {
@@ -24,6 +31,7 @@ export enum Mutations {
   CONNECTING = 'connecting',
   CONNECTED = 'connected',
   DISCONNECTED = 'disconnected',
+  COLOR_CHANGED = 'color-changed',
   VALUE_WRITING = 'value-writing',
   VALUE_WRITTEN = 'value-written',
 }
@@ -31,6 +39,7 @@ export enum Mutations {
 export enum Actions {
   CONNECT = 'connect',
   DISCONNECT = 'disconnect',
+  CHANGE_COLOR = 'change-color',
   FETCH_BUILD_STATUS = 'fetch-build-status',
 }
 
@@ -43,6 +52,7 @@ export default new Vuex.Store<State>({
     deviceId: null,
     gattServer: null,
     buildStatus: null,
+    color: BulbColor.OFF,
   },
   mutations: {
     [Mutations.CONNECTING](state: State) {
@@ -66,6 +76,9 @@ export default new Vuex.Store<State>({
     },
     [Mutations.ERROR](state: State, message: string) {
       state.errorMessage = message;
+    },
+    [Mutations.COLOR_CHANGED](state: State, color: BulbColor) {
+      state.color = color;
     },
     [Mutations.VALUE_WRITING](state: State) {
       state.writeValueInProgress = true;
@@ -97,6 +110,15 @@ export default new Vuex.Store<State>({
       disconnect(state.gattServer);
       await showNotification(NotificationTitle.INFO, 'Disconnected');
       commit(Mutations.DISCONNECTED);
+    },
+    async [Actions.CHANGE_COLOR]({ commit, state }, color: BulbColor) {
+      if (!state.gattServer) {
+        const message = "Can't change color because bulb is not connected";
+        commit(Mutations.ERROR, message);
+        return;
+      }
+      await changeColor(color, state.gattServer);
+      commit(Mutations.COLOR_CHANGED, color);
     },
     async [Actions.FETCH_BUILD_STATUS]({ commit }) {
       const {

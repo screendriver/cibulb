@@ -11,7 +11,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import LightBulb from '@/components/LightBulb.vue';
 import TheErrorMessage from '@/views/TheErrorMessage.vue';
 import TheFooter from '@/views/TheFooter.vue';
-import { connect, disconnect } from '@/light-bulb';
+import { connect, disconnect, BulbColor } from '@/light-bulb';
 import { Actions, Mutations } from '@/store';
 import { showNotification, NotificationTitle } from '@/notification';
 
@@ -29,11 +29,13 @@ export default class App extends Vue {
     switch (this.$store.state.connection) {
       case 'disconnected':
         await this.$store.dispatch(Actions.CONNECT);
+        await this.$store.dispatch(Actions.CHANGE_COLOR, BulbColor.BLUE);
         this.intervalId = window.setInterval(() => {
           this.$store.dispatch(Actions.FETCH_BUILD_STATUS);
         }, 10 * 1000);
         break;
       case 'connected':
+        await this.$store.dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
         await this.$store.dispatch(Actions.DISCONNECT);
         if (this.intervalId) {
           window.clearInterval(this.intervalId);
