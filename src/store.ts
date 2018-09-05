@@ -144,6 +144,7 @@ export default new Vuex.Store<State>({
         commit(Mutations.ERROR, 'Environment variables are missing');
         return;
       }
+      try {
       const status = await fetchBuildStatus(
         VUE_APP_GITHUB_API_URL,
         VUE_APP_GITHUP_API_TOKEN,
@@ -152,6 +153,10 @@ export default new Vuex.Store<State>({
       );
       commit(Mutations.BUILD_STATUS, status);
       dispatch(Actions.CHANGE_COLOR, getColorFromStatus(status));
+    } catch (error) {
+      commit(Mutations.ERROR, error.toString());
+      dispatch(Actions.CHANGE_COLOR, BulbColor.PINK);
+    }
     },
   },
 });

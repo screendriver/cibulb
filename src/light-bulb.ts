@@ -88,6 +88,9 @@ export async function fetchBuildStatus(
     },
   });
   const statuses = await response.json();
+  if (statuses.length === 0) {
+    throw new Error('Empty response from GitHub');
+  }
   const { id, state } = statuses[0];
   return { id, state };
 }
