@@ -1,6 +1,3 @@
-import { Store } from 'vuex';
-import { State, Mutations, BuildStatus } from '@/store';
-
 const bulbName = 'icolorlive';
 const serviceName = 'f000ffa0-0451-4000-b000-000000000000';
 const changeModeCharacteristic = 'f000ffa3-0451-4000-b000-000000000000';
@@ -16,6 +13,12 @@ export const enum BulbColor {
   RED,
   PINK,
 }
+
+export interface BuildStatus {
+  id: string;
+  state: 'pending' | 'failure' | 'error' | 'success';
+}
+
 type BulbColorRgb = [number, number, number];
 type DeviceId = string;
 
@@ -106,16 +109,20 @@ export function changeColor(
   });
 }
 
-export function getColorFromStatus(status: BuildStatus): BulbColor {
-  switch (status.state) {
-    case 'pending':
-      return BulbColor.YELLOW;
-    case 'failure':
-    case 'error':
-      return BulbColor.RED;
-    case 'success':
-      return BulbColor.GREEN;
-    default:
-      return BulbColor.PINK;
+export function getColorFromStatus(
+  statuses: ReadonlyArray<BuildStatus>,
+): BulbColor {
+  if (statuses.length === 0) {
+    return BulbColor.PINK;
   }
+  if (statuses.every(({ state }) => state === 'success')) {
+    return BulbColor.GREEN;
+  }
+  if (statuses.some(({ state }) => state === 'pending')) {
+    return BulbColor.YELLOW;
+  }
+  if (statuses.some(({ state }) => state === 'failure' || state === 'error')) {
+    return BulbColor.RED;
+  }
+  return BulbColor.PINK;
 }

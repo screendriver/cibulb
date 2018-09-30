@@ -7,8 +7,10 @@ import {
   changeColor,
   BulbColor,
   getColorFromStatus,
+  BuildStatus,
 } from '@/light-bulb';
 import { showNotification, NotificationTitle } from '@/notification';
+import { getConfig, Config } from '@/config';
 
 Vue.use(Vuex);
 
@@ -18,13 +20,8 @@ export interface State {
   errorMessage: string;
   deviceId: string | null;
   gattServer: BluetoothRemoteGATTServer | null;
-  buildStatus: BuildStatus | null;
+  buildStatuses: ReadonlyArray<BuildStatus> | null;
   color: BulbColor;
-}
-
-export interface BuildStatus {
-  id: string;
-  state: 'pending' | 'failure' | 'error' | 'success';
 }
 
 export enum Mutations {
@@ -53,7 +50,7 @@ export default new Vuex.Store<State>({
     errorMessage: '',
     deviceId: null,
     gattServer: null,
-    buildStatus: null,
+    buildStatuses: null,
     color: BulbColor.OFF,
   },
   mutations: {
@@ -75,7 +72,7 @@ export default new Vuex.Store<State>({
       state.deviceId = null;
       state.gattServer = null;
       state.connection = 'disconnected';
-      state.buildStatus = null;
+      state.buildStatuses = null;
     },
     [Mutations.ERROR](state: State, message: string) {
       state.errorMessage = message;
@@ -83,8 +80,11 @@ export default new Vuex.Store<State>({
     [Mutations.COLOR_CHANGED](state: State, color: BulbColor) {
       state.color = color;
     },
-    [Mutations.BUILD_STATUS](state: State, buildStatus: BuildStatus) {
-      state.buildStatus = buildStatus;
+    [Mutations.BUILD_STATUS](
+      state: State,
+      statuses: ReadonlyArray<BuildStatus>,
+    ) {
+      state.buildStatuses = statuses;
     },
     [Mutations.VALUE_WRITING](state: State) {
       state.writeValueInProgress = true;
@@ -129,34 +129,26 @@ export default new Vuex.Store<State>({
       commit(Mutations.VALUE_WRITTEN);
     },
     async [Actions.FETCH_BUILD_STATUS]({ commit, dispatch }) {
-      const {
-        VUE_APP_GITHUB_API_URL,
-        VUE_APP_GITHUP_API_TOKEN,
-        VUE_APP_GITHUB_OWNER,
-        VUE_APP_GITHUB_REPO,
-      } = process.env;
-      if (
-        !VUE_APP_GITHUB_API_URL ||
-        !VUE_APP_GITHUP_API_TOKEN ||
-        !VUE_APP_GITHUB_OWNER ||
-        !VUE_APP_GITHUB_REPO
-      ) {
-        commit(Mutations.ERROR, 'Environment variables are missing');
+      let config: Config;
+      try {
+        config = getConfig();
+      } catch (e) {
+        commit(Mutations.ERROR, e);
         return;
       }
       try {
-      const status = await fetchBuildStatus(
-        VUE_APP_GITHUB_API_URL,
-        VUE_APP_GITHUP_API_TOKEN,
-        VUE_APP_GITHUB_OWNER,
-        VUE_APP_GITHUB_REPO,
-      );
-      commit(Mutations.BUILD_STATUS, status);
-      dispatch(Actions.CHANGE_COLOR, getColorFromStatus(status));
-    } catch (error) {
-      commit(Mutations.ERROR, error.toString());
-      dispatch(Actions.CHANGE_COLOR, BulbColor.PINK);
-    }
+        const {
+          gitHub: { apiUrl, apiToken, owner, repos },
+        } = config;
+        const statuses = await Promise.all(
+          repos.map(repo => fetchBuildStatus(apiUrl, apiToken, owner, repo)),
+        );
+        commit(Mutations.BUILD_STATUS, statuses);
+        dispatch(Actions.CHANGE_COLOR, getColorFromStatus(statuses));
+      } catch (error) {
+        commit(Mutations.ERROR, error.toString());
+        dispatch(Actions.CHANGE_COLOR, BulbColor.PINK);
+      }
     },
   },
 });
