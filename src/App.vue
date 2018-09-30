@@ -32,7 +32,7 @@ export default class App extends Vue {
         await this.$store.dispatch(Actions.CHANGE_COLOR, BulbColor.BLUE);
         this.intervalId = window.setInterval(() => {
           this.$store.dispatch(Actions.FETCH_BUILD_STATUS);
-        }, 10 * 1000);
+        }, 15 * 1000);
         break;
       case 'connected':
         await this.$store.dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
