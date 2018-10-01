@@ -133,7 +133,7 @@ export default new Vuex.Store<State>({
       try {
         config = getConfig();
       } catch (e) {
-        commit(Mutations.ERROR, e);
+        commit(Mutations.ERROR, e.toString());
         return;
       }
       try {
