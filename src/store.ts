@@ -138,10 +138,10 @@ export default new Vuex.Store<State>({
       }
       try {
         const {
-          gitHub: { apiUrl, apiToken, owner, repos },
+          gitHub: { apiUrl, apiToken, repos },
         } = config;
         const statuses = await Promise.all(
-          repos.map(repo => fetchBuildStatus(apiUrl, apiToken, owner, repo)),
+          repos.map(repo => fetchBuildStatus(apiUrl, apiToken, repo)),
         );
         commit(Mutations.BUILD_STATUS, statuses);
         dispatch(Actions.CHANGE_COLOR, getColorFromStatus(statuses));

@@ -80,11 +80,10 @@ export function disconnect(gattServer: BluetoothRemoteGATTServer) {
 export async function fetchBuildStatus(
   apiUrl: string,
   apiToken: string,
-  owner: string,
   repo: string,
   fetcher = fetch,
 ): Promise<BuildStatus> {
-  const fullUrl = `${apiUrl}/repos/${owner}/${repo}/commits/master/statuses`;
+  const fullUrl = `${apiUrl}/repos/${repo}/commits/master/statuses`;
   const response = await fetcher(fullUrl, {
     headers: {
       Authorization: `Bearer ${apiToken}`,
