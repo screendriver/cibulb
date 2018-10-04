@@ -19,7 +19,7 @@
     "vuex": "3.0.1"
   },
   "devDependencies": {
-    "@types/jest": "23.3.2",
+    "@types/jest": "23.3.3",
     "@types/node": "10.11.3",
     "@types/web-bluetooth": "0.0.4",
     "@vue/cli-plugin-typescript": "3.0.4",
