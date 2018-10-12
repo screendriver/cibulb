@@ -189,12 +189,12 @@
     ts-loader "^4.4.2"
     tslint "^5.10.0"
 
-"@vue/cli-plugin-unit-jest@3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-3.0.4.tgz#28196d85f6aab1b4045fce40cf194b9b6001009c"
-  integrity sha512-NwCgGRbjTmpm5IOkcTp/NuHhY4qlm2EYZo0R/tUuHLupXaQFwrxqjCjkG4s3/R99uE4IE+8OKrxGoD07GUm//g==
+"@vue/cli-plugin-unit-jest@3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-3.0.5.tgz#31a36ae7b14751d3198a08991640038c432ea75e"
+  integrity sha512-R75GNyzc7SYnIStkdgjHGlot5ap8tFlirtu+C0pXbqx0WxqEf+9RjpgfUkM9g6VRlFxW0xbHjTdqXSL78a9XKg==
   dependencies:
-    "@vue/cli-shared-utils" "^3.0.4"
+    "@vue/cli-shared-utils" "^3.0.5"
     babel-jest "^23.4.0"
     babel-plugin-transform-es2015-modules-commonjs "^6.26.2"
     jest "^23.4.0"
