@@ -1,4 +1,7 @@
 {
   "extends": ["config:base"],
-  "commitMessagePrefix": "⬆️ "
+  "commitMessagePrefix": "⬆️ ",
+  "nvm": {
+    "enabled": false
+  }
 }
