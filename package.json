@@ -22,7 +22,7 @@
     "@types/jest": "23.3.5",
     "@types/node": "10.11.7",
     "@types/web-bluetooth": "0.0.4",
-    "@vue/cli-plugin-typescript": "3.0.4",
+    "@vue/cli-plugin-typescript": "3.0.5",
     "@vue/cli-plugin-unit-jest": "3.0.4",
     "@vue/cli-service": "3.0.4",
     "@vue/test-utils": "1.0.0-beta.25",
