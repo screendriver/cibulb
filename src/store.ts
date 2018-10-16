@@ -1,14 +1,18 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {
-  connect,
-  disconnect,
+  connect as connectBulb,
+  disconnect as disconnectBulb,
   fetchBuildStatus,
   changeColor,
   BulbColor,
   getColorFromStatus,
   BuildStatus,
 } from '@/light-bulb';
+import {
+  connect as connectSocket,
+  disconnect as disconnectSocket,
+} from '@/socket';
 import { showNotification, NotificationTitle } from '@/notification';
 import { getConfig, Config } from '@/config';
 
@@ -96,8 +100,10 @@ export default new Vuex.Store<State>({
   actions: {
     async [Actions.CONNECT]({ commit }) {
       try {
+        const { socketUrl } = getConfig();
         commit(Mutations.CONNECTING);
-        const [gattServer, deviceId] = await connect();
+        const [gattServer, deviceId] = await connectBulb();
+        await connectSocket(socketUrl);
         await showNotification(NotificationTitle.INFO, 'Connected');
         commit(Mutations.CONNECTED, { deviceId, gattServer });
       } catch (error) {
@@ -110,7 +116,8 @@ export default new Vuex.Store<State>({
         commit(Mutations.ERROR, message);
         return;
       }
-      disconnect(state.gattServer);
+      disconnectBulb(state.gattServer);
+      disconnectSocket();
       await showNotification(NotificationTitle.INFO, 'Disconnected');
       commit(Mutations.DISCONNECTED);
     },
