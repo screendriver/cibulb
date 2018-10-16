@@ -77,26 +77,6 @@ export function disconnect(gattServer: BluetoothRemoteGATTServer) {
   gattServer.disconnect();
 }
 
-export async function fetchBuildStatus(
-  apiUrl: string,
-  apiToken: string,
-  repo: string,
-  fetcher = fetch,
-): Promise<BuildStatus> {
-  const fullUrl = `${apiUrl}/repos/${repo}/commits/master/statuses`;
-  const response = await fetcher(fullUrl, {
-    headers: {
-      Authorization: `Bearer ${apiToken}`,
-    },
-  });
-  const statuses = await response.json();
-  if (statuses.length === 0) {
-    throw new Error('Empty response from GitHub');
-  }
-  const { id, state } = statuses[0];
-  return { id, state };
-}
-
 export function changeColor(
   color: BulbColor,
   gattServer: BluetoothRemoteGATTServer,
