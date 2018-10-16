@@ -13,6 +13,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "socket.io-client": "2.1.1",
     "vue": "2.5.17",
     "vue-class-component": "6.3.2",
     "vue-property-decorator": "7.2.0",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@types/jest": "23.3.5",
     "@types/node": "10.12.0",
+    "@types/socket.io-client": "1.4.32",
     "@types/web-bluetooth": "0.0.4",
     "@vue/cli-plugin-typescript": "3.0.5",
     "@vue/cli-plugin-unit-jest": "3.0.5",
