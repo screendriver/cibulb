@@ -1,12 +1,10 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, { Store } from 'vuex';
 import {
   connect as connectBulb,
   disconnect as disconnectBulb,
-  fetchBuildStatus,
   changeColor,
   BulbColor,
-  getColorFromStatus,
   BuildStatus,
 } from '@/light-bulb';
 import {
@@ -14,7 +12,7 @@ import {
   disconnect as disconnectSocket,
 } from '@/socket';
 import { showNotification, NotificationTitle } from '@/notification';
-import { getConfig, Config } from '@/config';
+import { getConfig } from '@/config';
 
 Vue.use(Vuex);
 
@@ -37,13 +35,13 @@ export enum Mutations {
   BUILD_STATUS = 'build-status',
   VALUE_WRITING = 'value-writing',
   VALUE_WRITTEN = 'value-written',
+  GITHUB_HOOK_RECEIVED = 'github-hook-received',
 }
 
 export enum Actions {
   CONNECT = 'connect',
   DISCONNECT = 'disconnect',
   CHANGE_COLOR = 'change-color',
-  FETCH_BUILD_STATUS = 'fetch-build-status',
 }
 
 export default new Vuex.Store<State>({
@@ -96,14 +94,15 @@ export default new Vuex.Store<State>({
     [Mutations.VALUE_WRITTEN](state: State) {
       state.writeValueInProgress = false;
     },
+    [Mutations.GITHUB_HOOK_RECEIVED](json: unknown) {},
   },
   actions: {
     async [Actions.CONNECT]({ commit }) {
       try {
-        const { socketUrl } = getConfig();
         commit(Mutations.CONNECTING);
         const [gattServer, deviceId] = await connectBulb();
-        await connectSocket(socketUrl);
+        const { socketUrl } = getConfig();
+        await connectSocket(socketUrl, commit);
         await showNotification(NotificationTitle.INFO, 'Connected');
         commit(Mutations.CONNECTED, { deviceId, gattServer });
       } catch (error) {
@@ -134,28 +133,6 @@ export default new Vuex.Store<State>({
       await changeColor(color, state.gattServer);
       commit(Mutations.COLOR_CHANGED, color);
       commit(Mutations.VALUE_WRITTEN);
-    },
-    async [Actions.FETCH_BUILD_STATUS]({ commit, dispatch }) {
-      let config: Config;
-      try {
-        config = getConfig();
-      } catch (e) {
-        commit(Mutations.ERROR, e.toString());
-        return;
-      }
-      try {
-        const {
-          gitHub: { apiUrl, apiToken, repos },
-        } = config;
-        const statuses = await Promise.all(
-          repos.map(repo => fetchBuildStatus(apiUrl, apiToken, repo)),
-        );
-        commit(Mutations.BUILD_STATUS, statuses);
-        dispatch(Actions.CHANGE_COLOR, getColorFromStatus(statuses));
-      } catch (error) {
-        commit(Mutations.ERROR, error.toString());
-        dispatch(Actions.CHANGE_COLOR, BulbColor.PINK);
-      }
     },
   },
 });
