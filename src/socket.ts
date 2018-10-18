@@ -12,14 +12,15 @@ let socket: SocketIOClient.Socket | undefined;
 
 export function connect(url: string, store: Store<State>, io = socketIo) {
   return new Promise((resolve, reject) => {
-    socket = io(url);
-    socket.on('connect', () => {
+    const client = io(url);
+    socket = client;
+    client.on('connect', () => {
       resolve();
-      socket!.on('github', (json: GitHubHook) => {
+      client.on('github', (json: GitHubHook) => {
         store.dispatch(Mutations.GITHUB_HOOK_RECEIVED, json);
       });
     });
-    socket.on('connect_error', reject);
+    client.on('connect_error', reject);
   });
 }
 
