@@ -22,7 +22,7 @@ export interface State {
   errorMessage: string;
   deviceId: string | null;
   gattServer: BluetoothRemoteGATTServer | null;
-  buildStatuses: ReadonlyArray<BuildStatus> | null;
+  buildStatuses: Map<string, BuildStatus>;
   color: BulbColor;
 }
 
@@ -52,7 +52,7 @@ export default new Vuex.Store<State>({
     errorMessage: '',
     deviceId: null,
     gattServer: null,
-    buildStatuses: null,
+    buildStatuses: new Map(),
     color: BulbColor.OFF,
   },
   mutations: {
@@ -74,7 +74,7 @@ export default new Vuex.Store<State>({
       state.deviceId = null;
       state.gattServer = null;
       state.connection = 'disconnected';
-      state.buildStatuses = null;
+      state.buildStatuses.clear();
     },
     [Mutations.ERROR](state: State, message: string) {
       state.errorMessage = message;

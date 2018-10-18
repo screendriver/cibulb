@@ -15,7 +15,7 @@ export const enum BulbColor {
 }
 
 export interface BuildStatus {
-  id: string;
+  id: number;
   state: 'pending' | 'failure' | 'error' | 'success';
 }
 
@@ -88,19 +88,20 @@ export function changeColor(
   });
 }
 
-export function getColorFromStatus(
-  statuses: ReadonlyArray<BuildStatus>,
+export function getColorFromStatuses(
+  statuses: Map<string, BuildStatus>,
 ): BulbColor {
-  if (statuses.length === 0) {
+  if (statuses.size === 0) {
     return BulbColor.PINK;
   }
-  if (statuses.every(({ state }) => state === 'success')) {
+  const values = [...statuses.values()];
+  if (values.every(({ state }) => state === 'success')) {
     return BulbColor.GREEN;
   }
-  if (statuses.some(({ state }) => state === 'pending')) {
+  if (values.some(({ state }) => state === 'pending')) {
     return BulbColor.YELLOW;
   }
-  if (statuses.some(({ state }) => state === 'failure' || state === 'error')) {
+  if (values.some(({ state }) => state === 'failure' || state === 'error')) {
     return BulbColor.RED;
   }
   return BulbColor.PINK;
