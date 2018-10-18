@@ -5,13 +5,13 @@ const changeModeCharacteristic = 'f000ffa3-0451-4000-b000-000000000000';
 // 4d57 (0x4F57) changes to white
 const changeColorCharacteristic = 'f000ffa4-0451-4000-b000-000000000000';
 
-export const enum BulbColor {
-  OFF,
-  BLUE,
-  YELLOW,
-  GREEN,
-  RED,
-  PINK,
+export enum BulbColor {
+  OFF = 'OFF',
+  BLUE = 'BLUE',
+  YELLOW = 'YELLOW',
+  GREEN = 'GREEN',
+  RED = 'RED',
+  PINK = ' PINK',
 }
 
 export interface BuildStatus {
