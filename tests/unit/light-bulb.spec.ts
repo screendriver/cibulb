@@ -1,8 +1,9 @@
 import {
   connect,
   disconnect,
-  getColorFromStatus,
+  getColorFromStatuses,
   BulbColor,
+  BuildStatus,
 } from '@/light-bulb';
 
 describe('light-bulb', () => {
@@ -26,42 +27,46 @@ describe('light-bulb', () => {
 
   describe('getColorFromStatus()', () => {
     it('should return GREEN when every state is in "success"', () => {
-      const color = getColorFromStatus([
-        { id: '', state: 'success' },
-        { id: '', state: 'success' },
+      const statuses = new Map<string, BuildStatus>([
+        ['test/repo', { id: 1, state: 'success' }],
+        ['second/repo', { id: 2, state: 'success' }],
       ]);
+      const color = getColorFromStatuses(statuses);
       expect(color).toEqual(BulbColor.GREEN);
     });
 
     it('should return YELLOW when one state is in "pending"', () => {
-      const color = getColorFromStatus([
-        { id: '', state: 'success' },
-        { id: '', state: 'pending' },
-        { id: '', state: 'success' },
+      const statuses = new Map<string, BuildStatus>([
+        ['test/repo', { id: 1, state: 'success' }],
+        ['second/repo', { id: 2, state: 'pending' }],
+        ['third/repo', { id: 3, state: 'success' }],
       ]);
+      const color = getColorFromStatuses(statuses);
       expect(color).toEqual(BulbColor.YELLOW);
     });
 
     it('should return RED when one state is in "failure"', () => {
-      const color = getColorFromStatus([
-        { id: '', state: 'success' },
-        { id: '', state: 'failure' },
-        { id: '', state: 'success' },
+      const statuses = new Map<string, BuildStatus>([
+        ['test/repo', { id: 1, state: 'success' }],
+        ['second/repo', { id: 2, state: 'failure' }],
+        ['third/repo', { id: 3, state: 'success' }],
       ]);
+      const color = getColorFromStatuses(statuses);
       expect(color).toEqual(BulbColor.RED);
     });
 
     it('should return RED when one state is in "error"', () => {
-      const color = getColorFromStatus([
-        { id: '', state: 'success' },
-        { id: '', state: 'error' },
-        { id: '', state: 'success' },
+      const statuses = new Map<string, BuildStatus>([
+        ['test/repo', { id: 1, state: 'success' }],
+        ['second/repo', { id: 2, state: 'error' }],
+        ['third/repo', { id: 3, state: 'success' }],
       ]);
+      const color = getColorFromStatuses(statuses);
       expect(color).toEqual(BulbColor.RED);
     });
 
     it('should return PINK when statuses are empty', () => {
-      const color = getColorFromStatus([]);
+      const color = getColorFromStatuses(new Map());
       expect(color).toEqual(BulbColor.PINK);
     });
   });
