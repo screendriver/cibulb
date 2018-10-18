@@ -23,24 +23,15 @@ import { showNotification, NotificationTitle } from '@/notification';
   },
 })
 export default class App extends Vue {
-  public intervalId: number | null = null;
-
   public async onBulbClick() {
     switch (this.$store.state.connection) {
       case 'disconnected':
         await this.$store.dispatch(Actions.CONNECT);
         await this.$store.dispatch(Actions.CHANGE_COLOR, BulbColor.BLUE);
-        this.intervalId = window.setInterval(() => {
-          this.$store.dispatch(Actions.FETCH_BUILD_STATUS);
-        }, 30 * 1000);
         break;
       case 'connected':
         await this.$store.dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
         await this.$store.dispatch(Actions.DISCONNECT);
-        if (this.intervalId) {
-          window.clearInterval(this.intervalId);
-          this.intervalId = null;
-        }
         break;
     }
   }

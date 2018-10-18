@@ -5,17 +5,17 @@ const changeModeCharacteristic = 'f000ffa3-0451-4000-b000-000000000000';
 // 4d57 (0x4F57) changes to white
 const changeColorCharacteristic = 'f000ffa4-0451-4000-b000-000000000000';
 
-export const enum BulbColor {
-  OFF,
-  BLUE,
-  YELLOW,
-  GREEN,
-  RED,
-  PINK,
+export enum BulbColor {
+  OFF = 'OFF',
+  BLUE = 'BLUE',
+  YELLOW = 'YELLOW',
+  GREEN = 'GREEN',
+  RED = 'RED',
+  PINK = ' PINK',
 }
 
 export interface BuildStatus {
-  id: string;
+  id: number;
   state: 'pending' | 'failure' | 'error' | 'success';
 }
 
@@ -77,26 +77,6 @@ export function disconnect(gattServer: BluetoothRemoteGATTServer) {
   gattServer.disconnect();
 }
 
-export async function fetchBuildStatus(
-  apiUrl: string,
-  apiToken: string,
-  repo: string,
-  fetcher = fetch,
-): Promise<BuildStatus> {
-  const fullUrl = `${apiUrl}/repos/${repo}/commits/master/statuses`;
-  const response = await fetcher(fullUrl, {
-    headers: {
-      Authorization: `Bearer ${apiToken}`,
-    },
-  });
-  const statuses = await response.json();
-  if (statuses.length === 0) {
-    throw new Error('Empty response from GitHub');
-  }
-  const { id, state } = statuses[0];
-  return { id, state };
-}
-
 export function changeColor(
   color: BulbColor,
   gattServer: BluetoothRemoteGATTServer,
@@ -108,19 +88,20 @@ export function changeColor(
   });
 }
 
-export function getColorFromStatus(
-  statuses: ReadonlyArray<BuildStatus>,
+export function getColorFromStatuses(
+  statuses: Map<string, BuildStatus>,
 ): BulbColor {
-  if (statuses.length === 0) {
+  if (statuses.size === 0) {
     return BulbColor.PINK;
   }
-  if (statuses.every(({ state }) => state === 'success')) {
+  const values = [...statuses.values()];
+  if (values.every(({ state }) => state === 'success')) {
     return BulbColor.GREEN;
   }
-  if (statuses.some(({ state }) => state === 'pending')) {
+  if (values.some(({ state }) => state === 'pending')) {
     return BulbColor.YELLOW;
   }
-  if (statuses.some(({ state }) => state === 'failure' || state === 'error')) {
+  if (values.some(({ state }) => state === 'failure' || state === 'error')) {
     return BulbColor.RED;
   }
   return BulbColor.PINK;

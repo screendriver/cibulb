@@ -1,16 +1,20 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+import Vuex, { Store } from 'vuex';
 import {
-  connect,
-  disconnect,
-  fetchBuildStatus,
+  connect as connectBulb,
+  disconnect as disconnectBulb,
   changeColor,
   BulbColor,
-  getColorFromStatus,
   BuildStatus,
+  getColorFromStatuses,
 } from '@/light-bulb';
+import {
+  connect as connectSocket,
+  disconnect as disconnectSocket,
+  GitHubHook,
+} from '@/socket';
 import { showNotification, NotificationTitle } from '@/notification';
-import { getConfig, Config } from '@/config';
+import { getConfig } from '@/config';
 
 Vue.use(Vuex);
 
@@ -20,7 +24,7 @@ export interface State {
   errorMessage: string;
   deviceId: string | null;
   gattServer: BluetoothRemoteGATTServer | null;
-  buildStatuses: ReadonlyArray<BuildStatus> | null;
+  buildStatuses: Map<string, BuildStatus>;
   color: BulbColor;
 }
 
@@ -30,19 +34,19 @@ export enum Mutations {
   CONNECTED = 'connected',
   DISCONNECTED = 'disconnected',
   COLOR_CHANGED = 'color-changed',
-  BUILD_STATUS = 'build-status',
   VALUE_WRITING = 'value-writing',
   VALUE_WRITTEN = 'value-written',
+  GITHUB_HOOK_RECEIVED = 'github-hook-received',
 }
 
 export enum Actions {
   CONNECT = 'connect',
   DISCONNECT = 'disconnect',
   CHANGE_COLOR = 'change-color',
-  FETCH_BUILD_STATUS = 'fetch-build-status',
+  GITHUB_HOOK_RECEIVED = 'github-hook-received',
 }
 
-export default new Vuex.Store<State>({
+const store = new Vuex.Store<State>({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     connection: 'disconnected',
@@ -50,7 +54,7 @@ export default new Vuex.Store<State>({
     errorMessage: '',
     deviceId: null,
     gattServer: null,
-    buildStatuses: null,
+    buildStatuses: new Map(),
     color: BulbColor.OFF,
   },
   mutations: {
@@ -72,7 +76,7 @@ export default new Vuex.Store<State>({
       state.deviceId = null;
       state.gattServer = null;
       state.connection = 'disconnected';
-      state.buildStatuses = null;
+      state.buildStatuses.clear();
     },
     [Mutations.ERROR](state: State, message: string) {
       state.errorMessage = message;
@@ -80,24 +84,23 @@ export default new Vuex.Store<State>({
     [Mutations.COLOR_CHANGED](state: State, color: BulbColor) {
       state.color = color;
     },
-    [Mutations.BUILD_STATUS](
-      state: State,
-      statuses: ReadonlyArray<BuildStatus>,
-    ) {
-      state.buildStatuses = statuses;
-    },
     [Mutations.VALUE_WRITING](state: State) {
       state.writeValueInProgress = true;
     },
     [Mutations.VALUE_WRITTEN](state: State) {
       state.writeValueInProgress = false;
     },
+    [Mutations.GITHUB_HOOK_RECEIVED](state: State, hook: GitHubHook) {
+      state.buildStatuses.set(hook.name, { id: hook.id, state: hook.state });
+    },
   },
   actions: {
     async [Actions.CONNECT]({ commit }) {
       try {
         commit(Mutations.CONNECTING);
-        const [gattServer, deviceId] = await connect();
+        const [gattServer, deviceId] = await connectBulb();
+        const { socketUrl } = getConfig();
+        await connectSocket(socketUrl, store);
         await showNotification(NotificationTitle.INFO, 'Connected');
         commit(Mutations.CONNECTED, { deviceId, gattServer });
       } catch (error) {
@@ -110,9 +113,17 @@ export default new Vuex.Store<State>({
         commit(Mutations.ERROR, message);
         return;
       }
-      disconnect(state.gattServer);
+      disconnectBulb(state.gattServer);
+      disconnectSocket();
       await showNotification(NotificationTitle.INFO, 'Disconnected');
       commit(Mutations.DISCONNECTED);
+    },
+    async [Actions.GITHUB_HOOK_RECEIVED](
+      { commit, dispatch, state },
+      hook: GitHubHook,
+    ) {
+      commit(Mutations.GITHUB_HOOK_RECEIVED, hook);
+      dispatch(Actions.CHANGE_COLOR, getColorFromStatuses(state.buildStatuses));
     },
     async [Actions.CHANGE_COLOR]({ commit, state }, color: BulbColor) {
       if (!state.gattServer) {
@@ -128,27 +139,7 @@ export default new Vuex.Store<State>({
       commit(Mutations.COLOR_CHANGED, color);
       commit(Mutations.VALUE_WRITTEN);
     },
-    async [Actions.FETCH_BUILD_STATUS]({ commit, dispatch }) {
-      let config: Config;
-      try {
-        config = getConfig();
-      } catch (e) {
-        commit(Mutations.ERROR, e.toString());
-        return;
-      }
-      try {
-        const {
-          gitHub: { apiUrl, apiToken, repos },
-        } = config;
-        const statuses = await Promise.all(
-          repos.map(repo => fetchBuildStatus(apiUrl, apiToken, repo)),
-        );
-        commit(Mutations.BUILD_STATUS, statuses);
-        dispatch(Actions.CHANGE_COLOR, getColorFromStatus(statuses));
-      } catch (error) {
-        commit(Mutations.ERROR, error.toString());
-        dispatch(Actions.CHANGE_COLOR, BulbColor.PINK);
-      }
-    },
   },
 });
+
+export default store;
