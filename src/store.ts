@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex, { Store } from 'vuex';
+import Vuex, { Store, MutationTree } from 'vuex';
 import {
   connect as connectBulb,
   disconnect as disconnectBulb,
@@ -46,6 +46,44 @@ export enum Actions {
   GITHUB_HOOK_RECEIVED = 'github-hook-received',
 }
 
+export const mutations: MutationTree<State> = {
+  [Mutations.CONNECTING](state: State) {
+    state.connection = 'connecting';
+  },
+  [Mutations.CONNECTED](
+    state: State,
+    {
+      deviceId,
+      gattServer,
+    }: { deviceId: string; gattServer: BluetoothRemoteGATTServer },
+  ) {
+    state.connection = 'connected';
+    state.deviceId = deviceId;
+    state.gattServer = gattServer;
+  },
+  [Mutations.DISCONNECTED](state: State) {
+    state.deviceId = null;
+    state.gattServer = null;
+    state.connection = 'disconnected';
+    state.buildStatuses.clear();
+  },
+  [Mutations.ERROR](state: State, message: string) {
+    state.errorMessage = message;
+  },
+  [Mutations.COLOR_CHANGED](state: State, color: BulbColor) {
+    state.color = color;
+  },
+  [Mutations.VALUE_WRITING](state: State) {
+    state.writeValueInProgress = true;
+  },
+  [Mutations.VALUE_WRITTEN](state: State) {
+    state.writeValueInProgress = false;
+  },
+  [Mutations.GITHUB_HOOK_RECEIVED](state: State, hook: GitHubHook) {
+    state.buildStatuses.set(hook.name, { id: hook.id, state: hook.state });
+  },
+};
+
 const store = new Vuex.Store<State>({
   strict: process.env.NODE_ENV !== 'production',
   state: {
@@ -57,43 +95,7 @@ const store = new Vuex.Store<State>({
     buildStatuses: new Map(),
     color: BulbColor.OFF,
   },
-  mutations: {
-    [Mutations.CONNECTING](state: State) {
-      state.connection = 'connecting';
-    },
-    [Mutations.CONNECTED](
-      state: State,
-      {
-        deviceId,
-        gattServer,
-      }: { deviceId: string; gattServer: BluetoothRemoteGATTServer },
-    ) {
-      state.connection = 'connected';
-      state.deviceId = deviceId;
-      state.gattServer = gattServer;
-    },
-    [Mutations.DISCONNECTED](state: State) {
-      state.deviceId = null;
-      state.gattServer = null;
-      state.connection = 'disconnected';
-      state.buildStatuses.clear();
-    },
-    [Mutations.ERROR](state: State, message: string) {
-      state.errorMessage = message;
-    },
-    [Mutations.COLOR_CHANGED](state: State, color: BulbColor) {
-      state.color = color;
-    },
-    [Mutations.VALUE_WRITING](state: State) {
-      state.writeValueInProgress = true;
-    },
-    [Mutations.VALUE_WRITTEN](state: State) {
-      state.writeValueInProgress = false;
-    },
-    [Mutations.GITHUB_HOOK_RECEIVED](state: State, hook: GitHubHook) {
-      state.buildStatuses.set(hook.name, { id: hook.id, state: hook.state });
-    },
-  },
+  mutations,
   actions: {
     async [Actions.CONNECT]({ commit }) {
       try {
