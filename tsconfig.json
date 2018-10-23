@@ -18,7 +18,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "plugins": [{ "name": "tslint-language-service" }],
+    "plugins": [{ "name": "typescript-tslint-plugin" }],
     "typeRoots": ["./node_modules/@types", "./typings"]
   },
   "include": [
