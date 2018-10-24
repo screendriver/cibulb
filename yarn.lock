@@ -7886,10 +7886,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript-tslint-plugin@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/typescript-tslint-plugin/-/typescript-tslint-plugin-0.0.3.tgz#2348f4b40496107885748818c914f2c00a135a0f"
-  integrity sha512-yNySqr35vg/HcRBco2qT+LWkmScL3dasAhlg1e99NpRlB4hNNmjsz4GWGMKWff+Ih1lt0nPw1ZKlxzosVXhtow==
+typescript-tslint-plugin@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/typescript-tslint-plugin/-/typescript-tslint-plugin-0.0.4.tgz#8f403606b94a0be64823ba584264dfd52885e4f3"
+  integrity sha512-4ulIuRFrBfc52rmUvwOyPM8oRSqKmhyixpbk6v/1WaeoP9lc8o8lauCPpY7NFCK5FI3JZ/Znuak7OqBflwycTw==
   dependencies:
     minimatch "^3.0.4"
     vscode-languageserver "^5.1.0"
