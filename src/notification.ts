@@ -18,6 +18,6 @@ export async function showNotification(title: NotificationTitle, body: string) {
   return new Notification(title, {
     body,
     renotify: true,
-    tag: 'lightbulb',
+    tag: 'bulb',
   });
 }

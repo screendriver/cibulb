@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <light-bulb @click="onBulbClick" />
+    <bulb @click="onBulbClick" />
     <the-error-message />
     <the-footer />
   </div>
@@ -8,16 +8,16 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import LightBulb from '@/components/LightBulb.vue';
+import Bulb from '@/components/Bulb.vue';
 import TheErrorMessage from '@/views/TheErrorMessage.vue';
 import TheFooter from '@/views/TheFooter.vue';
-import { connect, disconnect, BulbColor } from '@/light-bulb';
+import { connect, disconnect, BulbColor } from '@/bulb';
 import { Actions, Mutations } from '@/store';
 import { showNotification, NotificationTitle } from '@/notification';
 
 @Component({
   components: {
-    LightBulb,
+    Bulb,
     TheErrorMessage,
     TheFooter,
   },
@@ -48,12 +48,12 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-svg.lightBulb {
+svg.bulb {
   height: 50vh;
   transition: transform 0.3s;
 }
 
-svg.lightBulb:hover {
+svg.bulb:hover {
   cursor: pointer;
   transform: scale(1.1);
 }
@@ -73,7 +73,7 @@ svg.lightBulb:hover {
   }
 }
 
-svg.lightBulb > .lightBulbWire {
+svg.bulb > .bulbWire {
   animation: power 1s ease infinite;
 }
 

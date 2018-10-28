@@ -1,8 +1,8 @@
 {
-  "name": "ci-light-bulb",
+  "name": "cibulb",
   "version": "0.1.0",
   "private": true,
-  "repository": "git@github.com:screendriver/ci-light-bulb.git",
+  "repository": "git@github.com:screendriver/cibulb.git",
   "author": "Christian Rackerseder <git@echooff.de>",
   "license": "MIT",
   "scripts": {

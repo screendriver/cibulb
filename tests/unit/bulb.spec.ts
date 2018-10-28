@@ -4,7 +4,7 @@ import {
   getColorFromStatuses,
   BulbColor,
   BuildStatus,
-} from '@/light-bulb';
+} from '@/bulb';
 
 describe('light-bulb', () => {
   describe('connect()', () => {

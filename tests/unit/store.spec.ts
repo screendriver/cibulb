@@ -1,5 +1,5 @@
 import { mutations, Mutations, State } from '@/store';
-import { BulbColor, BuildStatus } from '@/light-bulb';
+import { BulbColor, BuildStatus } from '@/bulb';
 import { GitHubHook } from '@/socket';
 
 function createMockState(overrides: Partial<State> = {}): State {

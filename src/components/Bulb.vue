@@ -9,7 +9,7 @@
   viewBox="0 0 512.008 512.008"
   style="enable-background:new 0 0 512.008 512.008;"
   xml:space="preserve"
-  class="lightBulb"
+  class="bulb"
   @click="$emit('click')"
   >
     <g>

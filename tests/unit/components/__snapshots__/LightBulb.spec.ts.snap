@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<light-bulb /> should render correctly 1`] = `
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512.008 512.008" xml:space="preserve" class="lightBulb" style="enable-background: new 0 0 512.008 512.008;">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512.008 512.008" xml:space="preserve" class="bulb" style="enable-background: new 0 0 512.008 512.008;">
   <g>
     <g>
       <path d="M280.01,464.008h-48c-4.422,0-8,3.578-8,8v8c0,17.648,14.352,32,32,32s32-14.352,32-32v-8

@@ -7,7 +7,7 @@ import {
   BulbColor,
   BuildStatus,
   getColorFromStatuses,
-} from '@/light-bulb';
+} from '@/bulb';
 import {
   connect as connectSocket,
   disconnect as disconnectSocket,

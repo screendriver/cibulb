@@ -1,6 +1,6 @@
-# ci-light-bulb
+# cibulb
 
-[![Build Status](https://travis-ci.org/screendriver/ci-light-bulb.svg?branch=master)](https://travis-ci.org/screendriver/ci-light-bulb)
+[![Build Status](https://travis-ci.org/screendriver/cibulb.svg?branch=master)](https://travis-ci.org/screendriver/cibulb)
 
 ## Project setup
 
