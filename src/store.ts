@@ -105,8 +105,9 @@ const store = new Vuex.Store<State>({
         await connectSocket(socketUrl, store);
         await showNotification(NotificationTitle.INFO, 'Connected');
         commit(Mutations.CONNECTED, { deviceId, gattServer });
-      } catch (error) {
-        commit(Mutations.ERROR, error.toString());
+      } catch (e) {
+        commit(Mutations.ERROR, e.toString());
+        throw e;
       }
     },
     async [Actions.DISCONNECT]({ commit, state }) {
