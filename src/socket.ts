@@ -12,7 +12,9 @@ let socket: SocketIOClient.Socket | undefined;
 
 export function connect(url: string, store: Store<State>, io = socketIo) {
   return new Promise((resolve, reject) => {
-    const client = io(url);
+    const client = io(url, {
+      timeout: 45000,
+    });
     socket = client;
     client.on('connect', () => {
       resolve();
