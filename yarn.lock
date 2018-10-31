@@ -207,10 +207,10 @@
     jest-transform-stub "^1.0.0"
     vue-jest "^3.0.0"
 
-"@vue/cli-service@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.1.0.tgz#ac7e1e0262ea859f5782343599f39fa10574c093"
-  integrity sha512-bHlXuKXUr6PlEYz7ZiHgk9bjtcOmOi8MCsKb2/mxwnxmvCiqmUqf11NE5cFqiLXP/pNE7CJ9V2sSEqnv91aXww==
+"@vue/cli-service@3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.1.1.tgz#57481706731304e415817f64313343f575fe1951"
+  integrity sha512-emRKp+gk+xfPE3S/QkvP9gozbxrdgNfKP10qWvSWAphepriqGPzvY3R0HXzRoyV9mIcz0pDPUuAkmBiNmjCIxQ==
   dependencies:
     "@intervolga/optimize-cssnano-plugin" "^1.0.5"
     "@vue/cli-overlay" "^3.1.0"
@@ -218,6 +218,7 @@
     "@vue/preload-webpack-plugin" "^1.1.0"
     "@vue/web-component-wrapper" "^1.2.0"
     acorn "^6.0.2"
+    acorn-walk "^6.1.0"
     address "^1.0.3"
     autoprefixer "^8.6.5"
     cache-loader "1.2.2"
@@ -496,6 +497,11 @@ acorn-globals@^4.1.0:
   integrity sha512-KjZwU26uG3u6eZcfGbTULzFcsoz6pegNKtHPksZPOUsiKo5bUmiBPa38FuHZ/Eun+XYh/JCCkS9AS3Lu4McQOQ==
   dependencies:
     acorn "^5.0.0"
+
+acorn-walk@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-6.1.0.tgz#c957f4a1460da46af4a0388ce28b4c99355b0cbc"
+  integrity sha512-ugTb7Lq7u4GfWSqqpwE0bGyoBZNMTok/zDBXxfEG0QM50jNlGhIWjRC1pPN7bvV1anhF+bs+/gNcRw+o55Evbg==
 
 acorn@^5.0.0, acorn@^5.5.3, acorn@^5.6.2:
   version "5.7.2"
