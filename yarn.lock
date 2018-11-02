@@ -182,16 +182,16 @@
   resolved "https://registry.yarnpkg.com/@vue/cli-overlay/-/cli-overlay-3.1.0.tgz#47db870055060c30189454919dbf9381be8695f2"
   integrity sha512-id6FtCzfbYQ812vRP9AA5qelmQTfhYvYmU+AGm+eZmSbdk8eZqbUtiraFPa5JsqnPN8twUvpPLmvqmPHoK+VEw==
 
-"@vue/cli-plugin-typescript@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-typescript/-/cli-plugin-typescript-3.1.0.tgz#2abf7b67584dfad7e86dce1cf34c53e32c2019d6"
-  integrity sha512-6O7kdfytCs6wj1AhtPdP3IZR1pYlCcpQt6zDlLg9rDXIsDBeDAdttMaOgQOGIcC9VuvgiAXZIlEbEMG+9xTtZg==
+"@vue/cli-plugin-typescript@3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-typescript/-/cli-plugin-typescript-3.1.1.tgz#9c3a62795dd6f7359325384b303904e7d7b76d8d"
+  integrity sha512-DJqBo6y+w6ZJZBXDK6xk/4EB0/jy9aOemX356QSYxDsTNsHx1Okg3RuCq/wN0yElVVthzi5FEnDlfGymAWzqig==
   dependencies:
     "@types/webpack-env" "^1.13.6"
-    "@vue/cli-shared-utils" "^3.1.0"
+    "@vue/cli-shared-utils" "^3.1.1"
     fork-ts-checker-webpack-plugin "^0.4.14"
     globby "^8.0.1"
-    ts-loader "^5.2.2"
+    ts-loader "^5.3.0"
     tslint "^5.11.0"
 
 "@vue/cli-plugin-unit-jest@3.1.0":
@@ -270,6 +270,24 @@
   dependencies:
     chalk "^2.4.1"
     execa "^0.10.0"
+    joi "^13.0.0"
+    launch-editor "^2.2.1"
+    lru-cache "^4.1.3"
+    node-ipc "^9.1.1"
+    opn "^5.3.0"
+    ora "^2.1.0"
+    request "^2.87.0"
+    request-promise-native "^1.0.5"
+    semver "^5.5.0"
+    string.prototype.padstart "^3.0.0"
+
+"@vue/cli-shared-utils@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-3.1.1.tgz#ab8638c25318e5812b57877d7cfc65cd2af43740"
+  integrity sha512-r+R+5LI6IHHPI5tbOSDy5DpiY5O9eTy8LPr/QCPb5RIOg+Pg03VlElW4BL69hePXEHCQZZDsOzgItSmat6mBhg==
+  dependencies:
+    chalk "^2.4.1"
+    execa "^1.0.0"
     joi "^13.0.0"
     launch-editor "^2.2.1"
     lru-cache "^4.1.3"
@@ -2845,6 +2863,19 @@ execa@^0.9.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
+execa@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/execa/-/execa-1.0.0.tgz#c6236a5bb4df6d6f15e88e7f017798216749ddd8"
+  integrity sha512-adbxcyWV46qiHyvSp50TKt05tB4tK3HcmF7/nxfAdhnox83seTDbwnaqKO4sXRy7roHAIFqJP/Rw/AuEbX61LA==
+  dependencies:
+    cross-spawn "^6.0.0"
+    get-stream "^4.0.0"
+    is-stream "^1.1.0"
+    npm-run-path "^2.0.0"
+    p-finally "^1.0.0"
+    signal-exit "^3.0.0"
+    strip-eof "^1.0.0"
+
 exit@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/exit/-/exit-0.1.2.tgz#0632638f8d877cc82107d30a0fff1a17cba1cd0c"
@@ -3348,6 +3379,13 @@ get-stream@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-3.0.0.tgz#8e943d1358dc37555054ecbe2edb05aa174ede14"
   integrity sha1-jpQ9E1jcN1VQVOy+LtsFqhdO3hQ=
+
+get-stream@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-4.1.0.tgz#c1b255575f3dc21d59bfc79cd3d2b46b1c3a54b5"
+  integrity sha512-GMat4EJ5161kIy2HevLlr4luNjBgvmj413KaQA7jt4V8B4RDsfpHk7WQ9GVqfYyyx8OS/L66Kox+rJRNklLK7w==
+  dependencies:
+    pump "^3.0.0"
 
 get-value@^2.0.3, get-value@^2.0.6:
   version "2.0.6"
@@ -8224,10 +8262,10 @@ ts-jest@23.10.4:
     semver "^5.5"
     yargs-parser "10.x"
 
-ts-loader@^5.2.2:
-  version "5.2.2"
-  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-5.2.2.tgz#a707849b08ca754cc46f5c7053e79fe1c84caf0e"
-  integrity sha512-vM/TrEKXBqRYq5yLatsXyKFnYSpv53klmGtrILGlNqcMsxPVi8+e4yr1Agbu9oMZepx/4szDVn5QpFo83IQdQg==
+ts-loader@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/ts-loader/-/ts-loader-5.3.0.tgz#4bac24e57bc5189391ab14987d9898ce53ef5cf7"
+  integrity sha512-lGSNs7szRFj/rK9T1EQuayE3QNLg6izDUxt5jpmq0RG1rU2bapAt7E7uLckLCUPeO1jwxCiet2oRaWovc53UAg==
   dependencies:
     chalk "^2.3.0"
     enhanced-resolve "^4.0.0"
