@@ -207,14 +207,14 @@
     jest-transform-stub "^1.0.0"
     vue-jest "^3.0.0"
 
-"@vue/cli-service@3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.1.1.tgz#57481706731304e415817f64313343f575fe1951"
-  integrity sha512-emRKp+gk+xfPE3S/QkvP9gozbxrdgNfKP10qWvSWAphepriqGPzvY3R0HXzRoyV9mIcz0pDPUuAkmBiNmjCIxQ==
+"@vue/cli-service@3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.1.2.tgz#e3ca43cefd7c9b5fa5e148a8d1f667de9ddc2579"
+  integrity sha512-hJHXvtQ4+aynKn+wknSqM7RoEbg35yA5W9L74vvjOQDyU+nEf2uQHt/xNj5O/PwSxK5QBn80vWH8CrUSCBF0eg==
   dependencies:
     "@intervolga/optimize-cssnano-plugin" "^1.0.5"
     "@vue/cli-overlay" "^3.1.0"
-    "@vue/cli-shared-utils" "^3.1.0"
+    "@vue/cli-shared-utils" "^3.1.1"
     "@vue/preload-webpack-plugin" "^1.1.0"
     "@vue/web-component-wrapper" "^1.2.0"
     acorn "^6.0.2"
@@ -226,7 +226,7 @@
     chalk "^2.4.1"
     clipboardy "^1.2.3"
     cliui "^4.1.0"
-    copy-webpack-plugin "^4.5.4"
+    copy-webpack-plugin "^4.6.0"
     css-loader "^1.0.1"
     cssnano "^4.1.7"
     debug "^4.1.0"
@@ -1847,10 +1847,10 @@ copy-descriptor@^0.1.0:
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
   integrity sha1-Z29us8OZl8LuGsOpJP1hJHSPV40=
 
-copy-webpack-plugin@^4.5.4:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/copy-webpack-plugin/-/copy-webpack-plugin-4.5.4.tgz#f2b2782b3cd5225535c3dc166a80067e7d940f27"
-  integrity sha512-0lstlEyj74OAtYMrDxlNZsU7cwFijAI3Ofz2fD6Mpo9r4xCv4yegfa3uHIKvZY1NSuOtE9nvG6TAhJ+uz9gDaQ==
+copy-webpack-plugin@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/copy-webpack-plugin/-/copy-webpack-plugin-4.6.0.tgz#e7f40dd8a68477d405dd1b7a854aae324b158bae"
+  integrity sha512-Y+SQCF+0NoWQryez2zXn5J5knmr9z/9qSQt7fbL78u83rxmigOy8X5+BFn8CFSuX+nKT8gpYwJX68ekqtQt6ZA==
   dependencies:
     cacache "^10.0.4"
     find-cache-dir "^1.0.0"
