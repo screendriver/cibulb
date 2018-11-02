@@ -1,7 +1,7 @@
 [build]
   publish = "dist/"
   command = "yarn test:unit && yarn build"
-  environment = { YARN_VERSION = "1.10.1" }
+  environment = { YARN_VERSION = "1.12.1" }
 
 [[redirects]]
   from = "/*"
