@@ -138,11 +138,11 @@ const store = new Vuex.Store<State>({
         );
         return;
       }
+      await dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
       disconnectBulb(state.gattServer);
       commit(Mutations.BULB_DISCONNECTED);
       disconnectSocket();
       commit(Mutations.SOCKET_DISCONNECTED);
-      await dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
       await showNotification(NotificationTitle.INFO, 'Disconnected');
     },
     async [Actions.GITHUB_HOOK_RECEIVED](
