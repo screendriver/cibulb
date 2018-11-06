@@ -29,5 +29,6 @@ export function connect(url: string, store: Store<State>, io = socketIo) {
 export function disconnect() {
   if (socket) {
     socket.disconnect();
+    socket = undefined;
   }
 }
