@@ -24,13 +24,11 @@ import { showNotification, NotificationTitle } from '@/notification';
 })
 export default class App extends Vue {
   public async onBulbClick() {
-    switch (this.$store.state.connection) {
+    switch (this.$store.state.bulbConnection) {
       case 'disconnected':
         await this.$store.dispatch(Actions.CONNECT);
-        await this.$store.dispatch(Actions.CHANGE_COLOR, BulbColor.BLUE);
         break;
       case 'connected':
-        await this.$store.dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
         await this.$store.dispatch(Actions.DISCONNECT);
         break;
     }

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex, { Store, MutationTree } from 'vuex';
+import Vuex, { MutationTree } from 'vuex';
 import {
   connect as connectBulb,
   disconnect as disconnectBulb,
@@ -18,8 +18,11 @@ import { getConfig } from '@/config';
 
 Vue.use(Vuex);
 
+type Connection = 'connecting' | 'connected' | 'disconnected';
+
 export interface State {
-  connection: 'connecting' | 'connected' | 'disconnected';
+  bulbConnection: Connection;
+  socketConnection: Connection;
   writeValueInProgress: boolean;
   errorMessage: string;
   deviceId: string | null;
@@ -30,9 +33,12 @@ export interface State {
 
 export enum Mutations {
   ERROR = 'error',
-  CONNECTING = 'connecting',
-  CONNECTED = 'connected',
-  DISCONNECTED = 'disconnected',
+  BULB_CONNECTING = 'bulb-connecting',
+  BULB_CONNECTED = 'bulb-connected',
+  BULB_DISCONNECTED = 'bulb-disconnected',
+  SOCKET_CONNECTING = 'socket-connecting',
+  SOCKET_CONNECTED = 'socket-connected',
+  SOCKET_DISCONNECTED = 'socket-disconnected',
   COLOR_CHANGED = 'color-changed',
   VALUE_WRITING = 'value-writing',
   VALUE_WRITTEN = 'value-written',
@@ -47,24 +53,33 @@ export enum Actions {
 }
 
 export const mutations: MutationTree<State> = {
-  [Mutations.CONNECTING](state: State) {
-    state.connection = 'connecting';
+  [Mutations.BULB_CONNECTING](state: State) {
+    state.bulbConnection = 'connecting';
   },
-  [Mutations.CONNECTED](
+  [Mutations.BULB_CONNECTED](
     state: State,
     {
       deviceId,
       gattServer,
     }: { deviceId: string; gattServer: BluetoothRemoteGATTServer },
   ) {
-    state.connection = 'connected';
+    state.bulbConnection = 'connected';
     state.deviceId = deviceId;
     state.gattServer = gattServer;
   },
-  [Mutations.DISCONNECTED](state: State) {
+  [Mutations.BULB_DISCONNECTED](state: State) {
     state.deviceId = null;
     state.gattServer = null;
-    state.connection = 'disconnected';
+    state.bulbConnection = 'disconnected';
+  },
+  [Mutations.SOCKET_CONNECTING](state: State) {
+    state.socketConnection = 'connecting';
+  },
+  [Mutations.SOCKET_CONNECTED](state: State) {
+    state.socketConnection = 'connected';
+  },
+  [Mutations.SOCKET_DISCONNECTED](state: State) {
+    state.socketConnection = 'disconnected';
     state.buildStatuses.clear();
   },
   [Mutations.ERROR](state: State, message: string) {
@@ -87,7 +102,8 @@ export const mutations: MutationTree<State> = {
 const store = new Vuex.Store<State>({
   strict: process.env.NODE_ENV !== 'production',
   state: {
-    connection: 'disconnected',
+    bulbConnection: 'disconnected',
+    socketConnection: 'disconnected',
     writeValueInProgress: false,
     errorMessage: '',
     deviceId: null,
@@ -97,29 +113,37 @@ const store = new Vuex.Store<State>({
   },
   mutations,
   actions: {
-    async [Actions.CONNECT]({ commit }) {
+    async [Actions.CONNECT]({ commit, dispatch }) {
       try {
-        commit(Mutations.CONNECTING);
+        commit(Mutations.BULB_CONNECTING);
         const [gattServer, deviceId] = await connectBulb();
+        commit(Mutations.BULB_CONNECTED, { deviceId, gattServer });
+        await dispatch(Actions.CHANGE_COLOR, BulbColor.BLUE);
+        commit(Mutations.SOCKET_CONNECTING);
         const { socketUrl } = getConfig();
         await connectSocket(socketUrl, store);
-        await showNotification(NotificationTitle.INFO, 'Connected');
-        commit(Mutations.CONNECTED, { deviceId, gattServer });
+        commit(Mutations.SOCKET_CONNECTED, { deviceId, gattServer });
+        await showNotification(NotificationTitle.INFO, 'Connected to service');
       } catch (e) {
+        await dispatch(Actions.DISCONNECT);
         commit(Mutations.ERROR, e.toString());
         throw e;
       }
     },
-    async [Actions.DISCONNECT]({ commit, state }) {
+    async [Actions.DISCONNECT]({ commit, dispatch, state }) {
       if (!state.gattServer) {
-        const message = "Can't disconnect because bulb is not connected";
-        commit(Mutations.ERROR, message);
+        commit(
+          Mutations.ERROR,
+          "Can't disconnect because bulb is not connected",
+        );
         return;
       }
       disconnectBulb(state.gattServer);
+      commit(Mutations.BULB_DISCONNECTED);
       disconnectSocket();
+      commit(Mutations.SOCKET_DISCONNECTED);
+      await dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
       await showNotification(NotificationTitle.INFO, 'Disconnected');
-      commit(Mutations.DISCONNECTED);
     },
     async [Actions.GITHUB_HOOK_RECEIVED](
       { commit, dispatch, state },
