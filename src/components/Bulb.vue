@@ -1,16 +1,16 @@
 <template>
   <svg
-  version="1.1"
-  id="Layer_1"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  x="0px"
-  y="0px"
-  viewBox="0 0 512.008 512.008"
-  style="enable-background:new 0 0 512.008 512.008;"
-  xml:space="preserve"
-  class="bulb"
-  @click="$emit('click')"
+    version="1.1"
+    id="Layer_1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    x="0px"
+    y="0px"
+    viewBox="0 0 512.008 512.008"
+    style="enable-background:new 0 0 512.008 512.008;"
+    xml:space="preserve"
+    class="bulb"
+    @click="$emit('click');"
   >
     <g>
       <g>
@@ -36,9 +36,7 @@
         c58.742-32.406,95.234-94.156,95.234-161.156C440.006,133.43,418.858,84.547,381.983,49.895z"
         />
       </g>
-      <g>
-        <circle style="fill:#FFE671;" cx="256.002" cy="184.008" r="128" />
-      </g>
+      <g><circle style="fill:#FFE671;" cx="256.002" cy="184.008" r="128" /></g>
       <g>
         <g>
           <path
