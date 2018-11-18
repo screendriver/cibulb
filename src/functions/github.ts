@@ -1,11 +1,11 @@
 import {
-  APIGatewayEvent,
+  APIGatewayProxyEvent,
   APIGatewayEventRequestContext,
   Callback,
 } from 'aws-lambda';
 
 export function handler(
-  event: APIGatewayEvent,
+  event: APIGatewayProxyEvent,
   context: APIGatewayEventRequestContext,
   callback: Callback,
 ) {
