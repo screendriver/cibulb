@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/"
+  publish = "dist/app/"
   command = "yarn test:unit && yarn build"
   environment = { YARN_VERSION = "1.12.1" }
 
