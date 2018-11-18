@@ -20,6 +20,7 @@
     "vuex": "3.0.1"
   },
   "devDependencies": {
+    "@types/aws-lambda": "8.10.15",
     "@types/jest": "23.3.9",
     "@types/node": "10.12.9",
     "@types/socket.io-client": "1.4.32",
