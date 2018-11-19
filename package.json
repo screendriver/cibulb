@@ -13,6 +13,7 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "got": "9.3.2",
     "socket.io-client": "2.1.1",
     "vue": "2.5.17",
     "vue-class-component": "6.3.2",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.15",
+    "@types/got": "9.2.0",
     "@types/jest": "23.3.9",
     "@types/node": "10.12.9",
     "@types/socket.io-client": "1.4.32",
