@@ -4,6 +4,6 @@ export interface Config {
 
 export function getConfig(): Config {
   return {
-    socketUrl: 'https://api.cibulb.info',
+    socketUrl: 'https://cibulb-service.now.sh',
   };
 }
