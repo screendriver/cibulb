@@ -3,18 +3,17 @@ import {
   APIGatewayEventRequestContext,
   Callback,
 } from 'aws-lambda';
+import got from 'got';
 
-export function handler(
+export async function handler(
   event: APIGatewayProxyEvent,
-  context: APIGatewayEventRequestContext,
+  _context: APIGatewayEventRequestContext,
   callback: Callback,
 ) {
-  console.log('event', event);
-  console.log('context', context);
-  return callback(null, {
-    statusCode: 200,
-    body: JSON.stringify({
-      data: '⊂◉‿◉つ',
-    }),
+  console.log(event);
+  const { statusCode } = await got.post('https://cibulb-service.now.sh', {
+    headers: event.headers,
+    body: event.body || '',
   });
+  return callback(null, { statusCode });
 }
