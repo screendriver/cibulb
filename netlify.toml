@@ -5,6 +5,11 @@
   functions = "dist/functions/"
 
 [[redirects]]
+  from = "https://api.cibulb.info/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
