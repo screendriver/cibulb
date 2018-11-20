@@ -14,6 +14,7 @@ export async function handler(
   const { statusCode } = await got.post('https://cibulb-service.now.sh', {
     headers: event.headers,
     body: event.body || '',
+    timeout: 45000,
   });
   return callback(null, { statusCode });
 }
