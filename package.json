@@ -31,7 +31,7 @@
     "@vue/cli-plugin-unit-jest": "3.1.1",
     "@vue/cli-service": "3.1.4",
     "@vue/test-utils": "1.0.0-beta.25",
-    "husky": "1.1.4",
+    "husky": "1.2.0",
     "netlify-lambda": "1.0.3",
     "prettier": "1.15.2",
     "pretty-quick": "1.8.0",
