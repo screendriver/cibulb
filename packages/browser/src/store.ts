@@ -14,7 +14,7 @@ import {
   GitHubHook,
 } from '@/socket';
 import { showNotification, NotificationTitle } from '@/notification';
-import { getConfig } from '@/config';
+import { Config } from './config';
 
 Vue.use(Vuex);
 
@@ -99,74 +99,80 @@ export const mutations: MutationTree<State> = {
   },
 };
 
-const store = new Vuex.Store<State>({
-  strict: process.env.NODE_ENV !== 'production',
-  state: {
-    bulbConnection: 'disconnected',
-    socketConnection: 'disconnected',
-    writeValueInProgress: false,
-    errorMessage: '',
-    deviceId: null,
-    gattServer: null,
-    buildStatuses: new Map(),
-    color: BulbColor.OFF,
-  },
-  mutations,
-  actions: {
-    async [Actions.CONNECT]({ commit, dispatch }) {
-      try {
-        commit(Mutations.BULB_CONNECTING);
-        const [gattServer, deviceId] = await connectBulb();
-        commit(Mutations.BULB_CONNECTED, { deviceId, gattServer });
-        await dispatch(Actions.CHANGE_COLOR, BulbColor.BLUE);
-        commit(Mutations.SOCKET_CONNECTING);
-        const { socketUrl } = getConfig();
-        await connectSocket(socketUrl, store);
-        commit(Mutations.SOCKET_CONNECTED, { deviceId, gattServer });
-        await showNotification(NotificationTitle.INFO, 'Connected to service');
-      } catch (e) {
-        await dispatch(Actions.DISCONNECT);
-        commit(Mutations.ERROR, e.toString());
-        throw e;
-      }
+export function createStore(config: Config) {
+  const store = new Vuex.Store<State>({
+    strict: process.env.NODE_ENV !== 'production',
+    state: {
+      bulbConnection: 'disconnected',
+      socketConnection: 'disconnected',
+      writeValueInProgress: false,
+      errorMessage: '',
+      deviceId: null,
+      gattServer: null,
+      buildStatuses: new Map(),
+      color: BulbColor.OFF,
     },
-    async [Actions.DISCONNECT]({ commit, dispatch, state }) {
-      if (!state.gattServer) {
-        commit(
-          Mutations.ERROR,
-          "Can't disconnect because bulb is not connected",
+    mutations,
+    actions: {
+      async [Actions.CONNECT]({ commit, dispatch }) {
+        try {
+          commit(Mutations.BULB_CONNECTING);
+          const [gattServer, deviceId] = await connectBulb();
+          commit(Mutations.BULB_CONNECTED, { deviceId, gattServer });
+          await dispatch(Actions.CHANGE_COLOR, BulbColor.BLUE);
+          commit(Mutations.SOCKET_CONNECTING);
+          await connectSocket(config.socketUrl, store);
+          commit(Mutations.SOCKET_CONNECTED, { deviceId, gattServer });
+          await showNotification(
+            NotificationTitle.INFO,
+            'Connected to service',
+          );
+        } catch (e) {
+          await dispatch(Actions.DISCONNECT);
+          commit(Mutations.ERROR, e.toString());
+          throw e;
+        }
+      },
+      async [Actions.DISCONNECT]({ commit, dispatch, state }) {
+        if (!state.gattServer) {
+          commit(
+            Mutations.ERROR,
+            "Can't disconnect because bulb is not connected",
+          );
+          return;
+        }
+        await dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
+        disconnectBulb(state.gattServer);
+        commit(Mutations.BULB_DISCONNECTED);
+        disconnectSocket();
+        commit(Mutations.SOCKET_DISCONNECTED);
+        await showNotification(NotificationTitle.INFO, 'Disconnected');
+      },
+      async [Actions.GITHUB_HOOK_RECEIVED](
+        { commit, dispatch, state },
+        hook: GitHubHook,
+      ) {
+        commit(Mutations.GITHUB_HOOK_RECEIVED, hook);
+        dispatch(
+          Actions.CHANGE_COLOR,
+          getColorFromStatuses(state.buildStatuses),
         );
-        return;
-      }
-      await dispatch(Actions.CHANGE_COLOR, BulbColor.OFF);
-      disconnectBulb(state.gattServer);
-      commit(Mutations.BULB_DISCONNECTED);
-      disconnectSocket();
-      commit(Mutations.SOCKET_DISCONNECTED);
-      await showNotification(NotificationTitle.INFO, 'Disconnected');
+      },
+      async [Actions.CHANGE_COLOR]({ commit, state }, color: BulbColor) {
+        if (!state.gattServer) {
+          const message = "Can't change color because bulb is not connected";
+          commit(Mutations.ERROR, message);
+          return;
+        }
+        if (state.writeValueInProgress) {
+          return;
+        }
+        commit(Mutations.VALUE_WRITING);
+        await changeColor(color, state.gattServer);
+        commit(Mutations.COLOR_CHANGED, color);
+        commit(Mutations.VALUE_WRITTEN);
+      },
     },
-    async [Actions.GITHUB_HOOK_RECEIVED](
-      { commit, dispatch, state },
-      hook: GitHubHook,
-    ) {
-      commit(Mutations.GITHUB_HOOK_RECEIVED, hook);
-      dispatch(Actions.CHANGE_COLOR, getColorFromStatuses(state.buildStatuses));
-    },
-    async [Actions.CHANGE_COLOR]({ commit, state }, color: BulbColor) {
-      if (!state.gattServer) {
-        const message = "Can't change color because bulb is not connected";
-        commit(Mutations.ERROR, message);
-        return;
-      }
-      if (state.writeValueInProgress) {
-        return;
-      }
-      commit(Mutations.VALUE_WRITING);
-      await changeColor(color, state.gattServer);
-      commit(Mutations.COLOR_CHANGED, color);
-      commit(Mutations.VALUE_WRITTEN);
-    },
-  },
-});
-
-export default store;
+  });
+  return store;
+}
