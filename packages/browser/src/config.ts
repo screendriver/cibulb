@@ -1,6 +1,7 @@
 export interface FirebaseConfig {
   apiKey: string;
   messagingSenderId: string;
+  publicVapidKey: string;
 }
 
 export interface Config {
@@ -14,6 +15,7 @@ export function getConfig(env: NodeJS.ProcessEnv): Config {
     firebase: {
       apiKey: env.VUE_APP_FIREBASE_API_KEY || '',
       messagingSenderId: env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID || '',
+      publicVapidKey: env.VUE_APP_FIREBASE_PUBLIC_VAPID_KEY || '',
     },
   };
 }

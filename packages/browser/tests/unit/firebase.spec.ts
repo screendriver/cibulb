@@ -5,6 +5,7 @@ import { FirebaseConfig } from '@/config';
 const config: FirebaseConfig = {
   apiKey: 'the-api-key',
   messagingSenderId: 'the-sender-id',
+  publicVapidKey: 'the-vapid-key',
 };
 
 describe('firebase', () => {
