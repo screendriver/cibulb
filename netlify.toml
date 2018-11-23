@@ -1,18 +1,13 @@
 [build]
-  publish = "dist/app/"
+  publish = "packages/browser/dist/app/"
   command = "yarn test:unit && yarn build"
   environment = { YARN_VERSION = "1.12.1" }
-  functions = "dist/functions/"
+  functions = "packages/browser/dist/functions/"
 
 [[redirects]]
   from = "https://api.cibulb.info/*"
   to = "/.netlify/functions/:splat"
   status = 200
-
-[[redirects]] 
-    from = "/netlifytest/*" 
-    to = "/.netlify/functions/:splat" 
-    status = 200
 
 [[redirects]]
   from = "/*"

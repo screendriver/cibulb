@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
     "target": "es2015",
     "module": "esnext",
     "moduleResolution": "node",
@@ -12,21 +11,7 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "jsx": "preserve",
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    },
-    "plugins": [{ "name": "typescript-tslint-plugin" }],
-    "typeRoots": ["./typings", "./node_modules/@types"]
-  },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": ["node_modules", "src/functions/**/*"]
+    "plugins": [{ "name": "typescript-tslint-plugin" }]
+  }
 }

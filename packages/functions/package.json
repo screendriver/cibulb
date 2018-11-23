@@ -1,0 +1,25 @@
+{
+  "name": "cibulb-functions",
+  "version": "0.1.0",
+  "private": true,
+  "repository": "git@github.com:screendriver/cibulb.git",
+  "author": "Christian Rackerseder <git@echooff.de>",
+  "license": "MIT",
+  "engines": {
+    "node": "8"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "serve": "yarn run build && firebase serve --only functions",
+    "shell": "yarn run build && firebase functions:shell",
+    "start": "yarn run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "6.2.0",
+    "firebase-functions": "2.1.0",
+    "tslib": "1.9.3"
+  }
+}
