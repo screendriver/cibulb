@@ -1,5 +1,6 @@
 export interface FirebaseConfig {
   apiKey: string;
+  messagingSenderId: string;
 }
 
 export interface Config {
@@ -12,6 +13,7 @@ export function getConfig(env: NodeJS.ProcessEnv): Config {
     socketUrl: 'https://cibulb-service.now.sh',
     firebase: {
       apiKey: env.VUE_APP_FIREBASE_API_KEY || '',
+      messagingSenderId: env.VUE_APP_FIREBASE_MESSAGING_SENDER_ID || '',
     },
   };
 }
