@@ -14,7 +14,8 @@
     "test:unit:browser": "yarn workspace cibulb-browser test:unit",
     "test:unit": "yarn test:unit:browser",
     "build:browser": "yarn workspace cibulb-browser build",
-    "build": "yarn build:browser"
+    "build:functions": "yarn workspace cibulb-functions build",
+    "build": "yarn build:browser && yarn build:functions"
   },
   "devDependencies": {
     "husky": "1.2.0",
