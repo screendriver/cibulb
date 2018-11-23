@@ -6,4 +6,5 @@ export function initializeApp(
   config: FirebaseConfig,
 ) {
   firebase.initializeApp(config);
+  firebase.messaging();
 }

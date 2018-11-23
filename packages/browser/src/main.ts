@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import firebaseLib from 'firebase/app';
+import 'firebase/messaging';
 import { getConfig } from './config';
 import { initializeApp } from './firebase';
 import App from './App.vue';
