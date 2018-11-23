@@ -9,6 +9,7 @@ script:
   - yarn test:unit
   - yarn build
 deploy:
+  skip_cleanup: true
   provider: firebase
   on:
     branch: master
