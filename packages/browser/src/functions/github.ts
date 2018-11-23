@@ -17,11 +17,14 @@ export async function handler(
 ) {
   try {
     console.log(event);
-    const { statusCode } = await got.post('https://cibulb-service.now.sh', {
+    const options: got.GotBodyOptions<null> = {
       headers: event.headers,
       body: event.body || '',
       timeout: 10000,
-    });
+    };
+    const firebase = got.post(`${config.firebaseFunctionsUrl}/github`, options);
+    const now = got.post('https://cibulb-service.now.sh', options);
+    const [, { statusCode }] = await Promise.all([firebase, now]);
     return callback(null, { statusCode });
   } catch (e) {
     captureException(e);
