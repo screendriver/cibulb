@@ -13,10 +13,18 @@ function createFirebaseMock() {
     initializeApp: jest.fn(),
     messaging: jest.fn().mockReturnValue({
       usePublicVapidKey: jest.fn(),
-      requestPermission: jest.fn(),
     }) as any,
   };
   return firebaseMock as typeof firebaseLib;
+}
+
+function createFirebaseAppMock() {
+  const firebaseMock: Partial<firebaseLib.app.App> = {
+    messaging: jest.fn().mockReturnValue({
+      requestPermission: jest.fn(),
+    }) as any,
+  };
+  return firebaseMock as firebaseLib.app.App;
 }
 
 describe('firebase.initializeApp', () => {
@@ -37,8 +45,8 @@ describe('firebase.initializeApp', () => {
 
 describe('firebase.requestMessagingPermission', () => {
   it('should request for permission', async () => {
-    const firebaseMock = createFirebaseMock();
-    await requestMessagingPermission(firebaseMock);
-    expect(firebaseMock.messaging().requestPermission).toHaveBeenCalled();
+    const appMock = createFirebaseAppMock();
+    await requestMessagingPermission(appMock);
+    expect(appMock.messaging().requestPermission).toHaveBeenCalled();
   });
 });

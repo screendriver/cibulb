@@ -7,11 +7,12 @@ import App from './App.vue';
 import { createStore } from './store';
 
 const config = getConfig(process.env);
-initializeApp(firebaseLib, config.firebase);
-
-Vue.config.productionTip = false;
+const app = initializeApp(firebaseLib, config.firebase);
 
 new Vue({
   store: createStore(config),
-  render: h => h(App),
-}).$mount('#app');
+  render(createElement) {
+    return createElement(App, { props: { app } });
+  },
+  el: '#app',
+});

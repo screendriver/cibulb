@@ -5,12 +5,13 @@ export function initializeApp(
   firebase: typeof firebaseLib,
   config: FirebaseConfig,
 ) {
-  firebase.initializeApp(config);
+  const app = firebase.initializeApp(config);
   const messaging = firebase.messaging();
   messaging.usePublicVapidKey(config.publicVapidKey);
+  return app;
 }
 
-export function requestMessagingPermission(firebase: typeof firebaseLib) {
+export function requestMessagingPermission(firebase: firebaseLib.app.App) {
   const messaging = firebase.messaging();
   return messaging.requestPermission();
 }
