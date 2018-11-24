@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/tape": "4.2.32",
+    "tap-dot": "2.0.0",
     "tape": "4.9.1"
   }
 }
