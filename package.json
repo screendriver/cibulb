@@ -10,6 +10,7 @@
     "packages/functions"
   ],
   "scripts": {
+    "serve": "yarn workspace cibulb-browser serve",
     "test:unit:browser": "yarn workspace cibulb-browser test:unit",
     "test:unit": "yarn test:unit:browser",
     "build:browser": "yarn workspace cibulb-browser build",
