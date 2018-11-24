@@ -1,5 +1,9 @@
 import firebaseLib from 'firebase/app';
-import { initializeApp, requestMessagingPermission } from '@/firebase';
+import {
+  initializeApp,
+  requestMessagingPermission,
+  getRegistrationToken,
+} from '@/firebase';
 import { FirebaseConfig } from '@/config';
 
 const config: FirebaseConfig = {
@@ -22,6 +26,7 @@ function createFirebaseAppMock() {
   const firebaseMock: Partial<firebaseLib.app.App> = {
     messaging: jest.fn().mockReturnValue({
       requestPermission: jest.fn(),
+      getToken: jest.fn(),
     }) as any,
   };
   return firebaseMock as firebaseLib.app.App;
@@ -48,5 +53,19 @@ describe('firebase.requestMessagingPermission', () => {
     const appMock = createFirebaseAppMock();
     await requestMessagingPermission(appMock);
     expect(appMock.messaging().requestPermission).toHaveBeenCalled();
+  });
+});
+
+describe('firebase.getRegistrationToken', () => {
+  it('should get the token', () => {
+    const appMock = createFirebaseAppMock();
+    getRegistrationToken(appMock.messaging());
+    expect(appMock.messaging().getToken).toHaveBeenCalled();
+  });
+});
+
+describe('firebase.listenForTokenRefresh', () => {
+  it.skip('should listen for token refresh', () => {
+    throw new Error('Not implemented');
   });
 });

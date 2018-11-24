@@ -1,5 +1,7 @@
 import firebaseLib from 'firebase/app';
 import { FirebaseConfig } from './config';
+import { Store } from 'vuex';
+import { State, Actions, Mutations } from './store';
 
 export function initializeApp(
   firebase: typeof firebaseLib,
@@ -20,4 +22,21 @@ export function getRegistrationToken(
   messaging: firebaseLib.messaging.Messaging,
 ) {
   return messaging.getToken();
+}
+
+export function listenForTokenRefresh(
+  messaging: firebaseLib.messaging.Messaging,
+  store: Store<State>,
+) {
+  messaging.onTokenRefresh(async () => {
+    try {
+      const refreshedToken = await messaging.getToken();
+      if (refreshedToken) {
+        store.dispatch(Actions.SEND_TOKEN_TO_SERVER, refreshedToken);
+      }
+      throw new Error('Unable to retrieve refreshed token');
+    } catch (e) {
+      store.commit(Mutations.ERROR, e.toString());
+    }
+  });
 }
