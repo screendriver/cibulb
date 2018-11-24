@@ -1,5 +1,5 @@
 import firebaseLib from 'firebase/app';
-import { initializeApp } from '@/firebase';
+import { initializeApp, requestMessagingPermission } from '@/firebase';
 import { FirebaseConfig } from '@/config';
 
 const config: FirebaseConfig = {
@@ -8,28 +8,37 @@ const config: FirebaseConfig = {
   publicVapidKey: 'the-vapid-key',
 };
 
-describe('firebase', () => {
+function createFirebaseMock() {
+  const firebaseMock: Partial<typeof firebaseLib> = {
+    initializeApp: jest.fn(),
+    messaging: jest.fn().mockReturnValue({
+      usePublicVapidKey: jest.fn(),
+      requestPermission: jest.fn(),
+    }) as any,
+  };
+  return firebaseMock as typeof firebaseLib;
+}
+
+describe('firebase.initializeApp', () => {
   it('should initialize the App', () => {
-    const firebaseMock: Partial<typeof firebaseLib> = {
-      initializeApp: jest.fn(),
-      messaging: jest.fn().mockReturnValue({
-        usePublicVapidKey: jest.fn(),
-      }) as any,
-    };
-    initializeApp(firebaseMock as typeof firebaseLib, config);
+    const firebaseMock = createFirebaseMock();
+    initializeApp(firebaseMock, config);
     expect(firebaseMock.initializeApp).toHaveBeenCalledWith(config);
   });
 
   it('should initialize messaging', () => {
-    const firebaseMock: Partial<typeof firebaseLib> = {
-      initializeApp: jest.fn(),
-      messaging: jest.fn().mockReturnValue({
-        usePublicVapidKey: jest.fn(),
-      }) as any,
-    };
-    initializeApp(firebaseMock as typeof firebaseLib, config);
+    const firebaseMock = createFirebaseMock();
+    initializeApp(firebaseMock, config);
     const { messaging } = firebaseMock;
     expect(messaging).toHaveBeenCalled();
-    expect(messaging!().usePublicVapidKey).toHaveBeenCalled();
+    expect(messaging().usePublicVapidKey).toHaveBeenCalled();
+  });
+});
+
+describe('firebase.requestMessagingPermission', () => {
+  it('should request for permission', async () => {
+    const firebaseMock = createFirebaseMock();
+    await requestMessagingPermission(firebaseMock);
+    expect(firebaseMock.messaging().requestPermission).toHaveBeenCalled();
   });
 });

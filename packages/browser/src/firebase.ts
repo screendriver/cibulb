@@ -9,3 +9,8 @@ export function initializeApp(
   const messaging = firebase.messaging();
   messaging.usePublicVapidKey(config.publicVapidKey);
 }
+
+export function requestMessagingPermission(firebase: typeof firebaseLib) {
+  const messaging = firebase.messaging();
+  return messaging.requestPermission();
+}
