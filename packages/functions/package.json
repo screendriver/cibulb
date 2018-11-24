@@ -8,9 +8,11 @@
   "engines": {
     "node": "8"
   },
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
+    "pretest:unit": "yarn build",
+    "test:unit": "nyc tape -r source-map-support/register 'dist/test/unit/**/*.js' | tap-dot",
     "serve": "yarn run build && firebase serve --only functions",
     "shell": "yarn run build && firebase functions:shell",
     "start": "yarn run shell",
