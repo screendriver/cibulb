@@ -7,13 +7,17 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import Bulb from '@/components/Bulb.vue';
 import TheErrorMessage from '@/views/TheErrorMessage.vue';
 import TheFooter from '@/views/TheFooter.vue';
-import { connect, disconnect, BulbColor } from '@/bulb';
+import firebaseLib from 'firebase/app';
 import { Actions, Mutations } from '@/store';
-import { showNotification, NotificationTitle } from '@/notification';
+import {
+  requestMessagingPermission,
+  getRegistrationToken,
+  listenForTokenRefresh,
+} from '@/firebase';
 
 @Component({
   components: {
@@ -23,15 +27,39 @@ import { showNotification, NotificationTitle } from '@/notification';
   },
 })
 export default class App extends Vue {
+  @Prop() app!: firebaseLib.app.App;
+
   public async onBulbClick() {
     switch (this.$store.state.bulbConnection) {
       case 'disconnected':
-        await this.$store.dispatch(Actions.CONNECT);
+        this.connect();
         break;
       case 'connected':
-        await this.$store.dispatch(Actions.DISCONNECT);
+        this.disconnect();
         break;
     }
+  }
+
+  private async connect() {
+    try {
+      const messaging = this.app.messaging();
+      await requestMessagingPermission(this.app);
+      const token = await getRegistrationToken(messaging);
+      if (!token) {
+        throw new Error(
+          'No Instance ID token available. Request permission to generate one.',
+        );
+      }
+      await this.$store.dispatch(Actions.SEND_TOKEN_TO_SERVER, token);
+      listenForTokenRefresh(messaging, this.$store);
+      await this.$store.dispatch(Actions.CONNECT);
+    } catch (e) {
+      this.$store.commit(Mutations.ERROR, e.message);
+    }
+  }
+
+  private async disconnect() {
+    await this.$store.dispatch(Actions.DISCONNECT);
   }
 }
 </script>

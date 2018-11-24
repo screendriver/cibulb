@@ -1,10 +1,18 @@
 import Vue from 'vue';
+import firebaseLib from 'firebase/app';
+import 'firebase/messaging';
+import { getConfig } from './config';
+import { initializeApp } from './firebase';
 import App from './App.vue';
-import store from './store';
+import { createStore } from './store';
 
-Vue.config.productionTip = false;
+const config = getConfig(process.env);
+const app = initializeApp(firebaseLib, config.firebase);
 
 new Vue({
-  store,
-  render: h => h(App),
-}).$mount('#app');
+  store: createStore(config),
+  render(createElement) {
+    return createElement(App, { props: { app } });
+  },
+  el: '#app',
+});
