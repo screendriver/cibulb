@@ -4,6 +4,7 @@ import { GitHubHook } from '@/socket';
 
 function createMockState(overrides: Partial<State> = {}): State {
   return {
+    messagingRegistrationToken: null,
     bulbConnection: 'disconnected',
     socketConnection: 'disconnected',
     writeValueInProgress: false,

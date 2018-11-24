@@ -21,6 +21,7 @@ Vue.use(Vuex);
 type Connection = 'connecting' | 'connected' | 'disconnected';
 
 export interface State {
+  messagingRegistrationToken: string | null;
   bulbConnection: Connection;
   socketConnection: Connection;
   writeValueInProgress: boolean;
@@ -33,6 +34,7 @@ export interface State {
 
 export enum Mutations {
   ERROR = 'error',
+  MESSAGING_REGISTRATION_TOKEN = 'messaging-registration-token',
   BULB_CONNECTING = 'bulb-connecting',
   BULB_CONNECTED = 'bulb-connected',
   BULB_DISCONNECTED = 'bulb-disconnected',
@@ -46,6 +48,7 @@ export enum Mutations {
 }
 
 export enum Actions {
+  SEND_TOKEN_TO_SERVER = 'send-token-to-server',
   CONNECT = 'connect',
   DISCONNECT = 'disconnect',
   CHANGE_COLOR = 'change-color',
@@ -53,11 +56,14 @@ export enum Actions {
 }
 
 export const mutations: MutationTree<State> = {
-  [Mutations.BULB_CONNECTING](state: State) {
+  [Mutations.MESSAGING_REGISTRATION_TOKEN](state, token: string) {
+    state.messagingRegistrationToken = token;
+  },
+  [Mutations.BULB_CONNECTING](state) {
     state.bulbConnection = 'connecting';
   },
   [Mutations.BULB_CONNECTED](
-    state: State,
+    state,
     {
       deviceId,
       gattServer,
@@ -67,34 +73,34 @@ export const mutations: MutationTree<State> = {
     state.deviceId = deviceId;
     state.gattServer = gattServer;
   },
-  [Mutations.BULB_DISCONNECTED](state: State) {
+  [Mutations.BULB_DISCONNECTED](state) {
     state.deviceId = null;
     state.gattServer = null;
     state.bulbConnection = 'disconnected';
   },
-  [Mutations.SOCKET_CONNECTING](state: State) {
+  [Mutations.SOCKET_CONNECTING](state) {
     state.socketConnection = 'connecting';
   },
-  [Mutations.SOCKET_CONNECTED](state: State) {
+  [Mutations.SOCKET_CONNECTED](state) {
     state.socketConnection = 'connected';
   },
-  [Mutations.SOCKET_DISCONNECTED](state: State) {
+  [Mutations.SOCKET_DISCONNECTED](state) {
     state.socketConnection = 'disconnected';
     state.buildStatuses.clear();
   },
-  [Mutations.ERROR](state: State, message: string) {
+  [Mutations.ERROR](state, message: string) {
     state.errorMessage = message;
   },
-  [Mutations.COLOR_CHANGED](state: State, color: BulbColor) {
+  [Mutations.COLOR_CHANGED](state, color: BulbColor) {
     state.color = color;
   },
-  [Mutations.VALUE_WRITING](state: State) {
+  [Mutations.VALUE_WRITING](state) {
     state.writeValueInProgress = true;
   },
-  [Mutations.VALUE_WRITTEN](state: State) {
+  [Mutations.VALUE_WRITTEN](state) {
     state.writeValueInProgress = false;
   },
-  [Mutations.GITHUB_HOOK_RECEIVED](state: State, hook: GitHubHook) {
+  [Mutations.GITHUB_HOOK_RECEIVED](state, hook: GitHubHook) {
     state.buildStatuses.set(hook.name, { id: hook.id, state: hook.state });
   },
 };
@@ -103,6 +109,7 @@ export function createStore(config: Config) {
   const store = new Vuex.Store<State>({
     strict: process.env.NODE_ENV !== 'production',
     state: {
+      messagingRegistrationToken: null,
       bulbConnection: 'disconnected',
       socketConnection: 'disconnected',
       writeValueInProgress: false,
@@ -114,6 +121,9 @@ export function createStore(config: Config) {
     },
     mutations,
     actions: {
+      async [Actions.SEND_TOKEN_TO_SERVER]({ commit }, token: string) {
+        commit(Mutations.MESSAGING_REGISTRATION_TOKEN, token);
+      },
       async [Actions.CONNECT]({ commit, dispatch }) {
         try {
           commit(Mutations.BULB_CONNECTING);

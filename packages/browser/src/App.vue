@@ -45,6 +45,7 @@ export default class App extends Vue {
           'No Instance ID token available. Request permission to generate one.',
         );
       }
+      await this.$store.dispatch(Actions.SEND_TOKEN_TO_SERVER, token);
       await this.$store.dispatch(Actions.CONNECT);
     } catch (e) {
       this.$store.commit(Mutations.ERROR, e.message);
