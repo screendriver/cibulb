@@ -13,7 +13,7 @@ import TheErrorMessage from '@/views/TheErrorMessage.vue';
 import TheFooter from '@/views/TheFooter.vue';
 import firebaseLib from 'firebase/app';
 import { Actions, Mutations } from '@/store';
-import { requestMessagingPermission } from '@/firebase';
+import { requestMessagingPermission, getRegistrationToken } from '@/firebase';
 
 @Component({
   components: {
@@ -39,6 +39,12 @@ export default class App extends Vue {
   private async connect() {
     try {
       await requestMessagingPermission(this.app);
+      const token = await getRegistrationToken(this.app.messaging());
+      if (!token) {
+        throw new Error(
+          'No Instance ID token available. Request permission to generate one.',
+        );
+      }
       await this.$store.dispatch(Actions.CONNECT);
     } catch (e) {
       this.$store.commit(Mutations.ERROR, e.message);

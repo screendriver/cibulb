@@ -15,3 +15,9 @@ export function requestMessagingPermission(firebase: firebaseLib.app.App) {
   const messaging = firebase.messaging();
   return messaging.requestPermission();
 }
+
+export function getRegistrationToken(
+  messaging: firebaseLib.messaging.Messaging,
+) {
+  return messaging.getToken();
+}
