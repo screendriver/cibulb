@@ -27,7 +27,7 @@ import {
   },
 })
 export default class App extends Vue {
-  @Prop() app!: firebaseLib.app.App;
+  @Prop() public app!: firebaseLib.app.App;
 
   public async onBulbClick() {
     switch (this.$store.state.bulbConnection) {
