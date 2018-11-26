@@ -132,7 +132,7 @@ export function createStore(config: Config) {
           await dispatch(Actions.CHANGE_COLOR, BulbColor.BLUE);
           commit(Mutations.SOCKET_CONNECTING);
           await connectSocket(config.socketUrl, store);
-          commit(Mutations.SOCKET_CONNECTED, { deviceId, gattServer });
+          commit(Mutations.SOCKET_CONNECTED);
           await showNotification(
             NotificationTitle.INFO,
             'Connected to service',
