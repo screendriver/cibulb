@@ -42,6 +42,7 @@ export default class App extends Vue {
 
   private async connect() {
     try {
+      await this.$store.dispatch(Actions.CONNECT);
       const messaging = this.app.messaging();
       await requestMessagingPermission(this.app);
       const token = await getRegistrationToken(messaging);
@@ -52,7 +53,6 @@ export default class App extends Vue {
       }
       await this.$store.dispatch(Actions.SEND_TOKEN_TO_SERVER, token);
       listenForTokenRefresh(messaging, this.$store);
-      await this.$store.dispatch(Actions.CONNECT);
     } catch (e) {
       this.$store.commit(Mutations.ERROR, e.message);
     }
