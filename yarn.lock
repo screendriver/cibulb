@@ -693,18 +693,18 @@
     ts-loader "^5.3.1"
     tslint "^5.11.0"
 
-"@vue/cli-plugin-unit-jest@3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-3.1.1.tgz#8ea47d0c953088c8f04eb8cecaac21227b1bc317"
-  integrity sha512-6019ikvxRhCK9hSs2mQJllS4DA0BV1yxSUKMbIad5z987uJL6hNZIJqfuzXdtvHOq5AVgcQsY+JH4WWtqShr7g==
+"@vue/cli-plugin-unit-jest@3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-3.2.0.tgz#5f3d3d83b3cf2ea834af23d445f68a16387ace23"
+  integrity sha512-I3d2W7O1Gb7/jNzZJ8Vt7FEn2Az0WmjGPxEGQecPPhD4cKG6xas1eKoWngiNV1NMIJfTO99UN+PlmUUE7hxb1A==
   dependencies:
-    "@vue/cli-shared-utils" "^3.1.1"
+    "@vue/cli-shared-utils" "^3.2.0"
     babel-jest "^23.6.0"
     babel-plugin-transform-es2015-modules-commonjs "^6.26.2"
     jest "^23.6.0"
     jest-serializer-vue "^2.0.2"
     jest-transform-stub "^1.0.0"
-    vue-jest "^3.0.0"
+    vue-jest "^3.0.1"
 
 "@vue/cli-service@3.2.0":
   version "3.2.0"
@@ -761,24 +761,6 @@
     webpack-dev-server "^3.1.10"
     webpack-merge "^4.1.4"
     yorkie "^2.0.0"
-
-"@vue/cli-shared-utils@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-3.1.1.tgz#ab8638c25318e5812b57877d7cfc65cd2af43740"
-  integrity sha512-r+R+5LI6IHHPI5tbOSDy5DpiY5O9eTy8LPr/QCPb5RIOg+Pg03VlElW4BL69hePXEHCQZZDsOzgItSmat6mBhg==
-  dependencies:
-    chalk "^2.4.1"
-    execa "^1.0.0"
-    joi "^13.0.0"
-    launch-editor "^2.2.1"
-    lru-cache "^4.1.3"
-    node-ipc "^9.1.1"
-    opn "^5.3.0"
-    ora "^2.1.0"
-    request "^2.87.0"
-    request-promise-native "^1.0.5"
-    semver "^5.5.0"
-    string.prototype.padstart "^3.0.0"
 
 "@vue/cli-shared-utils@^3.2.0":
   version "3.2.0"
@@ -9772,10 +9754,10 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.1.tgz#b2d3d95402a811602380783ea4f566eb875569a2"
   integrity sha512-AA86yKZ5uOKz87/q1UpngEXhbRkaYg1b7HMMVRobNV1IVKqZe8oLIzo6iMocVwZXnYitlGwf2k4ZRLOZlS8oPQ==
 
-vue-jest@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/vue-jest/-/vue-jest-3.0.0.tgz#e5b0ad60c37bbeebe214124420de9eb911596cdc"
-  integrity sha512-naYRHx600YmwfUCoCUsbNlgQ6uk8L0Nn76bVZyMIJYOLlvS+f/1BqOX7ASXlYnNqNobYSC5AtWSlNzRBtYz/mw==
+vue-jest@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/vue-jest/-/vue-jest-3.0.1.tgz#127cded1a57cdfcf01fa8a10ce29579e2cb3a04d"
+  integrity sha512-otS+n341cTsp0pF7tuTu2x43b23x/+K0LZdAXV+ewKYIMZRqhuQaJTECWEt/cN/YZw2JC6hUM6xybdnOB4ZQ+g==
   dependencies:
     babel-plugin-transform-es2015-modules-commonjs "^6.26.0"
     chalk "^2.1.0"
