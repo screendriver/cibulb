@@ -1,6 +1,6 @@
 const bulbName = 'icolorlive';
 const serviceName = 'f000ffa0-0451-4000-b000-000000000000';
-const changeModeCharacteristic = 'f000ffa3-0451-4000-b000-000000000000';
+// const changeModeCharacteristic = 'f000ffa3-0451-4000-b000-000000000000';
 // 4d43 (0x4F43) changes to color
 // 4d57 (0x4F57) changes to white
 const changeColorCharacteristic = 'f000ffa4-0451-4000-b000-000000000000';
