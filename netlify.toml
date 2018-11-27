@@ -1,6 +1,6 @@
 [build]
   publish = "packages/browser/dist/app/"
-  command = "yarn test:unit && yarn build"
+  command = "yarn lint && yarn test:unit && yarn build"
   environment = { YARN_VERSION = "1.12.1" }
   functions = "packages/browser/dist/functions/"
 

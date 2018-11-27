@@ -10,9 +10,13 @@
     "packages/functions"
   ],
   "scripts": {
+    "lint": "tslint -c tslint.json 'packages/**/*.ts' && yarn workspace cibulb-browser lint",
     "serve": "yarn workspace cibulb-browser serve",
     "test:unit:browser": "yarn workspace cibulb-browser test:unit",
-    "test:unit": "yarn test:unit:browser",
+    "test:unit:functions": "yarn workspace cibulb-functions test:unit",
+    "test:unit": "yarn test:unit:browser && yarn test:unit:functions",
+    "test": "yarn lint && yarn test:unit && yarn coverage",
+    "coverage": "yarn workspace cibulb-functions coverage",
     "build:browser": "yarn workspace cibulb-browser build",
     "build:functions": "yarn workspace cibulb-functions build",
     "build": "yarn build:browser && yarn build:functions"
@@ -21,6 +25,7 @@
     "husky": "1.2.0",
     "prettier": "1.15.2",
     "pretty-quick": "1.8.0",
+    "tslint": "5.11.0",
     "tslint-config-prettier": "1.16.0",
     "typescript": "3.1.6",
     "typescript-tslint-plugin": "0.1.0"

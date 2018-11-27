@@ -9,6 +9,7 @@ import { createStore } from './store';
 const config = getConfig(process.env);
 const app = initializeApp(firebaseLib, config.firebase);
 
+// tslint:disable-next-line
 new Vue({
   store: createStore(config),
   render(createElement) {
