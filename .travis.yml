@@ -9,6 +9,7 @@ script:
   - yarn lint
   - yarn test
   - yarn build
+  - codecov
 deploy:
   skip_cleanup: true
   provider: firebase
