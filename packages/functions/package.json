@@ -11,7 +11,7 @@
   "main": "dist/src/index.js",
   "scripts": {
     "build": "tsc",
-    "pretest:unit": "yarn build",
+    "pretest": "yarn build",
     "test:unit": "nyc tape -r source-map-support/register 'dist/test/unit/**/*.js' | tap-dot",
     "serve": "yarn run build && firebase serve --only functions",
     "shell": "yarn run build && firebase functions:shell",
