@@ -16,7 +16,6 @@ export async function handler(
   callback: Callback,
 ) {
   try {
-    console.log(event);
     const options: got.GotBodyOptions<null> = {
       headers: event.headers,
       body: event.body || '',
