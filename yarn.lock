@@ -551,10 +551,10 @@
     "@types/node" "*"
     "@types/request" "*"
 
-"@types/got@9.2.0":
-  version "9.2.0"
-  resolved "https://registry.yarnpkg.com/@types/got/-/got-9.2.0.tgz#5c99a07b24df6cd5e63d285b9c67a878987f5a2d"
-  integrity sha512-6aWDCt7AO0rhQSjnk+aLFIPfStFH1tMNQ9KLLfOT9SctmjOEndrqoo5Bw/YEIFYY2QRy744D/qUc2F3a3+mLsw==
+"@types/got@9.2.1":
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/@types/got/-/got-9.2.1.tgz#962e5a041d66f8be484740d76a6ca15d2a8d141b"
+  integrity sha512-3l1/X5MBeuPFWEcsEb5UVKrdzuXJ4DXkKHv+on9sYK0+BEO4OmIwdkLorYry3kVbdyFTlgF4yP+F5aeZoKIRDw==
   dependencies:
     "@types/node" "*"
     "@types/tough-cookie" "*"
