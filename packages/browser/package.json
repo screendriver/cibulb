@@ -15,7 +15,7 @@
     "@sentry/node": "4.4.0",
     "firebase": "5.5.9",
     "got": "9.3.2",
-    "socket.io-client": "2.1.1",
+    "socket.io-client": "2.2.0",
     "vue": "2.5.17",
     "vue-class-component": "6.3.2",
     "vue-property-decorator": "7.2.0",
