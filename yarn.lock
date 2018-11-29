@@ -3791,10 +3791,10 @@ find-up@^3.0.0:
   dependencies:
     locate-path "^3.0.0"
 
-firebase-admin@6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-6.2.0.tgz#c9491816dbf31909bd724086e53c41db3bfc9508"
-  integrity sha512-lzysCtWaN3ppMp8tqV85vlf1OSgxm+Jb6OH2DNBhjUTQt5wB5AqcjMIINefdCMdbxDvgIAx/ZPvdWKmeMJbifA==
+firebase-admin@6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-6.3.0.tgz#68ca0842ece2774c9455f7e1a054bacc24dde804"
+  integrity sha512-9jEt69a9VB0X3WMJJkKDzOKKmCdqX+iIcfTke5dI16GfbHlfbvqXVisgKIwAmi8Ea7FYc1t3V/WCEJUrWnJ8tA==
   dependencies:
     "@firebase/app" "^0.3.4"
     "@firebase/database" "^0.3.6"
