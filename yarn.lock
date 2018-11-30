@@ -106,17 +106,17 @@
     tslib "1.9.0"
     xmlhttprequest "1.8.0"
 
-"@firebase/auth-types@0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@firebase/auth-types/-/auth-types-0.3.4.tgz#253b1b2d9b520a0b945d4617c8418f0f19a4159f"
-  integrity sha512-0r3gSQk9jw5orFHCTUIgao0zan6dHt2J0BO3t/uEzbod+uwqvUn/gh+yg+kK6HX92Fg8E7y030KX4Bw/aXt0Ew==
+"@firebase/auth-types@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@firebase/auth-types/-/auth-types-0.4.0.tgz#f65e1d079a2793f581a995a92f56005e44cf4aac"
+  integrity sha512-Q1qAmkQW2dL0Ggg9/hNGpI69IlYZ6HOHcRtavuJi724tm8j1bCARxwSv78vncI9spSFsi+efbaZW12XMS5HwVg==
 
-"@firebase/auth@0.7.9":
-  version "0.7.9"
-  resolved "https://registry.yarnpkg.com/@firebase/auth/-/auth-0.7.9.tgz#f915f8eeb6ee16b827518f48a0fa529803d39e4e"
-  integrity sha512-m8e2KZ/WvToTMovoBI5K3N0Ku8Aqt6083oqzQODUYHjf94KsAfGdoQEaJono7T7vK4o7E5xpqFgFldOM5LdgiQ==
+"@firebase/auth@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@firebase/auth/-/auth-0.8.0.tgz#e98374341c66e4dc1e7dabdac4015eebfdae56ce"
+  integrity sha512-n3zgNrvNZ/fYCnYz+B2+MoFfpFPQx56lPeWkXgTua1Cy4OxJR6OWVA5xfQjRj1pM07pkBvnhRZtwB+DgY3BjDA==
   dependencies:
-    "@firebase/auth-types" "0.3.4"
+    "@firebase/auth-types" "0.4.0"
 
 "@firebase/database-types@0.3.2":
   version "0.3.2"
@@ -3820,13 +3820,13 @@ firebase-functions@2.1.0:
     jsonwebtoken "^8.2.1"
     lodash "^4.6.1"
 
-firebase@5.5.9:
-  version "5.5.9"
-  resolved "https://registry.yarnpkg.com/firebase/-/firebase-5.5.9.tgz#1e20172d7c7dfafdc75a18378439e0493bc12753"
-  integrity sha512-IFABX9++5Bq7S00zYGdkdnqikq67cJuub26iyap4qNPnc05qXxx/5waomMIyEvfH74K7ywOaVWEy0E1BFNKk7g==
+firebase@5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/firebase/-/firebase-5.6.0.tgz#fbaecb066a2928ff64f69e7b94669640daba5ba2"
+  integrity sha512-ejYDmJT3S/vQoNFsCCtBVopjXe0ny47aZ+C3QXgDY0UxlruNkcMa4Mo3vBIV32q1uad6AbHih6XdDHfs0CH5Uw==
   dependencies:
     "@firebase/app" "0.3.5"
-    "@firebase/auth" "0.7.9"
+    "@firebase/auth" "0.8.0"
     "@firebase/database" "0.3.7"
     "@firebase/firestore" "0.8.8"
     "@firebase/functions" "0.3.3"
