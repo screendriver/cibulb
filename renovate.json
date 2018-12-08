@@ -4,5 +4,11 @@
   "rebaseStalePrs": true,
   "nvm": {
     "enabled": false
-  }
+  },
+  "packageRules": [
+    {
+      "groupName": "vue",
+      "packagePatterns": ["vue", "vue-template-compiler"]
+    }
+  ]
 }
