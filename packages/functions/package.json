@@ -27,7 +27,7 @@
     "tslib": "1.9.3"
   },
   "devDependencies": {
-    "@types/sinon": "5.0.7",
+    "@types/sinon": "7.0.0",
     "@types/tape": "4.2.32",
     "codecov": "3.1.0",
     "nyc": "13.1.0",
