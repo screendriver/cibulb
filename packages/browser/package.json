@@ -22,7 +22,7 @@
     "vuex": "3.0.1"
   },
   "devDependencies": {
-    "@types/aws-lambda": "8.10.15",
+    "@types/aws-lambda": "8.10.17",
     "@types/got": "9.2.1",
     "@types/jest": "23.3.10",
     "@types/node": "10.12.15",
