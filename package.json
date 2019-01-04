@@ -5,21 +5,8 @@
   "repository": "git@github.com:screendriver/cibulb.git",
   "author": "Christian Rackerseder <git@echooff.de>",
   "license": "MIT",
-  "workspaces": [
-    "packages/browser",
-    "packages/functions"
-  ],
   "scripts": {
-    "lint": "tslint -c tslint.json 'packages/**/*.ts' && yarn workspace cibulb-browser lint",
-    "serve": "yarn workspace cibulb-browser serve",
-    "test:unit:browser": "yarn workspace cibulb-browser test:unit",
-    "test:unit:functions": "yarn workspace cibulb-functions test:unit",
-    "test:unit": "yarn test:unit:browser && yarn test:unit:functions",
-    "test": "yarn lint && yarn test:unit && yarn coverage",
-    "coverage": "yarn workspace cibulb-functions coverage",
-    "build:browser": "yarn workspace cibulb-browser build",
-    "build:functions": "yarn workspace cibulb-functions build",
-    "build": "yarn build:browser && yarn build:functions"
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'"
   },
   "devDependencies": {
     "husky": "1.2.1",
