@@ -1,4 +1,4 @@
 {
   "files": [],
-  "references": [{ "path": "./src" }, { "path": "./test" }]
+  "references": [{ "path": "./ColorFunction" }, { "path": "./test" }]
 }
