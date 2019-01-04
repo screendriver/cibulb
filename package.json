@@ -6,7 +6,8 @@
   "author": "Christian Rackerseder <git@echooff.de>",
   "license": "MIT",
   "scripts": {
-    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'"
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+    "build": "tsc --build"
   },
   "dependencies": {
     "tslib": "1.9.3"
