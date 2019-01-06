@@ -1,6 +1,9 @@
 import test from 'tape';
+import sinon from 'sinon';
+import { run } from '../../ColorFunction';
 
-test('setup should work', t => {
+test('setup should work', async t => {
   t.plan(1);
+  await run({ log: sinon.stub() }, { query: {} });
   t.pass();
 });
