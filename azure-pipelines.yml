@@ -6,14 +6,24 @@ steps:
     displayName: Install Node.js
     inputs:
       versionSpec: 10.14.1
+
   - script: yarn install
     displayName: Install dependencies
+
   - script: yarn build
     displayName: Build application
+
   - script: yarn test:ci
     displayName: Running tests
+
   - task: PublishTestResults@2
     inputs:
       testResultsFiles: '**/TEST-RESULTS.xml'
       testRunTitle: Test results for JavaScript
     condition: succeededOrFailed()
+
+  - task: PublishCodeCoverageResults@1
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+      reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
