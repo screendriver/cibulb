@@ -29,3 +29,4 @@ dist
 coverage
 
 yarn-error.log*
+TEST-RESULTS.xml
