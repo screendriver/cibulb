@@ -10,5 +10,5 @@ steps:
     displayName: Install dependencies
   - script: yarn build
     displayName: Build application
-  - script: yarn test
+  - script: yarn test:ci
     displayName: Running tests

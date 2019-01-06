@@ -7,8 +7,9 @@
   "license": "MIT",
   "scripts": {
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
-    "test:unit": "tape -r source-map-support/register 'dist/test/unit/**/*.js' | tap-dot",
-    "test": "yarn lint && yarn test:unit",
+    "test:unit": "tape -r source-map-support/register 'dist/test/unit/**/*.js'",
+    "test": "yarn lint && yarn test:unit | tap-dot",
+    "test:ci": "yarn lint && yarn test:unit | tap-xunit",
     "build": "tsc --build"
   },
   "dependencies": {
