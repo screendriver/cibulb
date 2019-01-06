@@ -12,3 +12,8 @@ steps:
     displayName: Build application
   - script: yarn test:ci
     displayName: Running tests
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/TEST-RESULTS.xml'
+      testRunTitle: 'Test results for JavaScript'
+    condition: succeededOrFailed()
