@@ -2,7 +2,7 @@ declare module 'azure-functions' {
   import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
 
   export interface HttpRequest {
-    body: any;
+    body?: any;
     headers: IncomingHttpHeaders;
     method: string;
     originalUrl: string;
@@ -18,7 +18,7 @@ declare module 'azure-functions' {
     status?: number;
   }
 
-  interface Logger {
+  export interface Logger {
     (...message: any): void;
     error(...message: any): void;
     warn(...message: any): void;
