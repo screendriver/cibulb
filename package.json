@@ -17,6 +17,7 @@
     "tslib": "1.9.3"
   },
   "devDependencies": {
+    "@types/node": "10.12.18",
     "@types/sinon": "7.0.3",
     "@types/tape": "4.2.33",
     "husky": "1.2.1",
