@@ -18,7 +18,7 @@ steps:
 
   - task: PublishTestResults@2
     inputs:
-      testResultsFiles: '**/TEST-RESULTS.xml'
+      testResultsFiles: '**/test-results.xml'
       testRunTitle: Test results for JavaScript
     condition: succeededOrFailed()
 
