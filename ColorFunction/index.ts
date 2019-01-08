@@ -1,4 +1,6 @@
-export async function run(context: any, req: any) {
+import { Context, HttpRequest } from 'azure-functions';
+
+export async function run(context: Context, req: HttpRequest) {
   context.log('JavaScript HTTP trigger function processed a request.');
 
   if (req.query.name || (req.body && req.body.name)) {
