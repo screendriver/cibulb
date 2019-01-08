@@ -7,7 +7,7 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["put"],
+      "methods": ["post"],
       "route": "color"
     },
     {
