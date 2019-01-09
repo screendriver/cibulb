@@ -14,7 +14,8 @@
     "build": "tsc --build"
   },
   "dependencies": {
-    "tslib": "1.9.3"
+    "tslib": "1.9.3",
+    "verify-github-webhook-secret": "1.1.0"
   },
   "devDependencies": {
     "@types/node": "10.12.18",
