@@ -9,6 +9,11 @@
       "name": "req",
       "methods": ["post"],
       "route": "color"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "$return"
     }
   ]
 }
