@@ -7,16 +7,26 @@ import {
   ColorChange,
 } from '../../ColorFunction/color';
 
-test('return status 403 when GitHub secret is not valid', async t => {
-  t.plan(1);
+function createTestData(
+  body: WebhookJsonBody = {},
+  verifySecretReturns = true,
+) {
   const logger: Partial<Logger> = {
     error: sinon.stub(),
   };
-  const body: WebhookJsonBody = {};
-  const verifySecret = sinon.stub().returns(false);
+  const verifySecret = sinon.stub().returns(verifySecretReturns);
   const secret = 'my-secret';
   const iftttKey = 'my-key';
   const got = sinon.stub();
+  return { logger, body, verifySecret, secret, iftttKey, got };
+}
+
+test('return status 403 when GitHub secret is not valid', async t => {
+  t.plan(1);
+  const { logger, body, verifySecret, secret, iftttKey, got } = createTestData(
+    {},
+    false,
+  );
   const actual = await changeColor(
     logger as Logger,
     body,
@@ -90,21 +100,61 @@ test('call IFTTT API when master branch state is "error"', async t => {
   );
 });
 
+test('do not call IFTTT API when branch is not master', async t => {
+  t.plan(1);
+  const bodyOverride: WebhookJsonBody = {
+    id: 123,
+    name: 'test',
+    state: 'success',
+    branches: [{ name: 'feature-a' }],
+  };
+  const { logger, body, verifySecret, secret, iftttKey, got } = createTestData(
+    bodyOverride,
+    true,
+  );
+  await changeColor(
+    logger as Logger,
+    body,
+    verifySecret,
+    secret,
+    iftttKey,
+    got,
+  );
+  t.false(got.called);
+});
+
+test('do not call IFTTT API when body fields are missing', async t => {
+  t.plan(1);
+  const bodyOverride: WebhookJsonBody = {
+    branches: [{ name: 'feature-a' }],
+  };
+  const { logger, body, verifySecret, secret, iftttKey, got } = createTestData(
+    bodyOverride,
+    true,
+  );
+  await changeColor(
+    logger as Logger,
+    body,
+    verifySecret,
+    secret,
+    iftttKey,
+    got,
+  );
+  t.false(got.called);
+});
+
 test('return status 204 when everything was fine', async t => {
   t.plan(1);
-  const logger: Partial<Logger> = {
-    error: sinon.stub(),
-  };
-  const body: WebhookJsonBody = {
+  const bodyOverride: WebhookJsonBody = {
     id: 123,
     name: 'test',
     state: 'success',
     branches: [{ name: 'master' }],
   };
-  const verifySecret = sinon.stub().returns(true);
-  const secret = 'my-secret';
-  const iftttKey = 'my-key';
-  const got = sinon.stub();
+  const { logger, body, verifySecret, secret, iftttKey, got } = createTestData(
+    bodyOverride,
+    true,
+  );
   const actual = await changeColor(
     logger as Logger,
     body,
