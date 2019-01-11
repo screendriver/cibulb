@@ -16,9 +16,9 @@
     "firebase": "5.7.0",
     "got": "9.4.0",
     "socket.io-client": "2.2.0",
-    "vue": "2.5.21",
+    "vue": "2.5.22",
     "vue-class-component": "6.3.2",
-    "vue-property-decorator": "7.2.0",
+    "vue-property-decorator": "7.3.0",
     "vuex": "3.0.1"
   },
   "devDependencies": {
@@ -28,13 +28,13 @@
     "@types/node": "10.12.15",
     "@types/socket.io-client": "1.4.32",
     "@types/web-bluetooth": "0.0.4",
-    "@vue/cli-plugin-typescript": "3.2.0",
-    "@vue/cli-plugin-unit-jest": "3.2.0",
-    "@vue/cli-service": "3.2.0",
-    "@vue/test-utils": "1.0.0-beta.27",
+    "@vue/cli-plugin-typescript": "3.3.0",
+    "@vue/cli-plugin-unit-jest": "3.3.0",
+    "@vue/cli-service": "3.3.0",
+    "@vue/test-utils": "1.0.0-beta.28",
     "ts-jest": "23.10.4",
     "ts-loader": "5.3.1",
-    "vue-template-compiler": "2.5.21",
+    "vue-template-compiler": "2.5.22",
     "webpack": "4.27.1",
     "webpack-cli": "3.1.2"
   }
