@@ -5,7 +5,7 @@ import {
   changeColor,
   WebhookJsonBody,
   ColorChange,
-} from '../../ColorFunction/color';
+} from '../../../ColorFunction/color';
 import { URL } from 'url';
 
 function createTestData(
