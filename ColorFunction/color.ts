@@ -1,6 +1,7 @@
 import { Logger } from 'azure-functions';
 import { GotFn } from 'got';
 import verifySecretFn from 'verify-github-webhook-secret';
+import { URL } from 'url';
 
 export interface WebhookJsonBody {
   id?: number;
@@ -26,6 +27,7 @@ export async function changeColor(
   body: WebhookJsonBody,
   verifySecret: typeof verifySecretFn,
   secret: string,
+  iftttBaseUrl: string,
   iftttKey: string,
   got: GotFn,
   xHubSignature?: string | string[],
@@ -38,11 +40,11 @@ export async function changeColor(
   }
   if (body.id && body.name && body.state && body.branches) {
     if (body.branches.map(({ name }) => name).includes('master')) {
-      await got(
-        `https://maker.ifttt.com/trigger/${
-          stateTriggerMap[body.state]
-        }/with/key/${iftttKey}`,
+      const iftttUrl = new URL(
+        `trigger/${stateTriggerMap[body.state]}/with/key/${iftttKey}`,
+        iftttBaseUrl,
       );
+      await got(iftttUrl);
     }
   }
   return { status: 204, body: null };

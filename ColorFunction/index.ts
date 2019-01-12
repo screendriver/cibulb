@@ -12,6 +12,7 @@ export async function run(context: Context, req: HttpRequest) {
     req.body,
     verifySecret,
     config.githubSecret,
+    config.iftttBaseUrl,
     config.iftttKey,
     got,
     xHubSignature,

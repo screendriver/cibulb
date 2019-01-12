@@ -6,6 +6,7 @@ import {
   WebhookJsonBody,
   ColorChange,
 } from '../../ColorFunction/color';
+import { URL } from 'url';
 
 function createTestData(
   body: WebhookJsonBody = {},
@@ -16,22 +17,29 @@ function createTestData(
   };
   const verifySecret = sinon.stub().returns(verifySecretReturns);
   const secret = 'my-secret';
+  const iftttBaseUrl = 'https://maker.ifttt.com';
   const iftttKey = 'my-key';
   const got = sinon.stub();
-  return { logger, body, verifySecret, secret, iftttKey, got };
+  return { logger, body, verifySecret, secret, iftttBaseUrl, iftttKey, got };
 }
 
 test('return status 403 when GitHub secret is not valid', async t => {
   t.plan(1);
-  const { logger, body, verifySecret, secret, iftttKey, got } = createTestData(
-    {},
-    false,
-  );
+  const {
+    logger,
+    body,
+    verifySecret,
+    secret,
+    iftttBaseUrl,
+    iftttKey,
+    got,
+  } = createTestData({}, false);
   const actual = await changeColor(
     logger as Logger,
     body,
     verifySecret,
     secret,
+    iftttBaseUrl,
     iftttKey,
     got,
   );
@@ -39,7 +47,7 @@ test('return status 403 when GitHub secret is not valid', async t => {
   t.deepEqual(actual, expected);
 });
 
-async function callIftttApi(state: WebhookJsonBody['state']): Promise<string> {
+async function callIftttApi(state: WebhookJsonBody['state']): Promise<URL> {
   const logger: Partial<Logger> = {
     error: sinon.stub(),
   };
@@ -51,6 +59,7 @@ async function callIftttApi(state: WebhookJsonBody['state']): Promise<string> {
   };
   const verifySecret = sinon.stub().returns(true);
   const secret = 'my-secret';
+  const iftttBaseUrl = 'https://maker.ifttt.com';
   const iftttKey = 'my-key';
   const got = sinon.stub();
   await changeColor(
@@ -58,6 +67,7 @@ async function callIftttApi(state: WebhookJsonBody['state']): Promise<string> {
     body,
     verifySecret,
     secret,
+    iftttBaseUrl,
     iftttKey,
     got,
   );
@@ -68,7 +78,7 @@ test('call IFTTT API when master branch state is "success"', async t => {
   t.plan(1);
   const actual = await callIftttApi('success');
   t.equal(
-    actual,
+    actual.toString(),
     'https://maker.ifttt.com/trigger/ci_build_success/with/key/my-key',
   );
 });
@@ -77,7 +87,7 @@ test('call IFTTT API when master branch state is "pending"', async t => {
   t.plan(1);
   const actual = await callIftttApi('pending');
   t.equal(
-    actual,
+    actual.toString(),
     'https://maker.ifttt.com/trigger/ci_build_pending/with/key/my-key',
   );
 });
@@ -86,7 +96,7 @@ test('call IFTTT API when master branch state is "failure"', async t => {
   t.plan(1);
   const actual = await callIftttApi('failure');
   t.equal(
-    actual,
+    actual.toString(),
     'https://maker.ifttt.com/trigger/ci_build_failure/with/key/my-key',
   );
 });
@@ -95,7 +105,7 @@ test('call IFTTT API when master branch state is "error"', async t => {
   t.plan(1);
   const actual = await callIftttApi('error');
   t.equal(
-    actual,
+    actual.toString(),
     'https://maker.ifttt.com/trigger/ci_build_failure/with/key/my-key',
   );
 });
@@ -108,15 +118,21 @@ test('do not call IFTTT API when branch is not master', async t => {
     state: 'success',
     branches: [{ name: 'feature-a' }],
   };
-  const { logger, body, verifySecret, secret, iftttKey, got } = createTestData(
-    bodyOverride,
-    true,
-  );
+  const {
+    logger,
+    body,
+    verifySecret,
+    secret,
+    iftttBaseUrl,
+    iftttKey,
+    got,
+  } = createTestData(bodyOverride, true);
   await changeColor(
     logger as Logger,
     body,
     verifySecret,
     secret,
+    iftttBaseUrl,
     iftttKey,
     got,
   );
@@ -128,15 +144,21 @@ test('do not call IFTTT API when body fields are missing', async t => {
   const bodyOverride: WebhookJsonBody = {
     branches: [{ name: 'feature-a' }],
   };
-  const { logger, body, verifySecret, secret, iftttKey, got } = createTestData(
-    bodyOverride,
-    true,
-  );
+  const {
+    logger,
+    body,
+    verifySecret,
+    secret,
+    iftttBaseUrl,
+    iftttKey,
+    got,
+  } = createTestData(bodyOverride, true);
   await changeColor(
     logger as Logger,
     body,
     verifySecret,
     secret,
+    iftttBaseUrl,
     iftttKey,
     got,
   );
@@ -151,15 +173,21 @@ test('return status 204 when everything was fine', async t => {
     state: 'success',
     branches: [{ name: 'master' }],
   };
-  const { logger, body, verifySecret, secret, iftttKey, got } = createTestData(
-    bodyOverride,
-    true,
-  );
+  const {
+    logger,
+    body,
+    verifySecret,
+    secret,
+    iftttBaseUrl,
+    iftttKey,
+    got,
+  } = createTestData(bodyOverride, true);
   const actual = await changeColor(
     logger as Logger,
     body,
     verifySecret,
     secret,
+    iftttBaseUrl,
     iftttKey,
     got,
   );
