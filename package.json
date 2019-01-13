@@ -8,8 +8,9 @@
   "scripts": {
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "test:unit": "nyc tape -r source-map-support/register 'dist/test/unit/**/*.js'",
-    "test": "yarn lint && yarn test:unit | tap-dot",
-    "test:ci": "yarn lint && yarn test:unit | tap-xunit > test-results.xml",
+    "test:integration": "tape -r source-map-support/register 'dist/test/integration/**/*.js' | tap-dot",
+    "test": "yarn lint && yarn test:unit | tap-dot && yarn test:integration",
+    "test:ci": "yarn lint && yarn test:unit | tap-xunit > test-results.xml && yarn test:integration",
     "coverage": "nyc report --reporter=text-summary",
     "build": "tsc --build"
   },
