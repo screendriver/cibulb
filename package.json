@@ -15,7 +15,7 @@
     "build": "tsc --build"
   },
   "dependencies": {
-    "got": "9.5.0",
+    "got": "9.5.1",
     "tslib": "1.9.3",
     "verify-github-webhook-secret": "1.1.0"
   },
