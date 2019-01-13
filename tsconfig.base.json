@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "importHelpers": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "plugins": [{ "name": "typescript-tslint-plugin" }],
+    "lib": ["es2018"],
+    "typeRoots": ["./typings", "./node_modules/@types"]
+  }
+}

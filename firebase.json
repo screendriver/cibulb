@@ -1,6 +1,0 @@
-{
-  "functions": {
-    "source": "packages/functions/",
-    "predeploy": "yarn run build:functions"
-  }
-}

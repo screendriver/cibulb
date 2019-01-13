@@ -1,19 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "es2015",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmitOnError": true,
-    "importHelpers": true,
-    "sourceMap": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "plugins": [{ "name": "typescript-tslint-plugin" }]
-  }
+  "files": [],
+  "references": [
+    { "path": "./ColorFunction" },
+    { "path": "./test/unit/ColorFunction" },
+    { "path": "./test/integration/ColorFunction" }
+  ]
 }
