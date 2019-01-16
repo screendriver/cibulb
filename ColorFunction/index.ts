@@ -1,10 +1,13 @@
-import { Context, HttpRequest } from 'azure-functions';
+import { Context, HttpRequest, AzureFunction } from '@azure/functions';
 import verifySecret from 'verify-github-webhook-secret';
 import got from 'got';
 import { getConfig } from './config';
 import { changeColor } from './color';
 
-export async function run(context: Context, req: HttpRequest) {
+export const run: AzureFunction = async (
+  context: Context,
+  req: HttpRequest,
+) => {
   const config = getConfig();
   const xHubSignature = req.headers['x-hub-signature'];
   return await changeColor(
@@ -17,4 +20,4 @@ export async function run(context: Context, req: HttpRequest) {
     got,
     xHubSignature,
   );
-}
+};

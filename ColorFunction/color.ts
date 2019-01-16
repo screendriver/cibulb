@@ -1,4 +1,4 @@
-import { Logger } from 'azure-functions';
+import { Logger } from '@azure/functions';
 import { GotFn } from 'got';
 import verifySecretFn from 'verify-github-webhook-secret';
 import { URL } from 'url';

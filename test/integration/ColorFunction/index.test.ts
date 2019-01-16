@@ -1,7 +1,7 @@
 import test from 'tape';
 import micro from 'micro';
 import listen from 'test-listen';
-import { Context, HttpRequest } from 'azure-functions';
+import { Context, HttpRequest } from '@azure/functions';
 import sinon from 'sinon';
 import { run } from '../../../ColorFunction/';
 

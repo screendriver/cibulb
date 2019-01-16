@@ -1,5 +1,5 @@
 import test from 'tape';
-import { Logger } from 'azure-functions';
+import { Logger } from '@azure/functions';
 import sinon from 'sinon';
 import {
   changeColor,

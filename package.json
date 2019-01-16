@@ -20,6 +20,7 @@
     "verify-github-webhook-secret": "1.1.0"
   },
   "devDependencies": {
+    "@azure/functions": "1.0.1-beta2",
     "@types/got": "9.3.0",
     "@types/micro": "7.3.3",
     "@types/node": "10.12.18",
