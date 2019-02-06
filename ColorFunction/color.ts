@@ -44,7 +44,9 @@ export async function changeColor(
         `trigger/${stateTriggerMap[body.state]}/with/key/${iftttKey}`,
         iftttBaseUrl,
       );
+      logger.info('Calling IFTTT webhook');
       await got(iftttUrl);
+      logger.info('Calling IFTTT webhook done');
     }
   }
   return { status: 204, body: null };

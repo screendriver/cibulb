@@ -14,6 +14,7 @@ function createTestData(
 ) {
   const logger: Partial<Logger> = {
     error: sinon.stub(),
+    info: sinon.stub(),
   };
   const verifySecret = sinon.stub().returns(verifySecretReturns);
   const secret = 'my-secret';
@@ -50,6 +51,7 @@ test('return status 403 when GitHub secret is not valid', async t => {
 async function callIftttApi(state: WebhookJsonBody['state']): Promise<URL> {
   const logger: Partial<Logger> = {
     error: sinon.stub(),
+    info: sinon.stub(),
   };
   const body: WebhookJsonBody = {
     id: 123,
