@@ -39,7 +39,8 @@ export async function changeColor(
     return { status: 403, body: 'Forbidden' };
   }
   if (body.id && body.name && body.state && body.branches) {
-    if (body.branches.map(({ name }) => name).includes('master')) {
+    const branchNames = body.branches.map(({ name }) => name);
+    if (branchNames.includes('master')) {
       const iftttUrl = new URL(
         `trigger/${stateTriggerMap[body.state]}/with/key/${iftttKey}`,
         iftttBaseUrl,
@@ -47,6 +48,10 @@ export async function changeColor(
       logger.info('Calling IFTTT webhook');
       await got(iftttUrl);
       logger.info('Calling IFTTT webhook done');
+    } else {
+      logger.info(
+        `Branch "${branchNames.toString()}" instead of "master". Doing nothing.`,
+      );
     }
   }
   return { status: 204, body: null };
