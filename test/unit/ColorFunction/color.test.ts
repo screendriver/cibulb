@@ -20,7 +20,7 @@ function createTestData(
   const secret = 'my-secret';
   const iftttBaseUrl = 'https://maker.ifttt.com';
   const iftttKey = 'my-key';
-  const got = sinon.stub();
+  const got = sinon.stub().returns({ body: '' });
   return { logger, body, verifySecret, secret, iftttBaseUrl, iftttKey, got };
 }
 
@@ -63,7 +63,7 @@ async function callIftttApi(state: WebhookJsonBody['state']): Promise<URL> {
   const secret = 'my-secret';
   const iftttBaseUrl = 'https://maker.ifttt.com';
   const iftttKey = 'my-key';
-  const got = sinon.stub();
+  const got = sinon.stub().returns({ body: '' });
   await changeColor(
     logger as Logger,
     body,

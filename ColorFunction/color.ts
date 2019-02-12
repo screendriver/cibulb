@@ -45,9 +45,9 @@ export async function changeColor(
         `trigger/${stateTriggerMap[body.state]}/with/key/${iftttKey}`,
         iftttBaseUrl,
       );
-      logger.info('Calling IFTTT webhook');
-      await got(iftttUrl);
-      logger.info('Calling IFTTT webhook done');
+      logger.info(`Calling IFTTT webhook with "${body.state}" state`);
+      const response = await got(iftttUrl);
+      logger.info(response.body);
     } else {
       logger.info(
         `Branch "${branchNames.toString()}" instead of "master". Doing nothing.`,
