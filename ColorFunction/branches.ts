@@ -1,4 +1,4 @@
-interface Branch {
+export interface Branch {
   name: string;
 }
 
