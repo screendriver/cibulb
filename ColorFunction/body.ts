@@ -1,8 +1,10 @@
+import { Branch } from './branches';
+
 export interface WebhookJsonBody {
   id?: number;
   name?: string;
   state?: 'pending' | 'failure' | 'error' | 'success';
-  branches?: Array<{ name: string }>;
+  branches?: ReadonlyArray<Branch>;
 }
 
 export function isBodyValid(body: WebhookJsonBody): boolean {
