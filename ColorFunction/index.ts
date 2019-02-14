@@ -2,22 +2,40 @@ import { Context, HttpRequest, AzureFunction } from '@azure/functions';
 import verifySecret from 'verify-github-webhook-secret';
 import got from 'got';
 import { getConfig } from './config';
-import { changeColor } from './color';
+import { xHubSignature } from './headers';
+import { isBodyValid, WebhookJsonBody } from './body';
+import { isMasterBranch } from './branches';
+import { callIftttWebhook } from './ifttt';
 
 export const run: AzureFunction = async (
   context: Context,
   req: HttpRequest,
 ) => {
+  const body: WebhookJsonBody = req.body;
+  const bodyAsString = JSON.stringify(body);
   const config = getConfig();
-  const xHubSignature = req.headers['x-hub-signature'];
-  return await changeColor(
-    context.log,
-    req.body,
-    verifySecret,
+  const signature = xHubSignature(req);
+  const isSecretValid = await verifySecret(
+    bodyAsString,
     config.githubSecret,
-    config.iftttBaseUrl,
-    config.iftttKey,
-    got,
-    xHubSignature,
+    signature,
   );
+  if (!isSecretValid) {
+    context.log.error('GitHub secret is not valid');
+    return { status: 403, body: 'Forbidden' };
+  }
+  if (isBodyValid(body)) {
+    if (isMasterBranch(body.branches!)) {
+      context.log.info(`Calling IFTTT webhook with "${body.state}" state`);
+      await callIftttWebhook(body.state!, config, got);
+      context.log.info(body);
+    } else {
+      context.log.info(
+        `Called from "${body
+          .branches!.map(({ name }) => name)
+          .toString()}" instead of "master" branch. Doing nothing.`,
+      );
+    }
+  }
+  return { status: 204, body: null };
 };
