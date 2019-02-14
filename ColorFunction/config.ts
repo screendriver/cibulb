@@ -1,7 +1,7 @@
 export interface Config {
-  githubSecret: string;
-  iftttBaseUrl: string;
-  iftttKey: string;
+  readonly githubSecret: string;
+  readonly iftttBaseUrl: string;
+  readonly iftttKey: string;
 }
 
 export function getConfig(): Config {
