@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 import { WebhookJsonBody } from './body';
 import { Config } from './config';
 
-type Repository = Pick<WebhookJsonBody, 'name' | 'state'>;
+export type Repository = Pick<WebhookJsonBody, 'name' | 'state'>;
 
 export async function updateDb(
   repository: Repository,

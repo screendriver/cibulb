@@ -4,6 +4,7 @@ import listen from 'test-listen';
 import { MongoClient } from 'mongodb';
 import { Context, HttpRequest } from '@azure/functions';
 import sinon from 'sinon';
+import { Repository } from '../../../ColorFunction/mongodb';
 import { run } from '../../../ColorFunction/';
 
 const mongoUri = 'mongodb://localhost:27017';
@@ -28,6 +29,34 @@ function setupEnvs(iftttUrl: string) {
   process.env.MONGO_URI = mongoUri;
 }
 
+function createContext(): Context {
+  const ctx: Partial<Context> = {
+    log: {
+      warn: sinon.stub(),
+      info: sinon.stub(),
+      metric: sinon.stub(),
+      verbose: sinon.stub(),
+      error: sinon.stub(),
+    } as any,
+  };
+  return ctx as Context;
+}
+
+function createRequest(): HttpRequest {
+  const req: Partial<HttpRequest> = {
+    headers: {
+      'x-hub-signature': 'sha1=7222a793428d77051ab41c61ee85305d0ea3da80',
+    },
+    body: {
+      id: 123,
+      name: 'test',
+      state: 'success',
+      branches: [{ name: 'master' }],
+    },
+  };
+  return req as HttpRequest;
+}
+
 test('call IFTTT webhook event "ci_build_success"', async t => {
   t.plan(1);
   const mongoClient = await createMongoDb();
@@ -40,25 +69,32 @@ test('call IFTTT webhook event "ci_build_success"', async t => {
   });
   const url = await listen(service);
   setupEnvs(url);
-  const context: Partial<Context> = {
-    log: {
-      warn: sinon.stub(),
-      info: sinon.stub(),
-      metric: sinon.stub(),
-      verbose: sinon.stub(),
-      error: sinon.stub(),
-    } as any,
-  };
-  const req: Partial<HttpRequest> = {
-    headers: {
-      'x-hub-signature': 'sha1=7222a793428d77051ab41c61ee85305d0ea3da80',
-    },
-    body: {
-      id: 123,
+  const context = createContext();
+  const req = createRequest();
+  await run(context, req);
+});
+
+test('inserts repository name and state into MongoDB', async t => {
+  t.plan(1);
+  const mongoClient = await createMongoDb();
+  const service = micro(async () => {
+    service.close();
+    const repos = await mongoClient
+      .db('cibulb')
+      .collection<Repository>('repositories')
+      .find()
+      .toArray();
+    t.deepEqual(repos.map(({ name, state }) => ({ name, state }))[0], {
       name: 'test',
       state: 'success',
-      branches: [{ name: 'master' }],
-    },
-  };
-  await run(context as Context, req as HttpRequest);
+    });
+    mongoClient.close();
+    deleteEnvs();
+    return null;
+  });
+  const url = await listen(service);
+  setupEnvs(url);
+  const context = createContext();
+  const req = createRequest();
+  await run(context, req);
 });
