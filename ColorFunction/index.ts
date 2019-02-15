@@ -3,7 +3,7 @@ import verifySecret from 'verify-github-webhook-secret';
 import got from 'got';
 import { getConfig } from './config';
 import { xHubSignature } from './headers';
-import { isBodyValid, WebhookJsonBody } from './body';
+import { isWebhookJsonBody, WebhookJsonBody } from './body';
 import { isMasterBranch } from './branches';
 import { callIftttWebhook } from './ifttt';
 
@@ -25,10 +25,10 @@ export const run: AzureFunction = async (
     context.log.error('GitHub secret is not valid');
     return { status: 403, body: 'Forbidden' };
   }
-  if (isBodyValid(body)) {
-    if (isMasterBranch(body.branches!)) {
+  if (isWebhookJsonBody(body)) {
+    if (isMasterBranch(body.branches)) {
       context.log.info(`Calling IFTTT webhook with "${body.state}" state`);
-      const hookResponse = await callIftttWebhook(body.state!, config, got);
+      const hookResponse = await callIftttWebhook(body.state, config, got);
       context.log.info(hookResponse);
     } else {
       context.log.info(
