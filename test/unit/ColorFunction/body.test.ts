@@ -1,59 +1,59 @@
 import test from 'tape';
-import { isBodyValid, WebhookJsonBody } from '../../../ColorFunction/body';
+import { isWebhookJsonBody } from '../../../ColorFunction/body';
 
 test('returns true when all properties are set', t => {
   t.plan(1);
-  const body: WebhookJsonBody = {
+  const body = {
     id: 123,
     name: 'test',
     state: 'success',
     branches: [],
   };
-  t.true(isBodyValid(body));
+  t.true(isWebhookJsonBody(body));
 });
 
 test('returns false when id property is missing', t => {
   t.plan(1);
-  const body: WebhookJsonBody = {
+  const body = {
     name: 'test',
     state: 'success',
     branches: [],
   };
-  t.false(isBodyValid(body));
+  t.false(isWebhookJsonBody(body));
 });
 
 test('returns false when name property is missing', t => {
   t.plan(1);
-  const body: WebhookJsonBody = {
+  const body = {
     id: 123,
     state: 'success',
     branches: [],
   };
-  t.false(isBodyValid(body));
+  t.false(isWebhookJsonBody(body));
 });
 
 test('returns false when state property is missing', t => {
   t.plan(1);
-  const body: WebhookJsonBody = {
+  const body = {
     id: 123,
     name: 'test',
     branches: [],
   };
-  t.false(isBodyValid(body));
+  t.false(isWebhookJsonBody(body));
 });
 
 test('returns false when branches property is missing', t => {
   t.plan(1);
-  const body: WebhookJsonBody = {
+  const body = {
     id: 123,
     name: 'test',
     state: 'success',
   };
-  t.false(isBodyValid(body));
+  t.false(isWebhookJsonBody(body));
 });
 
 test('returns false when all properties are missing', t => {
   t.plan(1);
-  const body: WebhookJsonBody = {};
-  t.false(isBodyValid(body));
+  const body = {};
+  t.false(isWebhookJsonBody(body));
 });
