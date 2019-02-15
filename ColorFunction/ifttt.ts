@@ -1,5 +1,6 @@
 import { GotFn } from 'got';
 import { URL } from 'url';
+import { WebhookJsonBody } from './body';
 import { Config } from './config';
 
 const stateTriggerMap = {
@@ -10,7 +11,7 @@ const stateTriggerMap = {
 };
 
 export async function callIftttWebhook(
-  state: 'pending' | 'failure' | 'error' | 'success',
+  state: WebhookJsonBody['state'],
   config: Config,
   got: GotFn,
 ): Promise<string> {
