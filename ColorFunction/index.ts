@@ -29,7 +29,7 @@ export const run: AzureFunction = async (
   }
   if (isWebhookJsonBody(body)) {
     if (isMasterBranch(body.branches)) {
-      context.log('Calling MongoDB');
+      context.log.info('Calling MongoDB');
       const repositories = await updateDb(body, config);
       const overallState = getRepositoriesState(repositories);
       context.log.info(`Calling IFTTT webhook with "${overallState}" state`);
