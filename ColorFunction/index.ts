@@ -28,8 +28,8 @@ export const run: AzureFunction = async (
   if (isBodyValid(body)) {
     if (isMasterBranch(body.branches!)) {
       context.log.info(`Calling IFTTT webhook with "${body.state}" state`);
-      await callIftttWebhook(body.state!, config, got);
-      context.log.info(body);
+      const hookResponse = await callIftttWebhook(body.state!, config, got);
+      context.log.info(hookResponse);
     } else {
       context.log.info(
         `Called from "${body
