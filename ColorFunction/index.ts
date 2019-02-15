@@ -15,6 +15,7 @@ export const run: AzureFunction = async (
   const bodyAsString = JSON.stringify(body);
   const config = getConfig();
   const signature = xHubSignature(req);
+  context.log.info(`Called from repository ${body.name}`);
   const isSecretValid = await verifySecret(
     bodyAsString,
     config.githubSecret,
