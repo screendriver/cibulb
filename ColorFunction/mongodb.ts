@@ -8,7 +8,9 @@ export async function updateDb(
   repository: Repository,
   config: Config,
 ): Promise<ReadonlyArray<Repository>> {
-  const client = await MongoClient.connect(config.mongoDbUri);
+  const client = await MongoClient.connect(config.mongoDbUri, {
+    useNewUrlParser: true,
+  });
   try {
     const repositoriesCollection = client
       .db('cibulb')
