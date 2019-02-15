@@ -1,5 +1,6 @@
 import { Context, HttpRequest, AzureFunction } from '@azure/functions';
 import verifySecret from 'verify-github-webhook-secret';
+import { MongoClient } from 'mongodb';
 import got from 'got';
 import { getConfig } from './config';
 import { xHubSignature } from './headers';
@@ -30,7 +31,7 @@ export const run: AzureFunction = async (
   if (isWebhookJsonBody(body)) {
     if (isMasterBranch(body.branches)) {
       context.log.info('Calling MongoDB');
-      const repositories = await updateDb(body, config);
+      const repositories = await updateDb(MongoClient, body, config);
       const overallState = getRepositoriesState(repositories);
       context.log.info(`Calling IFTTT webhook with "${overallState}" state`);
       const hookResponse = await callIftttWebhook(overallState, config, got);

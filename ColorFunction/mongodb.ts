@@ -5,10 +5,11 @@ import { Config } from './config';
 export type Repository = Pick<WebhookJsonBody, 'name' | 'state'>;
 
 export async function updateDb(
+  mongoClient: typeof MongoClient,
   repository: Repository,
   config: Config,
 ): Promise<ReadonlyArray<Repository>> {
-  const client = await MongoClient.connect(config.mongoDbUri, {
+  const client = await mongoClient.connect(config.mongoDbUri, {
     useNewUrlParser: true,
   });
   try {
