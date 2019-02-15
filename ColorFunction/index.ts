@@ -38,8 +38,8 @@ export const run: AzureFunction = async (
       context.log.info(hookResponse);
     } else {
       context.log.info(
-        `Called from "${body
-          .branches!.map(({ name }) => name)
+        `Called from "${body.branches
+          .map(({ name }) => name)
           .toString()}" instead of "master" branch. Doing nothing.`,
       );
     }
