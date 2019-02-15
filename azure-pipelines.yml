@@ -1,5 +1,15 @@
+resources:
+  containers:
+    - container: mongo
+      image: mongo
+      ports:
+        - 27017:27017
+
 pool:
   vmImage: Ubuntu-16.04
+
+services:
+  mongo: mongo
 
 steps:
   - task: NodeTool@0
