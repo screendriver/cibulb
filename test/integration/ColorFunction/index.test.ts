@@ -98,3 +98,32 @@ test('inserts repository name and state into MongoDB', async t => {
   const req = createRequest();
   await run(context, req);
 });
+
+test('updates repository state in MongoDB', async t => {
+  t.plan(1);
+  const mongoClient = await createMongoDb();
+  await mongoClient
+    .db('cibulb')
+    .collection<Repository>('repositories')
+    .insert({ name: 'test', state: 'pending' });
+  const service = micro(async () => {
+    service.close();
+    const repos = await mongoClient
+      .db('cibulb')
+      .collection<Repository>('repositories')
+      .find()
+      .toArray();
+    t.deepEqual(repos.map(({ name, state }) => ({ name, state }))[0], {
+      name: 'test',
+      state: 'success',
+    });
+    mongoClient.close();
+    deleteEnvs();
+    return null;
+  });
+  const url = await listen(service);
+  setupEnvs(url);
+  const context = createContext();
+  const req = createRequest();
+  await run(context, req);
+});
