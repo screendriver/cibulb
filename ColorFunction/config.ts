@@ -2,6 +2,7 @@ export interface Config {
   readonly githubSecret: string;
   readonly iftttBaseUrl: string;
   readonly iftttKey: string;
+  readonly mongoDbUri: string;
 }
 
 export function getConfig(): Config {
@@ -9,5 +10,6 @@ export function getConfig(): Config {
     githubSecret: process.env.GITHUB_SECRET || '',
     iftttBaseUrl: process.env.IFTTT_BASE_URL || 'https://maker.ifttt.com',
     iftttKey: process.env.IFTTT_KEY || '',
+    mongoDbUri: process.env.MONGO_URI || '',
   };
 }

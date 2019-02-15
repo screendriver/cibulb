@@ -9,6 +9,7 @@ const config: Config = {
   githubSecret: 'my-secret',
   iftttBaseUrl: 'https://ift.tt',
   iftttKey: 'my-secret-key',
+  mongoDbUri: 'mongodb+srv://',
 };
 
 function createIftttUrl(state: string): URL {

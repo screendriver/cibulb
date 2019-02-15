@@ -11,6 +11,7 @@ test('create config object from environment variables', t => {
     githubSecret: 'my-secret',
     iftttBaseUrl: 'http://localhost',
     iftttKey: 'my-key',
+    mongoDbUri: 'mongodb+srv://',
   };
   delete process.env.GITHUB_SECRET;
   delete process.env.IFTTT_BASE_URL;
@@ -25,6 +26,7 @@ test('initalize config object with defaults when env variables are not set', t =
     githubSecret: '',
     iftttBaseUrl: 'https://maker.ifttt.com',
     iftttKey: '',
+    mongoDbUri: 'mongodb+srv://',
   };
   t.deepEqual(actual, expected);
 });
