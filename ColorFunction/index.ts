@@ -3,9 +3,11 @@ import verifySecret from 'verify-github-webhook-secret';
 import got from 'got';
 import { getConfig } from './config';
 import { xHubSignature } from './headers';
-import { isBodyValid, WebhookJsonBody } from './body';
+import { isWebhookJsonBody, WebhookJsonBody } from './body';
 import { isMasterBranch } from './branches';
 import { callIftttWebhook } from './ifttt';
+import { updateDb } from './mongodb';
+import { getRepositoriesState } from './repositories';
 
 export const run: AzureFunction = async (
   context: Context,
@@ -25,10 +27,13 @@ export const run: AzureFunction = async (
     context.log.error('GitHub secret is not valid');
     return { status: 403, body: 'Forbidden' };
   }
-  if (isBodyValid(body)) {
-    if (isMasterBranch(body.branches!)) {
-      context.log.info(`Calling IFTTT webhook with "${body.state}" state`);
-      const hookResponse = await callIftttWebhook(body.state!, config, got);
+  if (isWebhookJsonBody(body)) {
+    if (isMasterBranch(body.branches)) {
+      context.log('Calling MongoDB');
+      const repositories = await updateDb(body, config);
+      const overallState = getRepositoriesState(repositories);
+      context.log.info(`Calling IFTTT webhook with "${overallState}" state`);
+      const hookResponse = await callIftttWebhook(overallState, config, got);
       context.log.info(hookResponse);
     } else {
       context.log.info(
