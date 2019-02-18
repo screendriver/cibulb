@@ -2,6 +2,7 @@
   "files": [],
   "references": [
     { "path": "./ColorFunction" },
+    { "path": "./Refresh" },
     { "path": "./test/unit/ColorFunction" },
     { "path": "./test/integration/ColorFunction" }
   ]
