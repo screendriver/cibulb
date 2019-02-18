@@ -4,5 +4,6 @@
     "outDir": "../dist/ColorFunction",
     "rootDir": "."
   },
-  "include": ["**/*"]
+  "include": ["**/*"],
+  "references": [{ "path": "../shared" }]
 }

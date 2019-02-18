@@ -4,5 +4,6 @@
     "outDir": "../dist/Refresh",
     "rootDir": "."
   },
-  "include": ["**/*"]
+  "include": ["**/*"],
+  "references": [{ "path": "../shared" }]
 }
