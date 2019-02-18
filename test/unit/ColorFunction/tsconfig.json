@@ -4,5 +4,6 @@
     "outDir": "../../../dist/test/unit/ColorFunction",
     "rootDir": "."
   },
+  "include": ["**/*"],
   "references": [{ "path": "../../../ColorFunction" }]
 }
