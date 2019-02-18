@@ -1,5 +1,6 @@
 {
   "disabled": false,
+  "scriptFile": "../dist/Refresh/index.js",
   "bindings": [
     {
       "authLevel": "anonymous",
