@@ -19,5 +19,6 @@
     "esModuleInterop": true,
     "plugins": [{ "name": "typescript-tslint-plugin" }],
     "lib": ["es2018"]
-  }
+  },
+  "exclude": ["node_modules"]
 }
