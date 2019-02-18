@@ -1,7 +1,7 @@
 import { GotFn } from 'got';
 import { URL } from 'url';
 import { WebhookJsonBody } from './body';
-import { Config } from './config';
+import { Config } from '../shared/config';
 
 const stateTriggerMap = {
   success: 'ci_build_success',

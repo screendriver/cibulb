@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { WebhookJsonBody } from './body';
-import { Config } from './config';
+import { Config } from '../shared/config';
 
 export type Repository = Pick<WebhookJsonBody, 'name' | 'state'>;
 

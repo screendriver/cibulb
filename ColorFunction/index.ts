@@ -2,7 +2,7 @@ import { Context, HttpRequest, AzureFunction } from '@azure/functions';
 import verifySecret from 'verify-github-webhook-secret';
 import { MongoClient } from 'mongodb';
 import got from 'got';
-import { getConfig } from './config';
+import { getConfig } from '../shared/config';
 import { xHubSignature } from './headers';
 import { isWebhookJsonBody, WebhookJsonBody } from './body';
 import { isMasterBranch } from './branches';
