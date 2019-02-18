@@ -3,6 +3,7 @@
   "references": [
     { "path": "./ColorFunction" },
     { "path": "./Refresh" },
+    { "path": "./shared" },
     { "path": "./test/unit/ColorFunction" },
     { "path": "./test/integration/ColorFunction" }
   ]
