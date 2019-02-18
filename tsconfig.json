@@ -6,6 +6,7 @@
     { "path": "./shared" },
     { "path": "./test/unit/ColorFunction" },
     { "path": "./test/integration/ColorFunction" },
-    { "path": "./test/unit/Refresh" }
+    { "path": "./test/unit/Refresh" },
+    { "path": "./test/unit/shared" }
   ]
 }
