@@ -2,13 +2,14 @@ import { Context, HttpRequest, AzureFunction } from '@azure/functions';
 import verifySecret from 'verify-github-webhook-secret';
 import { MongoClient } from 'mongodb';
 import got from 'got';
-import { getConfig } from './config';
+import { getConfig } from '../shared/config';
 import { xHubSignature } from './headers';
 import { isWebhookJsonBody, WebhookJsonBody } from './body';
 import { isMasterBranch } from './branches';
-import { callIftttWebhook } from './ifttt';
+import { callIftttWebhook } from '../shared/ifttt';
+import { connect } from '../shared/mongodb';
 import { updateDb } from './mongodb';
-import { getRepositoriesState } from './repositories';
+import { getRepositoriesState } from '../shared/repositories';
 
 export const run: AzureFunction = async (
   context: Context,
@@ -31,11 +32,16 @@ export const run: AzureFunction = async (
   if (isWebhookJsonBody(body)) {
     if (isMasterBranch(body.branches)) {
       context.log.info('Calling MongoDB');
-      const repositories = await updateDb(MongoClient, body, config);
+      const mongoClient = await connect(
+        MongoClient,
+        config.mongoDbUri,
+      );
+      const repositories = await updateDb(mongoClient, body);
       const overallState = getRepositoriesState(repositories);
       context.log.info(`Calling IFTTT webhook with "${overallState}" state`);
       const hookResponse = await callIftttWebhook(overallState, config, got);
       context.log.info(hookResponse);
+      mongoClient.close();
     } else {
       context.log.info(
         `Called from "${body.branches
