@@ -40,13 +40,6 @@ test('use "repositories" collection', async t => {
   t.true(client.db().collection.calledWith('repositories'));
 });
 
-test('close connection after work is done', async t => {
-  t.plan(1);
-  const client = createMongoClient();
-  await updateDb(client as any, createRepository());
-  t.true(client.close.called);
-});
-
 test('update DB with given repository', async t => {
   t.plan(1);
   const repository = createRepository();

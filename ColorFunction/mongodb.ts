@@ -5,17 +5,13 @@ export async function updateDb(
   mongoClient: MongoClient,
   repository: Repository,
 ): Promise<ReadonlyArray<Repository>> {
-  try {
-    const repositoriesCollection = mongoClient
-      .db('cibulb')
-      .collection<Repository>('repositories');
-    await repositoriesCollection.findOneAndUpdate(
-      { name: repository.name },
-      { $set: { state: repository.state } },
-      { upsert: true },
-    );
-    return await repositoriesCollection.find().toArray();
-  } finally {
-    mongoClient.close();
-  }
+  const repositoriesCollection = mongoClient
+    .db('cibulb')
+    .collection<Repository>('repositories');
+  await repositoriesCollection.findOneAndUpdate(
+    { name: repository.name },
+    { $set: { state: repository.state } },
+    { upsert: true },
+  );
+  return await repositoriesCollection.find().toArray();
 }
