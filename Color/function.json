@@ -1,14 +1,13 @@
 {
   "disabled": false,
-  "scriptFile": "../dist/ColorFunction/index.js",
+  "scriptFile": "../dist/Color/index.js",
   "bindings": [
     {
       "authLevel": "anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["post"],
-      "route": "color"
+      "methods": ["post"]
     },
     {
       "type": "http",

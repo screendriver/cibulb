@@ -5,7 +5,7 @@ import { MongoClient } from 'mongodb';
 import { Context, HttpRequest } from '@azure/functions';
 import sinon from 'sinon';
 import { Repository } from '../../../shared/mongodb';
-import { run } from '../../../ColorFunction/';
+import { run } from '../../../Color/';
 
 const mongoUri = 'mongodb://localhost:27017';
 

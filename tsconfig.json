@@ -1,11 +1,11 @@
 {
   "files": [],
   "references": [
-    { "path": "./ColorFunction" },
+    { "path": "./Color" },
     { "path": "./Refresh" },
     { "path": "./shared" },
-    { "path": "./test/unit/ColorFunction" },
-    { "path": "./test/integration/ColorFunction" },
+    { "path": "./test/unit/Color" },
+    { "path": "./test/integration/Color" },
     { "path": "./test/unit/Refresh" },
     { "path": "./test/unit/shared" }
   ]
