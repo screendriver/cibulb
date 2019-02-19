@@ -6,7 +6,7 @@ import { getConfig } from '../shared/config';
 import { xHubSignature } from './headers';
 import { isWebhookJsonBody, WebhookJsonBody } from './body';
 import { isMasterBranch } from './branches';
-import { callIftttWebhook } from './ifttt';
+import { callIftttWebhook } from '../shared/ifttt';
 import { connect } from '../shared/mongodb';
 import { updateDb } from './mongodb';
 import { getRepositoriesState } from '../shared/repositories';

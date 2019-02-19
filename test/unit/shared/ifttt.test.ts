@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { GotFn } from 'got';
 import { URL } from 'url';
 import { Config } from '../../../shared/config';
-import { callIftttWebhook } from '../../../ColorFunction/ifttt';
+import { callIftttWebhook } from '../../../shared/ifttt';
 
 const config: Config = {
   githubSecret: 'my-secret',
