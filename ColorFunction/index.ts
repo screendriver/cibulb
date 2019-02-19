@@ -41,6 +41,7 @@ export const run: AzureFunction = async (
       context.log.info(`Calling IFTTT webhook with "${overallState}" state`);
       const hookResponse = await callIftttWebhook(overallState, config, got);
       context.log.info(hookResponse);
+      mongoClient.close();
     } else {
       context.log.info(
         `Called from "${body.branches
