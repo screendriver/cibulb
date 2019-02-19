@@ -1,10 +1,8 @@
-import { WebhookJsonBody } from './body';
-
-export type Repository = Pick<WebhookJsonBody, 'state'>;
+import { Repository } from './mongodb';
 
 export function getRepositoriesState(
   repositories: ReadonlyArray<Repository>,
-): WebhookJsonBody['state'] {
+): Repository['state'] {
   if (repositories.length === 0) {
     return 'success';
   }

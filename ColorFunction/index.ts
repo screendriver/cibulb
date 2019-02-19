@@ -9,7 +9,7 @@ import { isMasterBranch } from './branches';
 import { callIftttWebhook } from './ifttt';
 import { connect } from '../shared/mongodb';
 import { updateDb } from './mongodb';
-import { getRepositoriesState } from './repositories';
+import { getRepositoriesState } from '../shared/repositories';
 
 export const run: AzureFunction = async (
   context: Context,
