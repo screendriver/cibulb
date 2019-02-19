@@ -1,15 +1,16 @@
 import { MongoClient } from 'mongodb';
 import { Config } from '../shared/config';
-import { Repository } from '../shared/mongodb';
+import { Repository, connect } from '../shared/mongodb';
 
 export async function updateDb(
   mongoClient: typeof MongoClient,
   repository: Repository,
   config: Config,
 ): Promise<ReadonlyArray<Repository>> {
-  const client = await mongoClient.connect(config.mongoDbUri, {
-    useNewUrlParser: true,
-  });
+  const client = await connect(
+    mongoClient,
+    config.mongoDbUri,
+  );
   try {
     const repositoriesCollection = client
       .db('cibulb')
