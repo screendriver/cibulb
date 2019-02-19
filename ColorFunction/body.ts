@@ -1,9 +1,8 @@
 import { Branch } from './branches';
+import { Repository } from '../shared/mongodb';
 
-export interface WebhookJsonBody {
+export interface WebhookJsonBody extends Repository {
   id: number;
-  name: string;
-  state: 'pending' | 'failure' | 'error' | 'success';
   branches: ReadonlyArray<Branch>;
 }
 

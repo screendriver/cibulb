@@ -1,8 +1,6 @@
 import { MongoClient } from 'mongodb';
-import { WebhookJsonBody } from './body';
 import { Config } from '../shared/config';
-
-export type Repository = Pick<WebhookJsonBody, 'name' | 'state'>;
+import { Repository } from '../shared/mongodb';
 
 export async function updateDb(
   mongoClient: typeof MongoClient,
