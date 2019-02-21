@@ -5,5 +5,5 @@
     "rootDir": "."
   },
   "include": ["**/*"],
-  "references": [{ "path": "../../../Refresh" }]
+  "references": [{ "path": "../../../src/refresh" }]
 }
