@@ -1,6 +1,6 @@
 import test from 'tape';
 import { HttpRequest } from '@azure/functions';
-import { xHubSignature } from '../../../Color/headers';
+import { xHubSignature } from '../../../src/color/headers';
 
 test('returns "x-hub-signature" from request headers', t => {
   t.plan(1);

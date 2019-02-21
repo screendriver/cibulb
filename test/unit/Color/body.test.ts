@@ -1,5 +1,5 @@
 import test from 'tape';
-import { isWebhookJsonBody } from '../../../Color/body';
+import { isWebhookJsonBody } from '../../../src/color/body';
 
 test('returns true when all properties are set', t => {
   t.plan(1);

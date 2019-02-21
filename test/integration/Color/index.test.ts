@@ -4,8 +4,8 @@ import listen from 'test-listen';
 import { MongoClient } from 'mongodb';
 import { Context, HttpRequest } from '@azure/functions';
 import sinon from 'sinon';
-import { Repository } from '../../../shared/mongodb';
-import { run } from '../../../Color/';
+import { Repository } from '../../../src/shared/mongodb';
+import { run } from '../../../src/color/';
 
 const mongoUri = 'mongodb://localhost:27017';
 
