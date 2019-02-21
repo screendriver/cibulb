@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "alias": "cibulb",
+  "regions": ["bru"],
+  "env": {
+    "MONGO_URI": "@mongo_uri",
+    "GITHUB_SECRET": "@github_secret",
+    "IFTTT_KEY": "@ifttt_key"
+  },
+  "builds": [
+    { "src": "dist/src/color/index.js", "use": "@now/node" },
+    { "src": "dist/src/refresh/index.js", "use": "@now/node" }
+  ],
+  "routes": [
+    {
+      "src": "/color",
+      "methods": ["POST"],
+      "dest": "/dist/src/color/index.js"
+    },
+    {
+      "src": "/refresh",
+      "methods": ["GET"],
+      "dest": "/dist/src/refresh/index.js"
+    }
+  ]
+}
