@@ -1,5 +1,9 @@
-import { HttpRequest } from '@azure/functions';
+import { IncomingMessage } from 'http';
 
-export function xHubSignature(req: HttpRequest): string {
-  return req.headers['x-hub-signature'];
+export function xHubSignature(req: IncomingMessage): string {
+  const signature = req.headers['x-hub-signature'];
+  if (typeof signature === 'string') {
+    return signature;
+  }
+  return '';
 }
