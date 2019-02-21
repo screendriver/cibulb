@@ -1,4 +1,4 @@
-import { AzureFunction, Context } from '@azure/functions';
+import { IncomingMessage, ServerResponse } from 'http';
 import { MongoClient } from 'mongodb';
 import got from 'got';
 import { getConfig } from '../shared/config';
@@ -7,18 +7,19 @@ import { allRepositories } from './mongodb';
 import { getRepositoriesState } from '../shared/repositories';
 import { callIftttWebhook } from '../shared/ifttt';
 
-export const run: AzureFunction = async (context: Context) => {
+export default async function(_req: IncomingMessage, res: ServerResponse) {
   const config = getConfig();
   const mongoClient = await connect(
     MongoClient,
     config.mongoDbUri,
   );
-  context.log.info('Reading all repositories from MongoDB');
+  console.info('Reading all repositories from MongoDB');
   const repositories = await allRepositories(mongoClient);
   const overallState = getRepositoriesState(repositories);
-  context.log.info(`Calling IFTTT webhook with "${overallState}" state`);
+  console.info(`Calling IFTTT webhook with "${overallState}" state`);
   const hookResponse = await callIftttWebhook(overallState, config, got);
-  context.log.info(hookResponse);
+  console.info(hookResponse);
   mongoClient.close();
-  return { status: 204, body: null };
-};
+  res.statusCode = 204;
+  res.end();
+}
