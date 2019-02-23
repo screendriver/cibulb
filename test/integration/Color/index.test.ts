@@ -115,7 +115,7 @@ test('updates repository state in MongoDB', async t => {
   await mongoClient
     .db('cibulb')
     .collection<Repository>('repositories')
-    .insert({ name: 'test', state: 'pending' });
+    .insertOne({ name: 'test', state: 'pending' });
   const iftttService = micro(() => '');
   const colorFunctionService = micro(async (req, res) => {
     await colorFunction(req, res);
