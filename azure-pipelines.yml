@@ -28,16 +28,12 @@ steps:
       summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
       reportDirectory: $(System.DefaultWorkingDirectory)/coverage
 
-  - task: DeleteFiles@1
-    inputs:
-      sourceFolder: node_modules
-
-  - script: yarn install --prod
-    displayName: Install only production dependencies
-
-  - task: ArchiveFiles@2
-    inputs:
-      rootFolderOrFile: $(System.DefaultWorkingDirectory)
-      includeRootFolder: false
-
-  - task: PublishBuildArtifacts@1
+  - script: |
+      yarn now -t $NOW_TOKEN -e GITHUB_SECRET -e IFTTT_KEY -e MONGO_URI
+      yarn now -t $NOW_TOKEN alias
+    displayName: Deploy to ZEIT Now
+    env:
+      NOW_TOKEN: $(nowKey)
+      GITHUB_SECRET: $(githubSecret)
+      IFTTT_KEY: $(iftttKey)
+      MONGO_URI: $(mongoUri)
