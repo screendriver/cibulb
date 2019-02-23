@@ -13,7 +13,7 @@ async function createMongoDb(): Promise<
   const mongod = new MongoMemoryServer();
   const uri = await mongod.getConnectionString();
   const client = await MongoClient.connect(uri, { useNewUrlParser: true });
-  client.db('cibulb').createCollection('repositories');
+  await client.db('cibulb').createCollection('repositories');
   return [mongod, client, uri];
 }
 
