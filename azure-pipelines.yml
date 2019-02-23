@@ -32,6 +32,7 @@ steps:
       yarn now -t $NOW_TOKEN -e GITHUB_SECRET -e IFTTT_KEY -e MONGO_URI
       yarn now -t $NOW_TOKEN alias
     displayName: Deploy to ZEIT Now
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     env:
       NOW_TOKEN: $(nowKey)
       GITHUB_SECRET: $(githubSecret)
