@@ -25,6 +25,7 @@
     "@types/got": "9.4.0",
     "@types/micro": "7.3.3",
     "@types/mongodb": "3.1.19",
+    "@types/mongodb-memory-server": "1.8.0",
     "@types/node": "10.12.21",
     "@types/sinon": "7.0.6",
     "@types/tape": "4.2.33",
