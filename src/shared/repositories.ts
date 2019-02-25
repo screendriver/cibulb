@@ -1,8 +1,8 @@
-import { Repository } from './mongodb';
+import { Repository, RepositoryState } from './mongodb';
 
 export function getRepositoriesState(
   repositories: ReadonlyArray<Repository>,
-): Repository['state'] {
+): RepositoryState {
   if (repositories.length === 0) {
     return 'success';
   }
