@@ -31,6 +31,21 @@ function deleteEnvs() {
   delete process.env.MONGO_URI;
 }
 
+function doNetworkRequest(url: string) {
+  return got.post(url, {
+    json: true,
+    headers: {
+      'x-hub-signature': 'sha1=7222a793428d77051ab41c61ee85305d0ea3da80',
+    },
+    body: {
+      id: 123,
+      name: 'test',
+      state: 'success',
+      branches: [{ name: 'master' }],
+    },
+  });
+}
+
 test('call IFTTT webhook event "ci_build_success"', async t => {
   t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
@@ -46,18 +61,7 @@ test('call IFTTT webhook event "ci_build_success"', async t => {
   const colorFunctionUrl = await listen(colorFunctionService);
   setupEnvs(iftttServiceUrl, mongoUri);
   try {
-    await got.post(colorFunctionUrl, {
-      json: true,
-      headers: {
-        'x-hub-signature': 'sha1=7222a793428d77051ab41c61ee85305d0ea3da80',
-      },
-      body: {
-        id: 123,
-        name: 'test',
-        state: 'success',
-        branches: [{ name: 'master' }],
-      },
-    });
+    await doNetworkRequest(colorFunctionUrl);
   } finally {
     iftttService.close();
     colorFunctionService.close();
@@ -79,18 +83,7 @@ test('inserts repository name and state into MongoDB', async t => {
   const colorFunctionUrl = await listen(colorFunctionService);
   setupEnvs(iftttServiceUrl, mongoUri);
   try {
-    await got.post(colorFunctionUrl, {
-      json: true,
-      headers: {
-        'x-hub-signature': 'sha1=7222a793428d77051ab41c61ee85305d0ea3da80',
-      },
-      body: {
-        id: 123,
-        name: 'test',
-        state: 'success',
-        branches: [{ name: 'master' }],
-      },
-    });
+    await doNetworkRequest(colorFunctionUrl);
     const repos = await mongoClient
       .db('cibulb')
       .collection<Repository>('repositories')
@@ -125,18 +118,7 @@ test('updates repository state in MongoDB', async t => {
   const colorFunctionUrl = await listen(colorFunctionService);
   setupEnvs(iftttServiceUrl, mongoUri);
   try {
-    await got.post(colorFunctionUrl, {
-      json: true,
-      headers: {
-        'x-hub-signature': 'sha1=7222a793428d77051ab41c61ee85305d0ea3da80',
-      },
-      body: {
-        id: 123,
-        name: 'test',
-        state: 'success',
-        branches: [{ name: 'master' }],
-      },
-    });
+    await doNetworkRequest(colorFunctionUrl);
     const repos = await mongoClient
       .db('cibulb')
       .collection<Repository>('repositories')
