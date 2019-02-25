@@ -9,12 +9,12 @@
   ],
   "routes": [
     {
-      "src": "/color",
+      "src": "/api/color",
       "methods": ["POST"],
       "dest": "/dist/src/color/index.js"
     },
     {
-      "src": "/refresh",
+      "src": "/api/refresh",
       "methods": ["GET"],
       "dest": "/dist/src/refresh/index.js"
     }
