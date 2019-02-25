@@ -36,10 +36,14 @@ export async function run(
         MongoClient,
         config.mongoDbUri,
       );
-      const repositories = await updateDb(mongoClient, requestBody);
-      const overallState = getRepositoriesState(repositories);
-      console.info(`Calling IFTTT webhook with "${overallState}" state`);
-      const hookResponse = await callIftttWebhook(overallState, config, got);
+      const dbRepositories = await updateDb(mongoClient, requestBody);
+      const dbRepositoriesState = getRepositoriesState(dbRepositories);
+      console.info(`Calling IFTTT webhook with "${dbRepositoriesState}" state`);
+      const hookResponse = await callIftttWebhook(
+        dbRepositoriesState,
+        config,
+        got,
+      );
       console.info(hookResponse);
       mongoClient.close();
     } else {
