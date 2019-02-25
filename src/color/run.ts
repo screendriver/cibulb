@@ -31,7 +31,7 @@ export async function run(
   }
   if (isWebhookJsonBody(requestBody)) {
     if (isMasterBranch(requestBody.branches)) {
-      console.info('Calling MongoDB');
+      console.info('Connect to MongoDB');
       const mongoClient = await connect(
         MongoClient,
         config.mongoDbUri,
