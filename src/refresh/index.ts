@@ -8,6 +8,8 @@ import { allRepositories } from './mongodb';
 import { getRepositoriesState } from '../shared/repositories';
 import { callIftttWebhook } from '../shared/ifttt';
 
+log.enableAll();
+
 export default async function(_req: IncomingMessage, res: ServerResponse) {
   const config = getConfig();
   const mongoClient = await connect(
