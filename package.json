@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "got": "9.6.0",
+    "loglevel": "1.6.1",
     "micro": "9.3.3",
     "mongodb": "3.1.13",
     "tslib": "1.9.3",
