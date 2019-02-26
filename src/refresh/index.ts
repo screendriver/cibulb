@@ -1,3 +1,4 @@
+import log from 'loglevel';
 import { IncomingMessage, ServerResponse } from 'http';
 import { MongoClient } from 'mongodb';
 import got from 'got';
@@ -13,12 +14,12 @@ export default async function(_req: IncomingMessage, res: ServerResponse) {
     MongoClient,
     config.mongoDbUri,
   );
-  console.info('Reading all repositories from MongoDB');
+  log.info('Reading all repositories from MongoDB');
   const repositories = await allRepositories(mongoClient);
   const overallState = getRepositoriesState(repositories);
-  console.info(`Calling IFTTT webhook with "${overallState}" state`);
+  log.info(`Calling IFTTT webhook with "${overallState}" state`);
   const hookResponse = await callIftttWebhook(overallState, config, got);
-  console.info(hookResponse);
+  log.info(hookResponse);
   mongoClient.close();
   res.statusCode = 204;
   res.end();

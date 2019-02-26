@@ -1,3 +1,4 @@
+import log from 'loglevel';
 import verifySecret from 'verify-github-webhook-secret';
 import { MongoClient } from 'mongodb';
 import got from 'got';
@@ -24,7 +25,7 @@ export async function run(
 ): Promise<Result> {
   const config = getConfig();
   const bodyAsString = JSON.stringify(requestBody);
-  console.info(`Called from repository ${requestBody.name}`);
+  log.info(`Called from repository ${requestBody.name}`);
   const isSecretValid = await verifySecret(
     bodyAsString,
     config.githubSecret,
@@ -40,7 +41,7 @@ export async function run(
 }
 
 function wrongBranch(requestBody: WebhookJsonBody): Result {
-  console.info(
+  log.info(
     `Called from "${requestBody.branches
       .map(({ name }) => name)
       .toString()}" instead of "master" branch. Doing nothing.`,
@@ -52,21 +53,21 @@ async function ifttt(
   requestBody: WebhookJsonBody,
   config: Config,
 ): Promise<Result> {
-  console.info('Connect to MongoDB');
+  log.info('Connect to MongoDB');
   const mongoClient = await connect(
     MongoClient,
     config.mongoDbUri,
   );
   const dbRepositories = await updateDb(mongoClient, requestBody);
   const dbRepositoriesState = getRepositoriesState(dbRepositories);
-  console.info(`Calling IFTTT webhook with "${dbRepositoriesState}" state`);
+  log.info(`Calling IFTTT webhook with "${dbRepositoriesState}" state`);
   const hookResponse = await callIftttWebhook(dbRepositoriesState, config, got);
-  console.info(hookResponse);
+  log.info(hookResponse);
   mongoClient.close();
   return noContentResult;
 }
 
 function forbidden(): Result {
-  console.error('GitHub secret is not valid');
+  log.error('GitHub secret is not valid');
   return { statusCode: 403, text: 'Forbidden' };
 }
