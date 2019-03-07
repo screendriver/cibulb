@@ -23,7 +23,7 @@
     "verify-github-webhook-secret": "1.1.0"
   },
   "devDependencies": {
-    "@types/got": "9.4.0",
+    "@types/got": "9.4.1",
     "@types/loglevel": "1.5.4",
     "@types/micro": "7.3.3",
     "@types/mongodb": "3.1.19",
