@@ -1,6 +1,6 @@
 import test from 'tape';
-import { Repository } from '../../../shared/mongodb';
-import { getRepositoriesState } from '../../../shared/repositories';
+import { Repository } from '../../../src/shared/mongodb';
+import { getRepositoriesState } from '../../../src/shared/repositories';
 
 test('returns "success" when repositories are empty', t => {
   t.plan(1);

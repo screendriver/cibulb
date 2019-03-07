@@ -8,5 +8,6 @@
     "obj": true,
     "bin": true
   },
-  "debug.internalConsoleOptions": "neverOpen"
+  "debug.internalConsoleOptions": "neverOpen",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

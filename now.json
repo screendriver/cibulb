@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "name": "cibulb",
+  "alias": "cibulb",
+  "regions": ["bru"],
+  "builds": [
+    { "src": "dist/src/color/index.js", "use": "@now/node" },
+    { "src": "dist/src/refresh/index.js", "use": "@now/node" }
+  ],
+  "routes": [
+    {
+      "src": "/api/color",
+      "methods": ["POST"],
+      "dest": "/dist/src/color/index.js"
+    },
+    {
+      "src": "/api/refresh",
+      "methods": ["GET"],
+      "dest": "/dist/src/refresh/index.js"
+    }
+  ]
+}

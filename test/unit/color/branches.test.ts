@@ -1,5 +1,5 @@
 import test from 'tape';
-import { isMasterBranch } from '../../../Color/branches';
+import { isMasterBranch } from '../../../src/color/branches';
 
 test('return true when "master" branch was found', t => {
   t.plan(1);

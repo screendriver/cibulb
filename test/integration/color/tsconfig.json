@@ -4,5 +4,5 @@
     "outDir": "../../../dist/test/integration/Color",
     "rootDir": "."
   },
-  "references": [{ "path": "../../../Color" }]
+  "references": [{ "path": "../../../src/color" }]
 }

@@ -1,12 +1,12 @@
 {
   "files": [],
   "references": [
-    { "path": "./Color" },
-    { "path": "./Refresh" },
-    { "path": "./shared" },
-    { "path": "./test/unit/Color" },
-    { "path": "./test/integration/Color" },
-    { "path": "./test/unit/Refresh" },
+    { "path": "./src/color" },
+    { "path": "./src/refresh" },
+    { "path": "./src/shared" },
+    { "path": "./test/unit/color" },
+    { "path": "./test/integration/color" },
+    { "path": "./test/unit/refresh" },
     { "path": "./test/unit/shared" }
   ]
 }
