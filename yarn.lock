@@ -1521,10 +1521,10 @@ mongodb-core@3.1.11:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongodb-memory-server@3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/mongodb-memory-server/-/mongodb-memory-server-3.1.1.tgz#259118b4ebc3e55c460e4714ac9b91edd755b150"
-  integrity sha512-sOkqhOMUBjZlMU68GbAPrSr97aYy2veOZqy8j3UYLWks1DQXS3Almmz/GGDmp0E8I6MaPacar66wRBwWdBqY9w==
+mongodb-memory-server@3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/mongodb-memory-server/-/mongodb-memory-server-3.1.2.tgz#5de1742770dc5aa4938b611bc64684ab5b68f9d4"
+  integrity sha512-3I3VwsbKALZsNj4GSvtF68LJZK3zHUfKqPbKU53AmiU745o0muJFJBI8v4AIsqeKPN5k9/5QVnXQWwt3NbfyJA==
   dependencies:
     "@babel/runtime" "^7.2.0"
     debug "^4.1.1"
