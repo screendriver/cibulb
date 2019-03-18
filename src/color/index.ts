@@ -13,9 +13,13 @@ log.enableAll();
 export default async function(req: IncomingMessage, res: ServerResponse) {
   const config = getConfig();
   initSentry(Sentry, config, log);
-  const body = (await json(req)) as WebhookJsonBody;
-  const signature = xHubSignature(req);
-  const result = await run(config, body, signature);
-  res.statusCode = result.statusCode;
-  res.end(result.text);
+  try {
+    const body = (await json(req)) as WebhookJsonBody;
+    const signature = xHubSignature(req);
+    const result = await run(config, body, signature);
+    res.statusCode = result.statusCode;
+    res.end(result.text);
+  } catch (e) {
+    Sentry.captureException(e);
+  }
 }
