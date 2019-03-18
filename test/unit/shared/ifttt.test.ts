@@ -10,6 +10,7 @@ const config: Config = {
   iftttBaseUrl: 'https://ift.tt',
   iftttKey: 'my-secret-key',
   mongoDbUri: 'mongodb+srv://',
+  sentryDSN: 'https://123@sentry.io/456',
 };
 
 function createIftttUrl(state: string): URL {

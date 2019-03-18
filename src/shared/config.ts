@@ -3,6 +3,7 @@ export interface Config {
   readonly iftttBaseUrl: string;
   readonly iftttKey: string;
   readonly mongoDbUri: string;
+  readonly sentryDSN: string;
 }
 
 export function getConfig(): Config {
@@ -11,5 +12,6 @@ export function getConfig(): Config {
     iftttBaseUrl: process.env.IFTTT_BASE_URL || 'https://maker.ifttt.com',
     iftttKey: process.env.IFTTT_KEY || '',
     mongoDbUri: process.env.MONGO_URI || '',
+    sentryDSN: process.env.SENTRY_DSN || '',
   };
 }
