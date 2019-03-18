@@ -4,8 +4,11 @@ import MongoMemoryServer from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
 import listen from 'test-listen';
 import got from 'got';
+import log from 'loglevel';
 import colorFunction from '../../../src/color/';
 import { Repository } from '../../../src/shared/mongodb';
+
+log.disableAll();
 
 async function createMongoDb(): Promise<
   [MongoMemoryServer, MongoClient, string]
