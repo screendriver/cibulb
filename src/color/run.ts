@@ -2,7 +2,7 @@ import log from 'loglevel';
 import verifySecret from 'verify-github-webhook-secret';
 import { MongoClient } from 'mongodb';
 import got from 'got';
-import { getConfig, Config } from '../shared/config';
+import { Config } from '../shared/config';
 import { isWebhookJsonBody, WebhookJsonBody } from './body';
 import { isMasterBranch } from './branches';
 import { connect } from '../shared/mongodb';
@@ -20,10 +20,10 @@ const noContentResult: Result = {
 };
 
 export async function run(
+  config: Config,
   requestBody: WebhookJsonBody,
   xHubSignature: string,
 ): Promise<Result> {
-  const config = getConfig();
   const bodyAsString = JSON.stringify(requestBody);
   log.info(`Called from repository ${requestBody.name}`);
   const isSecretValid = await verifySecret(

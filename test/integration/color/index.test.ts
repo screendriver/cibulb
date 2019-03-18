@@ -4,8 +4,11 @@ import MongoMemoryServer from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
 import listen from 'test-listen';
 import got from 'got';
+import log from 'loglevel';
 import colorFunction from '../../../src/color/';
 import { Repository } from '../../../src/shared/mongodb';
+
+log.disableAll();
 
 async function createMongoDb(): Promise<
   [MongoMemoryServer, MongoClient, string]
@@ -22,6 +25,7 @@ function setupEnvs(iftttUrl: string, mongoUri: string) {
   process.env.IFTTT_BASE_URL = iftttUrl;
   process.env.IFTTT_KEY = 'my-key';
   process.env.MONGO_URI = mongoUri;
+  process.env.SENTRY_DSN = 'http://localhost';
 }
 
 function deleteEnvs() {
@@ -29,6 +33,7 @@ function deleteEnvs() {
   delete process.env.IFTTT_BASE_URL;
   delete process.env.IFTTT_KEY;
   delete process.env.MONGO_URI;
+  delete process.env.SENTRY_DSN;
 }
 
 function doNetworkRequest(url: string) {
