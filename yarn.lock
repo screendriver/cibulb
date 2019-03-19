@@ -254,10 +254,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/mongodb@3.1.22":
-  version "3.1.22"
-  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.1.22.tgz#66f96c7acbf7135ce6295a8d6c26f1d97388a84b"
-  integrity sha512-hvNR0txBlJJAy1eZOeIDshW4dnQaC694COou4eHHaMdIcteCfoCQATD7sYNlXxNxfTc1iIbHUi7A8CAhQe08uA==
+"@types/mongodb@3.1.20":
+  version "3.1.20"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.1.20.tgz#278aa976eb60b6592f011d22fdf77fb4069ed753"
+  integrity sha512-tl9iKbhM8d9BQjhB/9L4KuyLxfEn9Weq6cBuM8C06fIuUJyyfk+5wlfwzvltvssuxjGY1GiHvZHmSTK8kJ1zwg==
   dependencies:
     "@types/bson" "*"
     "@types/node" "*"
@@ -1685,10 +1685,10 @@ normalize-url@^3.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
-now@14.0.3:
-  version "14.0.3"
-  resolved "https://registry.yarnpkg.com/now/-/now-14.0.3.tgz#193f7c5469d8f39b786ab2986323e11038b7c2a4"
-  integrity sha512-tBYUe5x4OUL592l5oZRBcX9gFREcfcW9RRZCr2eu+lIHqxmpVQQwf0LG/wpCup+4Zr2+nmyxWixmULlMCZT6ww==
+now@14.2.0:
+  version "14.2.0"
+  resolved "https://registry.yarnpkg.com/now/-/now-14.2.0.tgz#326afe3b18d20b327c4fec330978b858dee019b7"
+  integrity sha512-4NPhK3A3C8CCI9dFKlby4LZOPvICQHD/8p5FXvzk0on2izvKAtm5GtU8NHJzxtZNjsxaF1Jv8qXtD2/aTAUAiw==
 
 npm-run-path@^2.0.0:
   version "2.0.2"
