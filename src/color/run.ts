@@ -2,6 +2,7 @@ import log from 'loglevel';
 import verifySecret from 'verify-github-webhook-secret';
 import { MongoClient } from 'mongodb';
 import got from 'got';
+import * as Sentry from '@sentry/node';
 import { Config } from '../shared/config';
 import { isWebhookJsonBody, WebhookJsonBody } from './body';
 import { isMasterBranch } from './branches';
@@ -68,6 +69,8 @@ async function ifttt(
 }
 
 function forbidden(): Result {
-  log.error('GitHub secret is not valid');
+  const message = 'GitHub secret is not valid';
+  log.error(message);
+  Sentry.captureMessage(message, Sentry.Severity.Error);
   return { statusCode: 403, text: 'Forbidden' };
 }
