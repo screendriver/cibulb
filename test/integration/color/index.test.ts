@@ -39,6 +39,7 @@ function deleteEnvs() {
 function doNetworkRequest(url: string) {
   return got.post(url, {
     json: true,
+    throwHttpErrors: false,
     headers: {
       'x-hub-signature': 'sha1=7222a793428d77051ab41c61ee85305d0ea3da80',
     },
@@ -50,6 +51,21 @@ function doNetworkRequest(url: string) {
     },
   });
 }
+
+test('returns HTTP 403 when secret is not valid', async t => {
+  t.plan(1);
+  const colorFunctionService = micro(async (req, res) => {
+    await colorFunction(req, res);
+    res.end();
+  });
+  const colorFunctionUrl = await listen(colorFunctionService);
+  try {
+    const response = await doNetworkRequest(colorFunctionUrl);
+    t.equal(response.statusCode, 403);
+  } finally {
+    colorFunctionService.close();
+  }
+});
 
 test('call IFTTT webhook event "ci_build_success"', async t => {
   t.plan(1);
