@@ -54,7 +54,6 @@ async function ifttt(
   requestBody: WebhookJsonBody,
   config: Config,
 ): Promise<Result> {
-  log.info('Connect to MongoDB');
   const mongoClient = await connect(
     MongoClient,
     config.mongoDbUri,
