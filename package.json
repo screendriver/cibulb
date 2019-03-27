@@ -27,7 +27,7 @@
     "@types/got": "9.4.1",
     "@types/loglevel": "1.5.4",
     "@types/micro": "7.3.3",
-    "@types/mongodb": "3.1.20",
+    "@types/mongodb": "3.1.22",
     "@types/mongodb-memory-server": "1.8.0",
     "@types/node": "8.10.45",
     "@types/sinon": "7.0.10",
