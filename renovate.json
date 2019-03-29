@@ -1,7 +1,6 @@
 {
   "extends": ["config:base"],
   "commitMessagePrefix": "⬆️ ",
-  "prConcurrentLimit": 3,
   "labels": ["renovate"],
   "nvm": {
     "enabled": false
