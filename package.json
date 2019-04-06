@@ -15,7 +15,7 @@
     "build": "tsc --build"
   },
   "dependencies": {
-    "@sentry/node": "4.6.6",
+    "@sentry/node": "5.0.5",
     "got": "9.6.0",
     "loglevel": "1.6.1",
     "micro": "9.3.3",
