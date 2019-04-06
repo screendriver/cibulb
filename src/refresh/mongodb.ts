@@ -3,7 +3,7 @@ import { Repository } from '../shared/mongodb';
 
 export async function allRepositories(
   mongoClient: MongoClient,
-): Promise<ReadonlyArray<Repository>> {
+): Promise<readonly Repository[]> {
   return mongoClient
     .db('cibulb')
     .collection<Repository>('repositories')

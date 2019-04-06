@@ -4,7 +4,7 @@ import { Repository } from '../shared/mongodb';
 export async function updateDb(
   mongoClient: MongoClient,
   repository: Repository,
-): Promise<ReadonlyArray<Repository>> {
+): Promise<readonly Repository[]> {
   const repositoriesCollection = mongoClient
     .db('cibulb')
     .collection<Repository>('repositories');

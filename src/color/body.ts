@@ -3,7 +3,7 @@ import { Repository } from '../shared/mongodb';
 
 export interface WebhookJsonBody extends Repository {
   id: number;
-  branches: ReadonlyArray<Branch>;
+  branches: readonly Branch[];
 }
 
 export function isWebhookJsonBody(body: any): body is WebhookJsonBody {

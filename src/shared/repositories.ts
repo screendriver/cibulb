@@ -1,7 +1,7 @@
 import { Repository, RepositoryState } from './mongodb';
 
 export function getRepositoriesState(
-  repositories: ReadonlyArray<Repository>,
+  repositories: readonly Repository[],
 ): RepositoryState {
   if (repositories.length === 0) {
     return 'success';
