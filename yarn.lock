@@ -229,11 +229,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/bytes@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/bytes/-/bytes-3.0.0.tgz#549eeacd0a8fecfaa459334583a4edcee738e6db"
-  integrity sha512-ZF43+CIIlzngQe8/Zo7L1kpY9W8O6rO006VDz3c5iM21ddtXWxCEyOXyft+q4pVF2tGqvrVuVrEDH1+gJEi1fQ==
-
 "@types/got@9.4.1":
   version "9.4.1"
   resolved "https://registry.yarnpkg.com/@types/got/-/got-9.4.1.tgz#7479a3a321599b5e17647f3bd9d402b8c55bfee1"
@@ -1691,12 +1686,10 @@ normalize-url@^3.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
-now@14.2.4:
-  version "14.2.4"
-  resolved "https://registry.yarnpkg.com/now/-/now-14.2.4.tgz#f7768954cf242886bb5c618b9b63b9d8f6c7438b"
-  integrity sha512-HfMwF7iwGvv/pBzu9snIwe9r70G7FaA3BBvgChMey5s0HeSfvOJYCP16WC11/ANyV4OOkGHWPSGlMwYCaPRFww==
-  dependencies:
-    "@types/bytes" "3.0.0"
+now@15.0.2:
+  version "15.0.2"
+  resolved "https://registry.yarnpkg.com/now/-/now-15.0.2.tgz#11d7804fbd466ebc52a38bc74a811c2f7bf0a522"
+  integrity sha512-kloJ7sT1QnUvpslRtrKbcP+AdS6ymSuDK+oVh8d9399T2v388Ngk5OZBWjsDq8/58e9I3k2Xu5Hpk1P1dDpa3A==
 
 npm-run-path@^2.0.0:
   version "2.0.2"
