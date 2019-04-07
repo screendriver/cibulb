@@ -5,7 +5,7 @@ import got from 'got';
 import * as Sentry from '@sentry/node';
 import { Config } from '../shared/config';
 import { isWebhookJsonBody, WebhookJsonBody } from './body';
-import { isMasterBranch } from './branches';
+import { isBranchAllowed } from './branches';
 import { connect } from '../shared/mongodb';
 import { updateDb } from './mongodb';
 import { getRepositoriesState } from '../shared/repositories';
@@ -38,7 +38,7 @@ export async function run(
     ? forbidden()
     : !isWebhookJsonBody(requestBody)
     ? noContentResult
-    : isMasterBranch(requestBody.branches)
+    : isBranchAllowed(requestBody.branches)
     ? ifttt(requestBody, config)
     : wrongBranch(requestBody);
 }
