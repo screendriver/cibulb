@@ -1,16 +1,22 @@
-import { Branch } from './branches';
-import { Repository } from '../shared/mongodb';
-
-export interface WebhookRequestBody extends Repository {
-  id: number;
-  branches: readonly Branch[];
+export interface WebhookRequestBody {
+  object_attributes: {
+    id: number;
+    ref: string;
+    status: 'success';
+  };
+  project: {
+    name: string;
+  };
 }
 
-export function isWebhookJsonBody(body: any): body is WebhookRequestBody {
+export function isWebhookRequestBody(body: any): body is WebhookRequestBody {
+  const { object_attributes, project } = body;
   return (
-    body.id !== undefined &&
-    body.name !== undefined &&
-    body.state !== undefined &&
-    body.branches !== undefined
+    object_attributes !== undefined &&
+    object_attributes.id !== undefined &&
+    object_attributes.ref !== undefined &&
+    object_attributes.status !== undefined &&
+    project !== undefined &&
+    project.name !== undefined
   );
 }

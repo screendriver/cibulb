@@ -1,59 +1,90 @@
 import test from 'tape';
-import { isWebhookJsonBody } from '../../../src/color/body';
+import { isWebhookRequestBody } from '../../../src/color/body';
 
 test('returns true when all properties are set', t => {
   t.plan(1);
   const body = {
-    id: 123,
-    name: 'test',
-    state: 'success',
-    branches: [],
+    object_attributes: {
+      id: 123,
+      ref: 'master',
+      status: 'success',
+    },
+    project: {
+      name: 'my-project',
+    },
   };
-  t.true(isWebhookJsonBody(body));
+  t.true(isWebhookRequestBody(body));
 });
 
-test('returns false when id property is missing', t => {
+test('returns false when object_attributes.id property is missing', t => {
   t.plan(1);
   const body = {
-    name: 'test',
-    state: 'success',
-    branches: [],
+    object_attributes: {
+      ref: 'master',
+      status: 'success',
+    },
+    project: {
+      name: 'my-project',
+    },
   };
-  t.false(isWebhookJsonBody(body));
+  t.false(isWebhookRequestBody(body));
 });
 
-test('returns false when name property is missing', t => {
+test('returns false when object_attributes.ref property is missing', t => {
   t.plan(1);
   const body = {
-    id: 123,
-    state: 'success',
-    branches: [],
+    object_attributes: {
+      id: 123,
+      status: 'success',
+    },
+    project: {
+      name: 'my-project',
+    },
   };
-  t.false(isWebhookJsonBody(body));
+  t.false(isWebhookRequestBody(body));
 });
 
-test('returns false when state property is missing', t => {
+test('returns false when object_attributes.status property is missing', t => {
   t.plan(1);
   const body = {
-    id: 123,
-    name: 'test',
-    branches: [],
+    object_attributes: {
+      id: 123,
+      ref: 'master',
+    },
+    project: {
+      name: 'my-project',
+    },
   };
-  t.false(isWebhookJsonBody(body));
+  t.false(isWebhookRequestBody(body));
 });
 
-test('returns false when branches property is missing', t => {
+test('returns false when project property is missing', t => {
   t.plan(1);
   const body = {
-    id: 123,
-    name: 'test',
-    state: 'success',
+    object_attributes: {
+      id: 123,
+      ref: 'master',
+      status: 'success',
+    },
   };
-  t.false(isWebhookJsonBody(body));
+  t.false(isWebhookRequestBody(body));
+});
+
+test('returns false when project.name property is missing', t => {
+  t.plan(1);
+  const body = {
+    object_attributes: {
+      id: 123,
+      ref: 'master',
+      status: 'success',
+    },
+    project: {},
+  };
+  t.false(isWebhookRequestBody(body));
 });
 
 test('returns false when all properties are missing', t => {
   t.plan(1);
   const body = {};
-  t.false(isWebhookJsonBody(body));
+  t.false(isWebhookRequestBody(body));
 });
