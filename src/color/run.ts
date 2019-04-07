@@ -78,7 +78,7 @@ async function ifttt(
 }
 
 function forbidden(): Result {
-  const message = 'GitHub secret is not valid';
+  const message = 'GitLab secret is not valid';
   log.error(message);
   Sentry.captureMessage(message, Sentry.Severity.Error);
   return { statusCode: 403, text: 'Forbidden' };
