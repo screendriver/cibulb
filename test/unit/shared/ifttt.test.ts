@@ -6,7 +6,7 @@ import { Config } from '../../../src/shared/config';
 import { callIftttWebhook } from '../../../src/shared/ifttt';
 
 const config: Config = {
-  githubSecret: 'my-secret',
+  gitlabSecretToken: 'my-secret',
   iftttBaseUrl: 'https://ift.tt',
   iftttKey: 'my-secret-key',
   mongoDbUri: 'mongodb+srv://',

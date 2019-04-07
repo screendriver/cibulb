@@ -29,7 +29,7 @@ export async function run(
   log.info(`Called from repository ${requestBody.name}`);
   const isSecretValid = await verifySecret(
     bodyAsString,
-    config.githubSecret,
+    config.gitlabSecretToken,
     xGitlabToken,
   );
   return !isSecretValid
