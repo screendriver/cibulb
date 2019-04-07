@@ -25,6 +25,8 @@ export async function run(
   requestBody: WebhookJsonBody,
   xGitlabToken: string,
 ): Promise<Result> {
+  log.info('xGitlabToken', xGitlabToken);
+  log.info('requestBody', requestBody);
   const bodyAsString = JSON.stringify(requestBody);
   log.info(`Called from repository ${requestBody.name}`);
   const isSecretValid = await verifySecret(
