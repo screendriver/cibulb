@@ -38,7 +38,7 @@ export async function run(
     ? forbidden()
     : !isWebhookRequestBody(requestBody)
     ? noContentResult
-    : isBranchAllowed(requestBody.branches)
+    : isBranchAllowed(requestBody.object_attributes.ref)
     ? ifttt(requestBody, config)
     : wrongBranch(requestBody);
 }
