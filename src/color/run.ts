@@ -28,7 +28,7 @@ export async function run(
   log.info('xGitlabToken', xGitlabToken);
   log.info('requestBody', requestBody);
   const bodyAsString = JSON.stringify(requestBody);
-  log.info(`Called from repository ${requestBody.name}`);
+  log.info(`Called from repository ${requestBody.project.name}`);
   const isSecretValid = await verifySecret(
     bodyAsString,
     config.gitlabSecretToken,
@@ -45,9 +45,9 @@ export async function run(
 
 function wrongBranch(requestBody: WebhookRequestBody): Result {
   log.info(
-    `Called from "${requestBody.branches
-      .map(({ name }) => name)
-      .toString()}" instead of "master" branch. Doing nothing.`,
+    `Called from "${
+      requestBody.object_attributes.ref
+    }" instead of "master" branch. Doing nothing.`,
   );
   return noContentResult;
 }
