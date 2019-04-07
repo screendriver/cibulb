@@ -1,9 +1,9 @@
 import { GotFn } from 'got';
 import { URL } from 'url';
-import { RepositoryState } from './mongodb';
+import { RepositoryStatus } from './mongodb';
 import { Config } from '../shared/config';
 
-const stateTriggerMap = {
+const statusTriggerMap = {
   success: 'ci_build_success',
   pending: 'ci_build_pending',
   failure: 'ci_build_failure',
@@ -11,12 +11,12 @@ const stateTriggerMap = {
 };
 
 export async function callIftttWebhook(
-  state: RepositoryState,
+  status: RepositoryStatus,
   config: Config,
   got: GotFn,
 ): Promise<string> {
   const iftttUrl = new URL(
-    `trigger/${stateTriggerMap[state]}/with/key/${config.iftttKey}`,
+    `trigger/${statusTriggerMap[status]}/with/key/${config.iftttKey}`,
     config.iftttBaseUrl,
   );
   const { body } = await got(iftttUrl);

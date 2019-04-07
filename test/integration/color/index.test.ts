@@ -46,7 +46,7 @@ function doNetworkRequest(url: string) {
     body: {
       id: 123,
       name: 'test',
-      state: 'success',
+      status: 'success',
       branches: [{ name: 'master' }],
     },
   });
@@ -97,7 +97,7 @@ test.skip('call IFTTT webhook event "ci_build_success"', async t => {
   }
 });
 
-test.skip('inserts repository name and state into MongoDB', async t => {
+test.skip('inserts repository name and status into MongoDB', async t => {
   t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const iftttService = micro(() => '');
@@ -115,9 +115,9 @@ test.skip('inserts repository name and state into MongoDB', async t => {
       .collection<Repository>('repositories')
       .find()
       .toArray();
-    t.deepEqual(repos.map(({ name, state }) => ({ name, state }))[0], {
+    t.deepEqual(repos.map(({ name, status }) => ({ name, status }))[0], {
       name: 'test',
-      state: 'success',
+      status: 'success',
     });
   } finally {
     iftttService.close();
@@ -128,13 +128,13 @@ test.skip('inserts repository name and state into MongoDB', async t => {
   }
 });
 
-test.skip('updates repository state in MongoDB', async t => {
+test.skip('updates repository status in MongoDB', async t => {
   t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   await mongoClient
     .db('cibulb')
     .collection<Repository>('repositories')
-    .insertOne({ name: 'test', state: 'pending' });
+    .insertOne({ name: 'test', status: 'pending' });
   const iftttService = micro(() => '');
   const colorFunctionService = micro(async (req, res) => {
     await colorFunction(req, res);
@@ -150,9 +150,9 @@ test.skip('updates repository state in MongoDB', async t => {
       .collection<Repository>('repositories')
       .find()
       .toArray();
-    t.deepEqual(repos.map(({ name, state }) => ({ name, state }))[0], {
+    t.deepEqual(repos.map(({ name, status }) => ({ name, status }))[0], {
       name: 'test',
-      state: 'success',
+      status: 'success',
     });
   } finally {
     iftttService.close();

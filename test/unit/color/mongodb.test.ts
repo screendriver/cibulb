@@ -22,7 +22,7 @@ function createMongoClient() {
 function createRepository(): Repository {
   return {
     name: 'test-repo',
-    state: 'success',
+    status: 'success',
   };
 }
 
@@ -51,7 +51,7 @@ test('update DB with given repository', async t => {
       .collection()
       .findOneAndUpdate.calledWith(
         { name: repository.name },
-        { $set: { state: repository.state } },
+        { $set: { status: repository.status } },
         { upsert: true },
       ),
   );

@@ -6,9 +6,9 @@ import * as Sentry from '@sentry/node';
 import { Config } from '../shared/config';
 import { isWebhookJsonBody, WebhookRequestBody } from './body';
 import { isBranchAllowed } from './branches';
-import { connect } from '../shared/mongodb';
+import { connect, Repository } from '../shared/mongodb';
 import { updateDb } from './mongodb';
-import { getRepositoriesState } from '../shared/repositories';
+import { getRepositoriesStatus } from '../shared/repositories';
 import { callIftttWebhook } from '../shared/ifttt';
 
 interface Result {
@@ -60,10 +60,18 @@ async function ifttt(
     MongoClient,
     config.mongoDbUri,
   );
-  const dbRepositories = await updateDb(mongoClient, requestBody);
-  const dbRepositoriesState = getRepositoriesState(dbRepositories);
-  log.info(`Calling IFTTT webhook with "${dbRepositoriesState}" state`);
-  const hookResponse = await callIftttWebhook(dbRepositoriesState, config, got);
+  const repository: Repository = {
+    name: requestBody.project.name,
+    status: requestBody.object_attributes.status,
+  };
+  const dbRepositories = await updateDb(mongoClient, repository);
+  const dbRepositoriesStatus = getRepositoriesStatus(dbRepositories);
+  log.info(`Calling IFTTT webhook with "${dbRepositoriesStatus}" status`);
+  const hookResponse = await callIftttWebhook(
+    dbRepositoriesStatus,
+    config,
+    got,
+  );
   log.info(hookResponse);
   mongoClient.close();
   return noContentResult;

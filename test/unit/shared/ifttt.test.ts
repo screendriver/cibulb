@@ -13,14 +13,14 @@ const config: Config = {
   sentryDSN: 'https://123@sentry.io/456',
 };
 
-function createIftttUrl(state: string): URL {
+function createIftttUrl(status: string): URL {
   return new URL(
-    `trigger/${state}/with/key/${config.iftttKey}`,
+    `trigger/${status}/with/key/${config.iftttKey}`,
     config.iftttBaseUrl,
   );
 }
 
-test('call IFTTT webhook with "success" state', async t => {
+test('call IFTTT webhook with "success" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('success', config, got as GotFn);
@@ -29,7 +29,7 @@ test('call IFTTT webhook with "success" state', async t => {
   t.true(got.calledWith(iftttUrl));
 });
 
-test('call IFTTT webhook with "pending" state', async t => {
+test('call IFTTT webhook with "pending" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('pending', config, got as GotFn);
@@ -38,7 +38,7 @@ test('call IFTTT webhook with "pending" state', async t => {
   t.true(got.calledWith(iftttUrl));
 });
 
-test('call IFTTT webhook with "failure" state', async t => {
+test('call IFTTT webhook with "failure" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('failure', config, got as GotFn);
@@ -47,7 +47,7 @@ test('call IFTTT webhook with "failure" state', async t => {
   t.true(got.calledWith(iftttUrl));
 });
 
-test('call IFTTT webhook with "error" state', async t => {
+test('call IFTTT webhook with "error" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('error', config, got as GotFn);
