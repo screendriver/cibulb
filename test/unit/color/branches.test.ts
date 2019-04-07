@@ -1,43 +1,32 @@
 import test from 'tape';
 import { isBranchAllowed } from '../../../src/color/branches';
 
-test('return true when "master" branch was found', t => {
+test('return true when branch is "master', t => {
   t.plan(1);
-  const branches = [
-    { name: 'featureA' },
-    { name: 'master' },
-    { name: 'featureB' },
-  ];
-  t.true(isBranchAllowed(branches));
+  t.true(isBranchAllowed('master'));
 });
 
-test('return true when "develop" branch was found', t => {
+test('return true when branch is "refs/heads/master', t => {
   t.plan(1);
-  const branches = [
-    { name: 'featureA' },
-    { name: 'develop' },
-    { name: 'featureB' },
-  ];
-  t.true(isBranchAllowed(branches));
+  t.true(isBranchAllowed('refs/heads/master'));
 });
 
-test('return true when "master" or "develop" branch was found', t => {
+test('return true when branch is "develop', t => {
   t.plan(1);
-  const branches = [
-    { name: 'featureA' },
-    { name: 'develop' },
-    { name: 'master' },
-  ];
-  t.true(isBranchAllowed(branches));
+  t.true(isBranchAllowed('develop'));
 });
 
-test('return false when "master" or "develop" branch was not found', t => {
+test('return true when branch is "refs/heads/develop', t => {
   t.plan(1);
-  const branches = [{ name: 'featureA' }, { name: 'featureB' }];
-  t.false(isBranchAllowed(branches));
+  t.true(isBranchAllowed('refs/heads/develop'));
 });
 
-test('return false when branches are empty', t => {
+test('return false branch is "foo"', t => {
   t.plan(1);
-  t.false(isBranchAllowed([]));
+  t.false(isBranchAllowed('foo'));
+});
+
+test('return false when branch is an empty string', t => {
+  t.plan(1);
+  t.false(isBranchAllowed(''));
 });
