@@ -23,14 +23,14 @@ const noContentResult: Result = {
 export async function run(
   config: Config,
   requestBody: WebhookJsonBody,
-  xHubSignature: string,
+  xGitlabToken: string,
 ): Promise<Result> {
   const bodyAsString = JSON.stringify(requestBody);
   log.info(`Called from repository ${requestBody.name}`);
   const isSecretValid = await verifySecret(
     bodyAsString,
     config.githubSecret,
-    xHubSignature,
+    xGitlabToken,
   );
   return !isSecretValid
     ? forbidden()
