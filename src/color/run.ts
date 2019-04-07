@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb';
 import got from 'got';
 import * as Sentry from '@sentry/node';
 import { Config } from '../shared/config';
-import { isWebhookJsonBody, WebhookJsonBody } from './body';
+import { isWebhookJsonBody, WebhookRequestBody } from './body';
 import { isBranchAllowed } from './branches';
 import { connect } from '../shared/mongodb';
 import { updateDb } from './mongodb';
@@ -22,7 +22,7 @@ const noContentResult: Result = {
 
 export async function run(
   config: Config,
-  requestBody: WebhookJsonBody,
+  requestBody: WebhookRequestBody,
   xGitlabToken: string,
 ): Promise<Result> {
   log.info('xGitlabToken', xGitlabToken);
@@ -43,7 +43,7 @@ export async function run(
     : wrongBranch(requestBody);
 }
 
-function wrongBranch(requestBody: WebhookJsonBody): Result {
+function wrongBranch(requestBody: WebhookRequestBody): Result {
   log.info(
     `Called from "${requestBody.branches
       .map(({ name }) => name)
@@ -53,7 +53,7 @@ function wrongBranch(requestBody: WebhookJsonBody): Result {
 }
 
 async function ifttt(
-  requestBody: WebhookJsonBody,
+  requestBody: WebhookRequestBody,
   config: Config,
 ): Promise<Result> {
   const mongoClient = await connect(
