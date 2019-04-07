@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb';
 import got from 'got';
 import * as Sentry from '@sentry/node';
 import { Config } from '../shared/config';
-import { isWebhookJsonBody, WebhookRequestBody } from './body';
+import { isWebhookRequestBody, WebhookRequestBody } from './body';
 import { isBranchAllowed } from './branches';
 import { connect, Repository } from '../shared/mongodb';
 import { updateDb } from './mongodb';
@@ -36,7 +36,7 @@ export async function run(
   );
   return !isSecretValid
     ? forbidden()
-    : !isWebhookJsonBody(requestBody)
+    : !isWebhookRequestBody(requestBody)
     ? noContentResult
     : isBranchAllowed(requestBody.branches)
     ? ifttt(requestBody, config)
