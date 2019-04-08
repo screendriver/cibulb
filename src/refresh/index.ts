@@ -12,7 +12,7 @@ import { callIftttWebhook } from '../shared/ifttt';
 
 log.enableAll();
 
-export default async function(_req: IncomingMessage, res: ServerResponse) {
+export = async function refresh(_req: IncomingMessage, res: ServerResponse) {
   const config = getConfig();
   initSentry(Sentry, config, log);
   try {
@@ -32,4 +32,4 @@ export default async function(_req: IncomingMessage, res: ServerResponse) {
   } catch (e) {
     Sentry.captureException(e);
   }
-}
+};

@@ -10,7 +10,7 @@ import { run } from './run';
 
 log.enableAll();
 
-export default async function(req: IncomingMessage, res: ServerResponse) {
+export = async function color(req: IncomingMessage, res: ServerResponse) {
   const config = getConfig();
   initSentry(Sentry, config, log);
   try {
@@ -22,4 +22,4 @@ export default async function(req: IncomingMessage, res: ServerResponse) {
   } catch (e) {
     Sentry.captureException(e);
   }
-}
+};
