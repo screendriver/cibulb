@@ -1,8 +1,9 @@
-import { Repository, RepositoryStatus } from './mongodb';
+import { Repository } from './mongodb';
 
+export type Status = 'success' | 'running' | 'pending' | 'failed';
 export function getRepositoriesStatus(
   repositories: readonly Repository[],
-): RepositoryStatus {
+): Status {
   if (repositories.length === 0) {
     return 'success';
   }

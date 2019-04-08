@@ -1,7 +1,7 @@
 import { GotFn } from 'got';
 import { URL } from 'url';
-import { RepositoryStatus } from './mongodb';
 import { Config } from '../shared/config';
+import { Status } from './repositories';
 
 const statusTriggerMap = {
   success: 'ci_build_success',
@@ -11,7 +11,7 @@ const statusTriggerMap = {
 };
 
 export async function callIftttWebhook(
-  status: RepositoryStatus,
+  status: Status,
   config: Config,
   got: GotFn,
 ): Promise<string> {

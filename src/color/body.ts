@@ -1,4 +1,4 @@
-export type Status = 'success' | 'running' | 'pending' | 'failed';
+import { Status } from '../shared/repositories';
 
 export interface WebhookRequestBody {
   object_attributes: {
