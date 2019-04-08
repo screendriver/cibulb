@@ -6,21 +6,21 @@ import { Config } from '../../../src/shared/config';
 import { callIftttWebhook } from '../../../src/shared/ifttt';
 
 const config: Config = {
-  githubSecret: 'my-secret',
+  gitlabSecretToken: 'my-secret',
   iftttBaseUrl: 'https://ift.tt',
   iftttKey: 'my-secret-key',
   mongoDbUri: 'mongodb+srv://',
   sentryDSN: 'https://123@sentry.io/456',
 };
 
-function createIftttUrl(state: string): URL {
+function createIftttUrl(status: string): URL {
   return new URL(
-    `trigger/${state}/with/key/${config.iftttKey}`,
+    `trigger/${status}/with/key/${config.iftttKey}`,
     config.iftttBaseUrl,
   );
 }
 
-test('call IFTTT webhook with "success" state', async t => {
+test('call IFTTT webhook with "success" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('success', config, got as GotFn);
@@ -29,7 +29,16 @@ test('call IFTTT webhook with "success" state', async t => {
   t.true(got.calledWith(iftttUrl));
 });
 
-test('call IFTTT webhook with "pending" state', async t => {
+test('call IFTTT webhook with "running" status', async t => {
+  t.plan(1);
+  const got = sinon.stub().returns({ body: '' });
+  await callIftttWebhook('running', config, got as GotFn);
+
+  const iftttUrl = createIftttUrl('ci_build_pending');
+  t.true(got.calledWith(iftttUrl));
+});
+
+test('call IFTTT webhook with "pending" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('pending', config, got as GotFn);
@@ -38,19 +47,10 @@ test('call IFTTT webhook with "pending" state', async t => {
   t.true(got.calledWith(iftttUrl));
 });
 
-test('call IFTTT webhook with "failure" state', async t => {
+test('call IFTTT webhook with "failed" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
-  await callIftttWebhook('failure', config, got as GotFn);
-
-  const iftttUrl = createIftttUrl('ci_build_failure');
-  t.true(got.calledWith(iftttUrl));
-});
-
-test('call IFTTT webhook with "error" state', async t => {
-  t.plan(1);
-  const got = sinon.stub().returns({ body: '' });
-  await callIftttWebhook('error', config, got as GotFn);
+  await callIftttWebhook('failed', config, got as GotFn);
 
   const iftttUrl = createIftttUrl('ci_build_failure');
   t.true(got.calledWith(iftttUrl));

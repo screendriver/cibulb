@@ -1,50 +1,51 @@
 import test from 'tape';
 import { Repository } from '../../../src/shared/mongodb';
-import { getRepositoriesState } from '../../../src/shared/repositories';
+import { getRepositoriesStatus } from '../../../src/shared/repositories';
 
 test('returns "success" when repositories are empty', t => {
   t.plan(1);
-  const state = getRepositoriesState([]);
-  t.equal(state, 'success');
+  const status = getRepositoriesStatus([]);
+  t.equal(status, 'success');
 });
 
-test('returns "success" when all repositories are in state "success"', t => {
+test('returns "success" when all repositories are in status "success"', t => {
   t.plan(1);
   const repositories: Repository[] = [
-    { name: 'repoA', state: 'success' },
-    { name: 'repoB', state: 'success' },
+    { name: 'repoA', status: 'success' },
+    { name: 'repoB', status: 'success' },
   ];
-  const state = getRepositoriesState(repositories);
-  t.equal(state, 'success');
+  const status = getRepositoriesStatus(repositories);
+  t.equal(status, 'success');
 });
 
-test('returns "pending" when one repository is in state "pending"', t => {
+test('returns "pending" when one repository is in status "pending"', t => {
   t.plan(1);
   const repositories: Repository[] = [
-    { name: 'repoA', state: 'success' },
-    { name: 'repoB', state: 'error' },
-    { name: 'repoC', state: 'pending' },
+    { name: 'repoA', status: 'success' },
+    { name: 'repoB', status: 'failed' },
+    { name: 'repoC', status: 'pending' },
   ];
-  const state = getRepositoriesState(repositories);
-  t.equal(state, 'pending');
+  const status = getRepositoriesStatus(repositories);
+  t.equal(status, 'pending');
 });
 
-test('returns "error" when one repository is in state "error"', t => {
+test('returns "pending" when one repository is in status "running"', t => {
   t.plan(1);
   const repositories: Repository[] = [
-    { name: 'repoA', state: 'success' },
-    { name: 'repoB', state: 'error' },
+    { name: 'repoA', status: 'success' },
+    { name: 'repoB', status: 'failed' },
+    { name: 'repoC', status: 'running' },
   ];
-  const state = getRepositoriesState(repositories);
-  t.equal(state, 'error');
+  const status = getRepositoriesStatus(repositories);
+  t.equal(status, 'pending');
 });
 
-test('returns "error" when one repository is in state "failure"', t => {
+test('returns "failed" when one repository is in status "failed"', t => {
   t.plan(1);
   const repositories: Repository[] = [
-    { name: 'repoA', state: 'success' },
-    { name: 'repoB', state: 'failure' },
+    { name: 'repoA', status: 'success' },
+    { name: 'repoB', status: 'failed' },
   ];
-  const state = getRepositoriesState(repositories);
-  t.equal(state, 'error');
+  const status = getRepositoriesStatus(repositories);
+  t.equal(status, 'failed');
 });

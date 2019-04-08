@@ -1,10 +1,10 @@
 import { MongoClient } from 'mongodb';
 
-export type RepositoryState = 'pending' | 'failure' | 'error' | 'success';
+export type RepositoryStatus = 'success' | 'running' | 'pending' | 'failed';
 
 export interface Repository {
   name: string;
-  state: RepositoryState;
+  status: RepositoryStatus;
 }
 
 export function connect(

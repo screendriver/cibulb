@@ -1,16 +1,16 @@
-import { Repository, RepositoryState } from './mongodb';
+import { Repository, RepositoryStatus } from './mongodb';
 
-export function getRepositoriesState(
+export function getRepositoriesStatus(
   repositories: readonly Repository[],
-): RepositoryState {
+): RepositoryStatus {
   if (repositories.length === 0) {
     return 'success';
   }
-  if (repositories.every(({ state }) => state === 'success')) {
+  if (repositories.every(({ status }) => status === 'success')) {
     return 'success';
   }
-  if (repositories.some(({ state }) => state === 'pending')) {
+  if (repositories.some(({ status }) => status === 'pending' || status === 'running')) {
     return 'pending';
   }
-  return 'error';
+  return 'failed';
 }

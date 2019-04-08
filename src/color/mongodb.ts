@@ -10,7 +10,7 @@ export async function updateDb(
     .collection<Repository>('repositories');
   await repositoriesCollection.findOneAndUpdate(
     { name: repository.name },
-    { $set: { state: repository.state } },
+    { $set: { status: repository.status } },
     { upsert: true },
   );
   return await repositoriesCollection.find().toArray();

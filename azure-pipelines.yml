@@ -28,22 +28,22 @@ steps:
       summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
       reportDirectory: $(System.DefaultWorkingDirectory)/coverage
 
-  - script: yarn now -t $NOW_TOKEN -e GITHUB_SECRET -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN
+  - script: yarn now -t $NOW_TOKEN -e GITLAB_SECRET_TOKEN -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN
     displayName: Staging deploy to ZEIT Now
     condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     env:
       NOW_TOKEN: $(nowKey)
-      GITHUB_SECRET: $(githubSecret)
+      GITLAB_SECRET_TOKEN: $(gitlabSecret)
       IFTTT_KEY: $(iftttKey)
       MONGO_URI: $(mongoUri)
       SENTRY_DSN: $(sentryDSN)
 
-  - script: yarn now -t $NOW_TOKEN -e GITHUB_SECRET -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN --target production
+  - script: yarn now -t $NOW_TOKEN -e GITLAB_SECRET_TOKEN -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN --target production
     displayName: Production deploy to ZEIT Now
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     env:
       NOW_TOKEN: $(nowKey)
-      GITHUB_SECRET: $(githubSecret)
+      GITLAB_SECRET_TOKEN: $(gitlabSecret)
       IFTTT_KEY: $(iftttKey)
       MONGO_URI: $(mongoUri)
       SENTRY_DSN: $(sentryDSN)
