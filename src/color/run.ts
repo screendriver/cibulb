@@ -1,5 +1,4 @@
 import log from 'loglevel';
-import verifySecret from 'verify-github-webhook-secret';
 import { MongoClient } from 'mongodb';
 import got from 'got';
 import * as Sentry from '@sentry/node';
@@ -25,15 +24,11 @@ export async function run(
   requestBody: WebhookRequestBody,
   xGitlabToken: string,
 ): Promise<Result> {
-  log.info('xGitlabToken', xGitlabToken);
-  log.info('requestBody', requestBody);
-  const bodyAsString = JSON.stringify(requestBody);
-  log.info(`Called from repository ${requestBody.project.path_with_namespace}`);
-  const isSecretValid = await verifySecret(
-    bodyAsString,
-    config.gitlabSecretToken,
-    xGitlabToken,
-  );
+  const { project } = requestBody;
+  if (project) {
+    log.info(`Called from repository ${project.path_with_namespace}`);
+  }
+  const isSecretValid = xGitlabToken === config.gitlabSecretToken;
   return !isSecretValid
     ? forbidden()
     : !isWebhookRequestBody(requestBody)
