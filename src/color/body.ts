@@ -5,7 +5,7 @@ export interface WebhookRequestBody {
     status: 'success';
   };
   project: {
-    name: string;
+    path_with_namespace: string;
   };
 }
 
@@ -17,6 +17,6 @@ export function isWebhookRequestBody(body: any): body is WebhookRequestBody {
     object_attributes.ref !== undefined &&
     object_attributes.status !== undefined &&
     project !== undefined &&
-    project.name !== undefined
+    project.path_with_namespace !== undefined
   );
 }

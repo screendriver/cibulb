@@ -10,7 +10,7 @@ test('returns true when all properties are set', t => {
       status: 'success',
     },
     project: {
-      name: 'my-project',
+      path_with_namespace: 'my-project',
     },
   };
   t.true(isWebhookRequestBody(body));
@@ -24,7 +24,7 @@ test('returns false when object_attributes.id property is missing', t => {
       status: 'success',
     },
     project: {
-      name: 'my-project',
+      path_with_namespace: 'my-project',
     },
   };
   t.false(isWebhookRequestBody(body));
@@ -38,7 +38,7 @@ test('returns false when object_attributes.ref property is missing', t => {
       status: 'success',
     },
     project: {
-      name: 'my-project',
+      path_with_namespace: 'my-project',
     },
   };
   t.false(isWebhookRequestBody(body));
@@ -52,7 +52,7 @@ test('returns false when object_attributes.status property is missing', t => {
       ref: 'master',
     },
     project: {
-      name: 'my-project',
+      path_with_namespace: 'my-project',
     },
   };
   t.false(isWebhookRequestBody(body));
@@ -70,7 +70,7 @@ test('returns false when project property is missing', t => {
   t.false(isWebhookRequestBody(body));
 });
 
-test('returns false when project.name property is missing', t => {
+test('returns false when project.path_with_namespace property is missing', t => {
   t.plan(1);
   const body = {
     object_attributes: {

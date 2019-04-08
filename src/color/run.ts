@@ -28,7 +28,7 @@ export async function run(
   log.info('xGitlabToken', xGitlabToken);
   log.info('requestBody', requestBody);
   const bodyAsString = JSON.stringify(requestBody);
-  log.info(`Called from repository ${requestBody.project.name}`);
+  log.info(`Called from repository ${requestBody.project.path_with_namespace}`);
   const isSecretValid = await verifySecret(
     bodyAsString,
     config.gitlabSecretToken,
@@ -61,7 +61,7 @@ async function ifttt(
     config.mongoDbUri,
   );
   const repository: Repository = {
-    name: requestBody.project.name,
+    name: requestBody.project.path_with_namespace,
     status: requestBody.object_attributes.status,
   };
   const dbRepositories = await updateDb(mongoClient, repository);
