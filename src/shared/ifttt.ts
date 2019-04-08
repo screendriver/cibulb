@@ -5,9 +5,9 @@ import { Config } from '../shared/config';
 
 const statusTriggerMap = {
   success: 'ci_build_success',
+  running: 'ci_build_pending',
   pending: 'ci_build_pending',
-  failure: 'ci_build_failure',
-  error: 'ci_build_failure',
+  failed: 'ci_build_failure',
 };
 
 export async function callIftttWebhook(

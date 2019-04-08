@@ -22,29 +22,30 @@ test('returns "pending" when one repository is in status "pending"', t => {
   t.plan(1);
   const repositories: Repository[] = [
     { name: 'repoA', status: 'success' },
-    { name: 'repoB', status: 'error' },
+    { name: 'repoB', status: 'failed' },
     { name: 'repoC', status: 'pending' },
   ];
   const status = getRepositoriesStatus(repositories);
   t.equal(status, 'pending');
 });
 
-test('returns "error" when one repository is in status "error"', t => {
+test('returns "pending" when one repository is in status "running"', t => {
   t.plan(1);
   const repositories: Repository[] = [
     { name: 'repoA', status: 'success' },
-    { name: 'repoB', status: 'error' },
+    { name: 'repoB', status: 'failed' },
+    { name: 'repoC', status: 'running' },
   ];
   const status = getRepositoriesStatus(repositories);
-  t.equal(status, 'error');
+  t.equal(status, 'pending');
 });
 
-test('returns "error" when one repository is in status "failure"', t => {
+test('returns "failed" when one repository is in status "failed"', t => {
   t.plan(1);
   const repositories: Repository[] = [
     { name: 'repoA', status: 'success' },
-    { name: 'repoB', status: 'failure' },
+    { name: 'repoB', status: 'failed' },
   ];
   const status = getRepositoriesStatus(repositories);
-  t.equal(status, 'error');
+  t.equal(status, 'failed');
 });

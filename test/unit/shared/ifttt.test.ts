@@ -29,6 +29,15 @@ test('call IFTTT webhook with "success" status', async t => {
   t.true(got.calledWith(iftttUrl));
 });
 
+test('call IFTTT webhook with "running" status', async t => {
+  t.plan(1);
+  const got = sinon.stub().returns({ body: '' });
+  await callIftttWebhook('running', config, got as GotFn);
+
+  const iftttUrl = createIftttUrl('ci_build_pending');
+  t.true(got.calledWith(iftttUrl));
+});
+
 test('call IFTTT webhook with "pending" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
@@ -38,19 +47,10 @@ test('call IFTTT webhook with "pending" status', async t => {
   t.true(got.calledWith(iftttUrl));
 });
 
-test('call IFTTT webhook with "failure" status', async t => {
+test('call IFTTT webhook with "failed" status', async t => {
   t.plan(1);
   const got = sinon.stub().returns({ body: '' });
-  await callIftttWebhook('failure', config, got as GotFn);
-
-  const iftttUrl = createIftttUrl('ci_build_failure');
-  t.true(got.calledWith(iftttUrl));
-});
-
-test('call IFTTT webhook with "error" status', async t => {
-  t.plan(1);
-  const got = sinon.stub().returns({ body: '' });
-  await callIftttWebhook('error', config, got as GotFn);
+  await callIftttWebhook('failed', config, got as GotFn);
 
   const iftttUrl = createIftttUrl('ci_build_failure');
   t.true(got.calledWith(iftttUrl));

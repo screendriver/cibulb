@@ -1,8 +1,10 @@
+export type Status = 'success' | 'running' | 'pending' | 'failed';
+
 export interface WebhookRequestBody {
   object_attributes: {
     id: number;
     ref: string;
-    status: 'success';
+    status: Status;
   };
   project: {
     path_with_namespace: string;
