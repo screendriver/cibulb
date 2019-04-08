@@ -21,7 +21,7 @@ async function createMongoDb(): Promise<
 }
 
 function setupEnvs(iftttUrl: string, mongoUri: string) {
-  process.env.GITHUB_SECRET = 'my-secret';
+  process.env.GITLAB_SECRET_TOKEN = 'my-secret';
   process.env.IFTTT_BASE_URL = iftttUrl;
   process.env.IFTTT_KEY = 'my-key';
   process.env.MONGO_URI = mongoUri;
@@ -29,7 +29,7 @@ function setupEnvs(iftttUrl: string, mongoUri: string) {
 }
 
 function deleteEnvs() {
-  delete process.env.GITHUB_SECRET;
+  delete process.env.GITLAB_SECRET_TOKEN;
   delete process.env.IFTTT_BASE_URL;
   delete process.env.IFTTT_KEY;
   delete process.env.MONGO_URI;
@@ -41,24 +41,24 @@ function doNetworkRequest(url: string) {
     json: true,
     throwHttpErrors: false,
     headers: {
-      'x-hub-signature': 'sha1=7222a793428d77051ab41c61ee85305d0ea3da80',
+      'x-gitlab-token': 'my-secret',
     },
     body: {
-      id: 123,
-      name: 'test',
-      status: 'success',
-      branches: [{ name: 'master' }],
+      object_attributes: {
+        id: 123,
+        ref: 'master',
+        status: 'success',
+      },
+      project: {
+        path_with_namespace: 'test',
+      },
     },
   });
 }
 
-test('pass', t => {
+test('returns HTTP 403 when secret is not valid', async t => {
   t.plan(1);
-  t.pass();
-});
-
-test.skip('returns HTTP 403 when secret is not valid', async t => {
-  t.plan(1);
+  process.env.GITLAB_SECRET_TOKEN = 'foo';
   const colorFunctionService = micro(async (req, res) => {
     await colorFunction(req, res);
     res.end();
@@ -69,10 +69,11 @@ test.skip('returns HTTP 403 when secret is not valid', async t => {
     t.equal(response.statusCode, 403);
   } finally {
     colorFunctionService.close();
+    deleteEnvs();
   }
 });
 
-test.skip('call IFTTT webhook event "ci_build_success"', async t => {
+test('call IFTTT webhook event "ci_build_success"', async t => {
   t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const iftttService = micro(req => {
@@ -97,7 +98,7 @@ test.skip('call IFTTT webhook event "ci_build_success"', async t => {
   }
 });
 
-test.skip('inserts repository name and status into MongoDB', async t => {
+test('inserts repository name and status into MongoDB', async t => {
   t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const iftttService = micro(() => '');
@@ -128,7 +129,7 @@ test.skip('inserts repository name and status into MongoDB', async t => {
   }
 });
 
-test.skip('updates repository status in MongoDB', async t => {
+test('updates repository status in MongoDB', async t => {
   t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   await mongoClient
