@@ -13,6 +13,8 @@ import { callIftttWebhook } from '../shared/ifttt';
 log.enableAll();
 
 export = async function refresh(_req: IncomingMessage, res: ServerResponse) {
+  // tslint:disable-next-line
+  console.log('[GET] /api/refresh');
   const config = getConfig();
   initSentry(Sentry, config, log);
   try {
