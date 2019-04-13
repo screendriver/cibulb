@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+    "prettier:check": "prettier --check 'src/**/*.ts?(x)' 'test/**/*.ts?(x)' 'typings/**/*.ts'",
     "test:unit": "nyc tape -r source-map-support/register 'dist/test/unit/**/*.js'",
     "test:integration": "tape -r source-map-support/register 'dist/test/integration/**/*.js' | tap-dot",
     "test": "yarn lint && yarn test:unit | tap-dot && yarn test:integration",
