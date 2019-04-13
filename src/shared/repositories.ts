@@ -10,7 +10,11 @@ export function getRepositoriesStatus(
   if (repositories.every(({ status }) => status === 'success')) {
     return 'success';
   }
-  if (repositories.some(({ status }) => status === 'pending' || status === 'running')) {
+  if (
+    repositories.some(
+      ({ status }) => status === 'pending' || status === 'running',
+    )
+  ) {
     return 'pending';
   }
   return 'failed';
