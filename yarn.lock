@@ -226,10 +226,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/got@9.4.1":
-  version "9.4.1"
-  resolved "https://registry.yarnpkg.com/@types/got/-/got-9.4.1.tgz#7479a3a321599b5e17647f3bd9d402b8c55bfee1"
-  integrity sha512-m7Uc07bG/bZ+Dis7yI3mGssYDcAdUvP4irF3ZmBzf0ig7zEd1FyADfnELVGcf+p1Ol/iPCXbZYwcSNOJA2a+Qg==
+"@types/got@9.4.2":
+  version "9.4.2"
+  resolved "https://registry.yarnpkg.com/@types/got/-/got-9.4.2.tgz#8d5bf4156fced9355fc2880f10570ff276962f28"
+  integrity sha512-k9F2iT5+Ym1jmAGjZyLsd0P3F8XB+4/gntbkx6Lofu7JvRINVIHa+l+fufLqtrJhgUw7UZqTfA+S6McPNXlPug==
   dependencies:
     "@types/node" "*"
     "@types/tough-cookie" "*"
