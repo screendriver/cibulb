@@ -1,10 +1,17 @@
 {
-  "exclude": [
-    "**/*.test.*"
+  "all": true,
+  "include": [
+    "dist/src/**/*.js"
   ],
+  "exclude": [
+    "dist/src/color/index.js",
+    "dist/src/color/run.js",
+    "dist/src/refresh/index.js"
+  ],
+  "exclude-after-remap": false,
   "reporter": [
     "lcov",
     "cobertura",
-    "json"
+    "text-summary"
   ]
 }
