@@ -2,7 +2,6 @@
   "extends": ["config:base"],
   "commitMessagePrefix": "⬆️ ",
   "labels": ["renovate"],
-  "rebaseStalePrs": false,
   "nvm": {
     "enabled": false
   }
