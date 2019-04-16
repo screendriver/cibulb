@@ -12,7 +12,6 @@
     "test:integration": "tape -r source-map-support/register 'dist/test/integration/**/*.js' | tap-dot",
     "test": "yarn lint && yarn prettier:check && yarn test:unit | tap-dot && yarn test:integration",
     "test:ci": "yarn lint && yarn prettier:check && yarn test:unit | tap-xunit > test-results.xml && yarn test:integration",
-    "coverage": "nyc report --reporter=text-summary",
     "build": "tsc --build"
   },
   "dependencies": {
