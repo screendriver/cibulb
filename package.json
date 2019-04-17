@@ -6,13 +6,13 @@
   "author": "Christian Rackerseder <git@echooff.de>",
   "license": "MIT",
   "scripts": {
+    "build": "tsc --build",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "prettier:check": "prettier --check 'src/**/*.ts?(x)' 'test/**/*.ts?(x)'",
-    "test:unit": "nyc tape -r source-map-support/register 'dist/test/unit/**/*.js'",
-    "test:integration": "tape -r source-map-support/register 'dist/test/integration/**/*.js' | tap-dot",
-    "test": "yarn lint && yarn prettier:check && yarn test:unit | tap-dot && yarn test:integration",
     "test:ci": "yarn lint && yarn prettier:check && yarn test:unit | tap-xunit > test-results.xml && yarn test:integration",
-    "build": "tsc --build"
+    "test:integration": "tape -r source-map-support/register 'dist/test/integration/**/*.js' | tap-dot",
+    "test:unit": "nyc tape -r source-map-support/register 'dist/test/unit/**/*.js'",
+    "test": "yarn lint && yarn prettier:check && yarn test:unit | tap-dot && yarn test:integration"
   },
   "dependencies": {
     "@sentry/node": "5.0.8",
