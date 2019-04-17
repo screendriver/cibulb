@@ -2,7 +2,7 @@
   "version": 2,
   "name": "cibulb",
   "alias": "cibulb.now.sh",
-  "regions": ["cdg"],
+  "regions": ["bru"],
   "builds": [
     { "src": "dist/src/color/index.js", "use": "@now/node" },
     { "src": "dist/src/refresh/index.js", "use": "@now/node" }
