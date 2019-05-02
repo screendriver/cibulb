@@ -475,6 +475,11 @@ camelcase@^5.0.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-5.0.0.tgz#03295527d58bd3cd4aa75363f35b2e8d97be2f42"
   integrity sha512-faqwZqnWxbxn+F1d399ygeamQNy3lPp/H9H6rNrqYh4FSVCtcY+3cub1MxA8o9mDd55mM8Aghuu/kuyYA6VTsA==
 
+camelcase@^5.3.1:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-5.3.1.tgz#e3c9b31569e106811df242f715725a1f4c494320"
+  integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
+
 chalk@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.0.tgz#a060a297a6b57e15b61ca63ce84995daa0fe6e52"
@@ -887,6 +892,11 @@ find-cache-dir@^2.1.0:
     commondir "^1.0.1"
     make-dir "^2.0.0"
     pkg-dir "^3.0.0"
+
+find-package-json@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/find-package-json/-/find-package-json-1.2.0.tgz#4057d1b943f82d8445fe52dc9cf456f6b8b58083"
+  integrity sha512-+SOGcLGYDJHtyqHd87ysBhmaeQ95oWspDKnMXBrnQ9Eq4OkLNqejgoaD8xVWu6GPa0B6roa6KinCMEMcVeqONw==
 
 find-up@^3.0.0:
   version "3.0.0"
@@ -1490,15 +1500,17 @@ mongodb-core@^3.2.3:
   optionalDependencies:
     saslprep "^1.0.0"
 
-mongodb-memory-server@4.2.2:
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/mongodb-memory-server/-/mongodb-memory-server-4.2.2.tgz#d6a863f32dd83b7e76eadc63540ade67e246c3d9"
-  integrity sha512-XZKg9TDyZfPS6q71nZrXMze7Ew04U/VQiD7VRvUYrh7Xg2zlPc4qYk7x8cwEqpNSbMwLkDuCKZIA7JTCcKI+xw==
+mongodb-memory-server-core@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/mongodb-memory-server-core/-/mongodb-memory-server-core-5.1.0.tgz#fd0b39b9f5b08eb9e7ffdf2ba79146e5f6d109bc"
+  integrity sha512-M/GWVvFze0geP2smoy0ns+Yz5l4BRP6Y66OKc+w9zlX422ydQEA04bLQjooPqoaBTrV90xuDj5E+zejn/YkPew==
   dependencies:
+    camelcase "^5.3.1"
     debug "^4.1.1"
     decompress "^4.2.0"
     dedent "^0.7.0"
     find-cache-dir "^2.0.0"
+    find-package-json "^1.2.0"
     get-port "^4.2.0"
     getos "^3.1.1"
     https-proxy-agent "^2.2.1"
@@ -1509,6 +1521,13 @@ mongodb-memory-server@4.2.2:
     uuid "^3.2.1"
   optionalDependencies:
     mongodb ">=3.0.0"
+
+mongodb-memory-server@5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/mongodb-memory-server/-/mongodb-memory-server-5.1.0.tgz#6861b1929bea040c25b25a006241a9c5cec88827"
+  integrity sha512-CN4fjt90fi6A3PSJIx6xYxIRqpxF1rJoz4BcJv6LmGyRAOAvCbr3SqRbfXJMS26wTDyHylXtW32PhdykDohogA==
+  dependencies:
+    mongodb-memory-server-core "5.1.0"
 
 mongodb@3.1.13:
   version "3.1.13"

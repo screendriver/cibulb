@@ -1,6 +1,6 @@
 import test from 'tape';
 import micro from 'micro';
-import MongoMemoryServer from 'mongodb-memory-server';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
 import listen from 'test-listen';
 import got from 'got';
