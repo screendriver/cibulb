@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../dist/test/integration/Color",
+    "outDir": "../../../target/test/integration/Color",
     "rootDir": "."
   },
   "references": [{ "path": "../../../src/color" }]

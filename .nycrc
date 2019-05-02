@@ -1,12 +1,14 @@
 {
   "all": true,
+  "temp-dir": "./target/.nyc_output",
+  "report-dir": "./target/coverage",
   "include": [
-    "dist/src/**/*.js"
+    "target/src/**/*.js"
   ],
   "exclude": [
-    "dist/src/color/index.js",
-    "dist/src/color/run.js",
-    "dist/src/refresh/index.js"
+    "target/src/color/index.js",
+    "target/src/color/run.js",
+    "target/src/refresh/index.js"
   ],
   "exclude-after-remap": false,
   "reporter": [

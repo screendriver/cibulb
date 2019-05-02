@@ -25,8 +25,8 @@ steps:
   - task: PublishCodeCoverageResults@1
     inputs:
       codeCoverageTool: Cobertura
-      summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml
-      reportDirectory: $(System.DefaultWorkingDirectory)/coverage
+      summaryFileLocation: $(System.DefaultWorkingDirectory)/target/coverage/cobertura-coverage.xml
+      reportDirectory: $(System.DefaultWorkingDirectory)/target/coverage
 
   - script: yarn now -t $NOW_TOKEN -e GITLAB_SECRET_TOKEN -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN
     displayName: Staging deploy to ZEIT Now
