@@ -18,7 +18,7 @@
     "@sentry/node": "5.1.0",
     "got": "9.6.0",
     "loglevel": "1.6.1",
-    "micro": "9.3.3",
+    "micro": "9.3.4",
     "mongodb": "3.1.13",
     "tslib": "1.9.3"
   },
