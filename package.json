@@ -15,7 +15,7 @@
     "test": "yarn lint && yarn prettier:check && yarn test:unit | tap-dot && yarn test:integration"
   },
   "dependencies": {
-    "@sentry/node": "5.1.0",
+    "@sentry/node": "5.2.0",
     "got": "9.6.0",
     "loglevel": "1.6.1",
     "micro": "9.3.3",
