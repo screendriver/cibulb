@@ -29,7 +29,7 @@
     "@types/mongodb": "3.1.22",
     "@types/mongodb-memory-server": "1.8.0",
     "@types/node": "8.10.48",
-    "@types/sinon": "7.0.11",
+    "@types/sinon": "7.0.12",
     "@types/tape": "4.2.33",
     "@types/test-listen": "1.1.0",
     "mongodb-memory-server": "5.1.1",
