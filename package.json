@@ -33,7 +33,7 @@
     "@types/tape": "4.2.33",
     "@types/test-listen": "1.1.0",
     "mongodb-memory-server": "5.1.1",
-    "now": "15.2.0",
+    "now": "15.3.0",
     "nyc": "14.1.1",
     "prettier": "1.17.1",
     "sinon": "7.3.2",
