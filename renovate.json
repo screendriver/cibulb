@@ -3,6 +3,7 @@
   "commitMessagePrefix": "⬆️ ",
   "labels": ["renovate"],
   "rebaseStalePrs": false,
+  "lockFileMaintenance": { "enabled": true },
   "nvm": {
     "enabled": false
   }
