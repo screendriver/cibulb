@@ -40,9 +40,7 @@ export async function run(
 
 function wrongBranch(requestBody: WebhookRequestBody): Result {
   log.info(
-    `Called from "${
-      requestBody.object_attributes.ref
-    }" instead of "master" branch. Doing nothing.`,
+    `Called from "${requestBody.object_attributes.ref}" instead of "master" branch. Doing nothing.`,
   );
   return noContentResult;
 }
