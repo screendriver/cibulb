@@ -5,7 +5,7 @@ steps:
   - task: NodeTool@0
     displayName: Install Node.js
     inputs:
-      versionSpec: 8.10
+      versionSpec: 10
 
   - script: yarn install
     displayName: Install dependencies

@@ -5,6 +5,9 @@
   "repository": "git@github.com:screendriver/cibulb.git",
   "author": "Christian Rackerseder <git@echooff.de>",
   "license": "MIT",
+  "engines": {
+    "node": "10.x"
+  },
   "scripts": {
     "build": "tsc --build",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
