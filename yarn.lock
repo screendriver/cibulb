@@ -2290,10 +2290,10 @@ type-fest@^0.3.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.3.1.tgz#63d00d204e059474fe5e1b7c011112bbd1dc29e1"
   integrity sha512-cUGJnCdr4STbePCgqNFbpVNCepa+kAVohJs1sLhxzdH+gnEoOd8VhbYa7pD3zZYGiURWM2xzEII3fQcRizDkYQ==
 
-typescript-tslint-plugin@0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/typescript-tslint-plugin/-/typescript-tslint-plugin-0.5.2.tgz#8544e3387ed4256111751fe5caee5ba60f55d3ec"
-  integrity sha512-KzF0geUOAKMxDE9Z6CaFaWOPgoEgx2kpmUJVr3suMD2xs8zvTCE3lixbVqjU9Kn7zGB0B+OaB39hAFPAmg8slQ==
+typescript-tslint-plugin@0.5.3:
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/typescript-tslint-plugin/-/typescript-tslint-plugin-0.5.3.tgz#555d1d31c4a8504cdde60e616d1c41da1da7df4e"
+  integrity sha512-mL/11ve0XORmCVnOFsmgw1E/r6Ic/NBaat0ZtmTjLTYopo3noGnW00UJzl1Vf7zxe3YckLHH1irTckgAa+XRrA==
   dependencies:
     minimatch "^3.0.4"
     mock-require "^3.0.2"
