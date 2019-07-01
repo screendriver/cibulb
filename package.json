@@ -43,7 +43,7 @@
     "source-map-support": "0.5.12",
     "tap-dot": "2.0.0",
     "tap-xunit": "2.4.1",
-    "tape": "4.10.2",
+    "tape": "4.11.0",
     "test-listen": "1.1.0",
     "tslint": "5.18.0",
     "tslint-config-prettier": "1.18.0",
