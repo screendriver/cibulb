@@ -42,6 +42,7 @@
     "sinon": "7.3.2",
     "source-map-support": "0.5.12",
     "tap-dot": "2.0.0",
+    "tap-nirvana": "1.1.0",
     "tap-xunit": "2.4.1",
     "tape": "4.11.0",
     "test-listen": "1.1.0",
