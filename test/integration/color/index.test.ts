@@ -7,6 +7,7 @@ import got from 'got';
 import log from 'loglevel';
 import colorFunction from '../../../src/color/';
 import { Repository } from '../../../src/shared/mongodb';
+import { Server } from 'http';
 
 log.disableAll();
 
@@ -36,6 +37,13 @@ function deleteEnvs() {
   delete process.env.SENTRY_DSN;
 }
 
+function createColorFunctionService() {
+  return micro(async (req, res) => {
+    await colorFunction(req, res);
+    res.end();
+  });
+}
+
 function doNetworkRequest(url: string) {
   return got.post(url, {
     json: true,
@@ -56,13 +64,51 @@ function doNetworkRequest(url: string) {
   });
 }
 
+async function closeAll(
+  iftttService: Server,
+  colorFunctionService: Server,
+  mongoClient: MongoClient,
+  mongod: MongoMemoryServer,
+) {
+  iftttService.close();
+  colorFunctionService.close();
+  await mongoClient.close();
+  await mongod.stop();
+  deleteEnvs();
+}
+
+async function getRepositories(
+  mongod: MongoMemoryServer,
+  mongoClient: MongoClient,
+  mongoUri: string,
+) {
+  const iftttService = micro(() => '');
+  const colorFunctionService = createColorFunctionService();
+  const iftttServiceUrl = await listen(iftttService);
+  const colorFunctionUrl = await listen(colorFunctionService);
+  setupEnvs(iftttServiceUrl, mongoUri);
+  try {
+    await doNetworkRequest(colorFunctionUrl);
+    return mongoClient
+      .db('cibulb')
+      .collection<Repository>('repositories')
+      .find()
+      .toArray();
+  } finally {
+    await closeAll(iftttService, colorFunctionService, mongoClient, mongod);
+  }
+}
+
+function getNameAndStatus(repos: Repository[]) {
+  return repos
+    .map(({ name, status }) => ({ name, status }))
+    .reduce((_, currentValue) => currentValue);
+}
+
 test('returns HTTP 403 when secret is not valid', async t => {
   t.plan(1);
   process.env.GITLAB_SECRET_TOKEN = 'foo';
-  const colorFunctionService = micro(async (req, res) => {
-    await colorFunction(req, res);
-    res.end();
-  });
+  const colorFunctionService = createColorFunctionService();
   const colorFunctionUrl = await listen(colorFunctionService);
   try {
     const response = await doNetworkRequest(colorFunctionUrl);
@@ -80,53 +126,25 @@ test('call IFTTT webhook event "ci_build_success"', async t => {
     t.equal(req.url, '/trigger/ci_build_success/with/key/my-key');
     return '';
   });
-  const colorFunctionService = micro(async (req, res) => {
-    await colorFunction(req, res);
-    res.end();
-  });
+  const colorFunctionService = createColorFunctionService();
   const iftttServiceUrl = await listen(iftttService);
   const colorFunctionUrl = await listen(colorFunctionService);
   setupEnvs(iftttServiceUrl, mongoUri);
   try {
     await doNetworkRequest(colorFunctionUrl);
   } finally {
-    iftttService.close();
-    colorFunctionService.close();
-    await mongoClient.close();
-    await mongod.stop();
-    deleteEnvs();
+    await closeAll(iftttService, colorFunctionService, mongoClient, mongod);
   }
 });
 
 test('inserts repository name and status into MongoDB', async t => {
   t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
-  const iftttService = micro(() => '');
-  const colorFunctionService = micro(async (req, res) => {
-    await colorFunction(req, res);
-    res.end();
+  const repos = await getRepositories(mongod, mongoClient, mongoUri);
+  t.deepEqual(getNameAndStatus(repos), {
+    name: 'test',
+    status: 'success',
   });
-  const iftttServiceUrl = await listen(iftttService);
-  const colorFunctionUrl = await listen(colorFunctionService);
-  setupEnvs(iftttServiceUrl, mongoUri);
-  try {
-    await doNetworkRequest(colorFunctionUrl);
-    const repos = await mongoClient
-      .db('cibulb')
-      .collection<Repository>('repositories')
-      .find()
-      .toArray();
-    t.deepEqual(repos.map(({ name, status }) => ({ name, status }))[0], {
-      name: 'test',
-      status: 'success',
-    });
-  } finally {
-    iftttService.close();
-    colorFunctionService.close();
-    await mongoClient.close();
-    await mongod.stop();
-    deleteEnvs();
-  }
 });
 
 test('updates repository status in MongoDB', async t => {
@@ -135,31 +153,13 @@ test('updates repository status in MongoDB', async t => {
   await mongoClient
     .db('cibulb')
     .collection<Repository>('repositories')
-    .insertOne({ name: 'test', status: 'pending' });
-  const iftttService = micro(() => '');
-  const colorFunctionService = micro(async (req, res) => {
-    await colorFunction(req, res);
-    res.end();
-  });
-  const iftttServiceUrl = await listen(iftttService);
-  const colorFunctionUrl = await listen(colorFunctionService);
-  setupEnvs(iftttServiceUrl, mongoUri);
-  try {
-    await doNetworkRequest(colorFunctionUrl);
-    const repos = await mongoClient
-      .db('cibulb')
-      .collection<Repository>('repositories')
-      .find()
-      .toArray();
-    t.deepEqual(repos.map(({ name, status }) => ({ name, status }))[0], {
+    .insertOne({
       name: 'test',
-      status: 'success',
+      status: 'pending',
     });
-  } finally {
-    iftttService.close();
-    colorFunctionService.close();
-    await mongoClient.close();
-    await mongod.stop();
-    deleteEnvs();
-  }
+  const repos = await getRepositories(mongod, mongoClient, mongoUri);
+  t.deepEqual(getNameAndStatus(repos), {
+    name: 'test',
+    status: 'success',
+  });
 });
