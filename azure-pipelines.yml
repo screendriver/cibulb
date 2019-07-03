@@ -7,18 +7,34 @@ steps:
     inputs:
       versionSpec: 10
 
-  - script: yarn install
+  - script: yarn install --frozen-lockfile
     displayName: Install dependencies
 
-  - script: yarn build
-    displayName: Build application
+  - script: yarn lint
+    displayName: Lint source code
 
-  - script: yarn test:ci
-    displayName: Running tests
+  - script: yarn prettier:check
+    displayName: Check code format
+
+  - script: yarn copy:paste:detector
+    displayName: Copy/Paste detector
+
+  - task: PublishPipelineArtifact@0
+    displayName: Publish jscpd HTML report
+    condition: failed()
+    inputs:
+      artifactName: 'CopyPasteDetectorReport'
+      targetPath: 'target/jscpd-report.html'
+
+  - script: yarn build
+    displayName: Compile source code
+
+  - script: npm run test:unit:ci
+    displayName: Run unit tests
 
   - task: PublishTestResults@2
     inputs:
-      testResultsFiles: '**/test-results.xml'
+      testResultsFiles: 'target/test-results.xml'
       testRunTitle: Test results for JavaScript
     condition: succeededOrFailed()
 
