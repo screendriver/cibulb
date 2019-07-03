@@ -12,6 +12,7 @@
     "build": "tsc --build",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "prettier:check": "prettier --check 'src/**/*.ts?(x)' 'test/**/*.ts?(x)'",
+    "copy:paste:detector": "jscpd src test typings",
     "test:ci": "yarn lint && yarn prettier:check && yarn test:unit | tap-xunit > test-results.xml && yarn test:integration",
     "test:integration": "tape -r source-map-support/register 'target/test/integration/**/*.js' | tap-dot",
     "test:unit:base": "tape -r source-map-support/register 'target/test/unit/**/*.js'",
