@@ -27,8 +27,8 @@ export = async function refresh(_req: IncomingMessage, res: ServerResponse) {
     const hookResponse = await callIftttWebhook(overallStatus, config, got);
     log.info(hookResponse);
     mongoClient.close();
-    res.statusCode = 204;
-    res.end();
+    res.statusCode = 200;
+    res.end(hookResponse);
   } catch (e) {
     Sentry.captureException(e);
   }
