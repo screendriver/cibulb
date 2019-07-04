@@ -32,6 +32,9 @@ steps:
   - script: npm run test:unit:ci
     displayName: Run unit tests
 
+  - script: npm run test:integration
+    displayName: Run integration tests
+
   - task: PublishTestResults@2
     inputs:
       testResultsFiles: 'target/test-results.xml'
