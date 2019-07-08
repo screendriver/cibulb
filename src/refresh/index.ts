@@ -1,6 +1,6 @@
+import { NowRequest, NowResponse } from '@now/node';
 import log from 'loglevel';
 import * as Sentry from '@sentry/node';
-import { IncomingMessage, ServerResponse } from 'http';
 import { MongoClient } from 'mongodb';
 import got from 'got';
 import { getConfig } from '../shared/config';
@@ -12,7 +12,7 @@ import { callIftttWebhook } from '../shared/ifttt';
 
 log.enableAll();
 
-export = async function refresh(_req: IncomingMessage, res: ServerResponse) {
+export = async function refresh(_req: NowRequest, res: NowResponse) {
   const config = getConfig();
   initSentry(Sentry, config, log);
   try {

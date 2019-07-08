@@ -1,6 +1,6 @@
+import { NowRequest, NowResponse } from '@now/node';
 import log from 'loglevel';
 import * as Sentry from '@sentry/node';
-import { IncomingMessage, ServerResponse } from 'http';
 import { json } from 'micro';
 import { getConfig } from '../shared/config';
 import { initSentry } from '../shared/sentry';
@@ -10,7 +10,7 @@ import { run } from './run';
 
 log.enableAll();
 
-export = async function color(req: IncomingMessage, res: ServerResponse) {
+export = async function color(req: NowRequest, res: NowResponse) {
   const config = getConfig();
   initSentry(Sentry, config, log);
   try {
