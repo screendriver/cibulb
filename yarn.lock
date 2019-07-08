@@ -108,10 +108,10 @@
   resolved "https://registry.yarnpkg.com/@now/node-bridge/-/node-bridge-1.2.2.tgz#b4740d8806227b8dd1d4d8481e21b3b30ad299b4"
   integrity sha512-E5xqal3QRN8RvcQ4Q82vtg/hvWmQWaIYp2bJHd550Ps/kemGabcwAAQsP/TUM/4b5oYlOmjrfuYPq9AhMvFqkQ==
 
-"@now/node@0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@now/node/-/node-0.11.0.tgz#70f020f9f7f7704bebdeba6e938853e9b6035abb"
-  integrity sha512-Nj/K0KQOf9K8FJpv7ZncCYtbHEhQDBkcZk3v9P/Sxcz9qTdGZuNWIgzNG2/2uUOoByoHpbvzOpflma3Z4ifMiw==
+"@now/node@0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@now/node/-/node-0.11.1.tgz#f0d2fa43ee3ded69341763b7b1c890227e90ab13"
+  integrity sha512-2nGzxozS6aH3vIOOX6xggnHNiBLuc9awAPTP2w1DGu5LWU8Jg48y8U53Hlk4/zTWqdpByw9zwndNgzyFOVQOAA==
   dependencies:
     "@now/node-bridge" "1.2.2"
     "@types/node" "*"
