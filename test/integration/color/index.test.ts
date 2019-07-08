@@ -1,5 +1,6 @@
 import test from 'tape';
 import micro from 'micro';
+import { NowRequest, NowResponse } from '@now/node';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { MongoClient } from 'mongodb';
 import listen from 'test-listen';
@@ -39,7 +40,7 @@ function deleteEnvs() {
 
 function createColorFunctionService() {
   return micro(async (req, res) => {
-    await colorFunction(req, res);
+    await colorFunction(req as NowRequest, res as NowResponse);
     res.end();
   });
 }
