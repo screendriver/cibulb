@@ -40,7 +40,7 @@
     "@types/test-listen": "1.1.0",
     "jscpd": "2.0.15",
     "mongodb-memory-server": "5.1.5",
-    "now": "15.8.5",
+    "now": "15.8.6",
     "nyc": "14.1.1",
     "prettier": "1.18.2",
     "sinon": "7.3.2",
