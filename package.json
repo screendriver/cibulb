@@ -39,7 +39,7 @@
     "@types/tape": "4.2.33",
     "@types/test-listen": "1.1.0",
     "jscpd": "2.0.15",
-    "mongodb-memory-server": "5.1.5",
+    "mongodb-memory-server": "5.1.9",
     "now": "15.8.5",
     "nyc": "14.1.1",
     "prettier": "1.18.2",
