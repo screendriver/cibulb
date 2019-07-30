@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@now/node": "0.11.1",
-    "@types/got": "9.6.2",
+    "@types/got": "9.6.4",
     "@types/loglevel": "1.5.4",
     "@types/micro": "7.3.3",
     "@types/mongodb": "3.1.31",
