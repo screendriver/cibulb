@@ -103,20 +103,12 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@now/node-bridge@1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@now/node-bridge/-/node-bridge-1.2.2.tgz#b4740d8806227b8dd1d4d8481e21b3b30ad299b4"
-  integrity sha512-E5xqal3QRN8RvcQ4Q82vtg/hvWmQWaIYp2bJHd550Ps/kemGabcwAAQsP/TUM/4b5oYlOmjrfuYPq9AhMvFqkQ==
-
-"@now/node@0.11.1":
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/@now/node/-/node-0.11.1.tgz#f0d2fa43ee3ded69341763b7b1c890227e90ab13"
-  integrity sha512-2nGzxozS6aH3vIOOX6xggnHNiBLuc9awAPTP2w1DGu5LWU8Jg48y8U53Hlk4/zTWqdpByw9zwndNgzyFOVQOAA==
+"@now/node@0.12.1":
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/@now/node/-/node-0.12.1.tgz#8cceae1bf8ee37d448cb3adeb6ccc5e47889d9a9"
+  integrity sha512-4Oxd9m9uD55AFbF9adsqgJkPUIEw2P6joBpLuB7s1PcQv58yRZo5aoZcVKH+d/SCEY9IcdAv24HbnQ9mf8pZ3Q==
   dependencies:
-    "@now/node-bridge" "1.2.2"
     "@types/node" "*"
-    "@zeit/ncc" "0.18.5"
-    "@zeit/ncc-watcher" "1.0.3"
 
 "@sentry/core@5.5.0":
   version "5.5.0"
@@ -298,18 +290,6 @@
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.5.tgz#9da44ed75571999b65c37b60c9b2b88db54c585d"
   integrity sha512-SCcK7mvGi3+ZNz833RRjFIxrn4gI1PPR3NtuIS+6vMkvmsGjosqTJwRt5bAEFLRz+wtJMWv8+uOnZf2hi2QXTg==
-
-"@zeit/ncc-watcher@1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@zeit/ncc-watcher/-/ncc-watcher-1.0.3.tgz#c4569d13db7b80a96a7672047c069400e69913ae"
-  integrity sha512-367wm9bGMBCwT8kHQckw8UY/iYhC9rdzj357FBoM0SjVvWv53yziEmd12RkeF1EsBs0F2a1uBYdUaUvGo6LfkA==
-  dependencies:
-    "@zeit/ncc" "^0.18.5"
-
-"@zeit/ncc@0.18.5", "@zeit/ncc@^0.18.5":
-  version "0.18.5"
-  resolved "https://registry.yarnpkg.com/@zeit/ncc/-/ncc-0.18.5.tgz#5687df6c32f1a2e2486aa110b3454ccebda4fb9c"
-  integrity sha512-F+SbvEAh8rchiRXqQbmD1UmbePY7dCOKTbvfFtbVbK2xMH/tyri5YKfNxXKK7eL9EWkkbqB3NTVQO6nokApeBA==
 
 abstract-leveldown@^6.0.0, abstract-leveldown@~6.0.0, abstract-leveldown@~6.0.1, abstract-leveldown@~6.0.3:
   version "6.0.3"
