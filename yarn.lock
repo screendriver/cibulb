@@ -103,10 +103,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@now/node@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@now/node/-/node-0.12.1.tgz#8cceae1bf8ee37d448cb3adeb6ccc5e47889d9a9"
-  integrity sha512-4Oxd9m9uD55AFbF9adsqgJkPUIEw2P6joBpLuB7s1PcQv58yRZo5aoZcVKH+d/SCEY9IcdAv24HbnQ9mf8pZ3Q==
+"@now/node@0.12.2":
+  version "0.12.2"
+  resolved "https://registry.yarnpkg.com/@now/node/-/node-0.12.2.tgz#4b78c445d6f2e9e2b2b5635c9207b657bd0075b0"
+  integrity sha512-HXs9hxsGkXnc39mJ+60V+oie48KIQ7oITluLaVbbZWTZUvt1qBy0KOyWb1z+J5t+I0YHIzlkadS8pbBZykSSeg==
   dependencies:
     "@types/node" "*"
 
