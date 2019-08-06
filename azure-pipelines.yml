@@ -10,14 +10,11 @@ steps:
   - script: yarn install --frozen-lockfile
     displayName: Install dependencies
 
-  - script: yarn lint
-    displayName: Lint source code
-
-  - script: yarn prettier:check
-    displayName: Check code format
-
-  - script: yarn copy:paste:detector
-    displayName: Copy/Paste detector
+  - script: |
+      yarn lint
+      yarn prettier:check
+      yarn copy:paste:detector
+    displayName: Check code
 
   - task: PublishPipelineArtifact@0
     displayName: Publish jscpd HTML report
