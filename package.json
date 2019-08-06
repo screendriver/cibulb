@@ -13,12 +13,8 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "prettier:check": "prettier --check 'src/**/*.ts?(x)' 'test/**/*.ts?(x)'",
     "copy:paste:detector": "jscpd src test typings",
-    "test:ci": "yarn lint && yarn prettier:check && yarn test:unit | tap-xunit > test-results.xml && yarn test:integration",
-    "test:integration": "tape -r source-map-support/register 'target/test/integration/**/*.js' | tap-nirvana",
-    "test:unit:base": "tape -r source-map-support/register 'target/test/unit/**/*.js'",
-    "test:unit": "yarn test:unit:base | tap-nirvana",
-    "test:unit:ci": "npm run test:unit:coverage | tap-xunit > target/test-results.xml",
-    "test:unit:coverage": "nyc npm run test:unit:base"
+    "test:unit": "ava",
+    "test:unit:ci": "nyc ava --tap | tap-xunit > target/test-results.xml"
   },
   "dependencies": {
     "@sentry/node": "5.5.0",
