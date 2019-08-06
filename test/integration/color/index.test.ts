@@ -1,4 +1,4 @@
-import test from 'tape';
+import test from 'ava';
 import micro from 'micro';
 import { NowRequest, NowResponse } from '@now/node';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -103,17 +103,16 @@ async function getRepositories(
 function getNameAndStatus(repos: Repository[]) {
   return repos
     .map(({ name, status }) => ({ name, status }))
-    .reduce((_, currentValue) => currentValue);
+    .reduce((_, currentValue) => currentValue, {});
 }
 
 test('returns HTTP 403 when secret is not valid', async t => {
-  t.plan(1);
   process.env.GITLAB_SECRET_TOKEN = 'foo';
   const colorFunctionService = createColorFunctionService();
   const colorFunctionUrl = await listen(colorFunctionService);
   try {
     const response = await doNetworkRequest(colorFunctionUrl);
-    t.equal(response.statusCode, 403);
+    t.deepEqual(response.statusCode, 403);
   } finally {
     colorFunctionService.close();
     deleteEnvs();
@@ -121,10 +120,9 @@ test('returns HTTP 403 when secret is not valid', async t => {
 });
 
 test('call IFTTT webhook event "ci_build_success"', async t => {
-  t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const iftttService = micro(req => {
-    t.equal(req.url, '/trigger/ci_build_success/with/key/my-key');
+    t.deepEqual(req.url, '/trigger/ci_build_success/with/key/my-key');
     return '';
   });
   const colorFunctionService = createColorFunctionService();
@@ -139,7 +137,6 @@ test('call IFTTT webhook event "ci_build_success"', async t => {
 });
 
 test('inserts repository name and status into MongoDB', async t => {
-  t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const repos = await getRepositories(mongod, mongoClient, mongoUri);
   t.deepEqual(getNameAndStatus(repos), {
@@ -149,7 +146,6 @@ test('inserts repository name and status into MongoDB', async t => {
 });
 
 test('updates repository status in MongoDB', async t => {
-  t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   await mongoClient
     .db('cibulb')

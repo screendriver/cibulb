@@ -1,4 +1,4 @@
-import test from 'tape';
+import test from 'ava';
 import sinon from 'sinon';
 import { Repository } from '../../../src/shared/mongodb';
 import { updateDb } from '../../../src/color/mongodb';
@@ -27,21 +27,18 @@ function createRepository(): Repository {
 }
 
 test('use "cibulb" db', async t => {
-  t.plan(1);
   const client = createMongoClient();
   await updateDb(client as any, createRepository());
   t.true(client.db.calledWith('cibulb'));
 });
 
 test('use "repositories" collection', async t => {
-  t.plan(1);
   const client = createMongoClient();
   await updateDb(client as any, createRepository());
   t.true(client.db().collection.calledWith('repositories'));
 });
 
 test('update DB with given repository', async t => {
-  t.plan(1);
   const repository = createRepository();
   const client = createMongoClient();
   await updateDb(client as any, repository);

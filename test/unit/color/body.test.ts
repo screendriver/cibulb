@@ -1,8 +1,7 @@
-import test from 'tape';
+import test from 'ava';
 import { isWebhookRequestBody } from '../../../src/color/body';
 
 test('returns true when all properties are set', t => {
-  t.plan(1);
   const body = {
     object_attributes: {
       id: 123,
@@ -17,7 +16,6 @@ test('returns true when all properties are set', t => {
 });
 
 test('returns false when object_attributes.id property is missing', t => {
-  t.plan(1);
   const body = {
     object_attributes: {
       ref: 'master',
@@ -31,7 +29,6 @@ test('returns false when object_attributes.id property is missing', t => {
 });
 
 test('returns false when object_attributes.ref property is missing', t => {
-  t.plan(1);
   const body = {
     object_attributes: {
       id: 123,
@@ -45,7 +42,6 @@ test('returns false when object_attributes.ref property is missing', t => {
 });
 
 test('returns false when object_attributes.status property is missing', t => {
-  t.plan(1);
   const body = {
     object_attributes: {
       id: 123,
@@ -59,7 +55,6 @@ test('returns false when object_attributes.status property is missing', t => {
 });
 
 test('returns false when project property is missing', t => {
-  t.plan(1);
   const body = {
     object_attributes: {
       id: 123,
@@ -71,7 +66,6 @@ test('returns false when project property is missing', t => {
 });
 
 test('returns false when project.path_with_namespace property is missing', t => {
-  t.plan(1);
   const body = {
     object_attributes: {
       id: 123,
@@ -84,7 +78,6 @@ test('returns false when project.path_with_namespace property is missing', t => 
 });
 
 test('returns false when all properties are missing', t => {
-  t.plan(1);
   const body = {};
   t.false(isWebhookRequestBody(body));
 });

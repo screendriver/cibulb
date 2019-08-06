@@ -1,4 +1,4 @@
-import test from 'tape';
+import test from 'ava';
 import * as Sentry from '@sentry/node';
 import { Logger } from 'loglevel';
 import sinon from 'sinon';
@@ -6,7 +6,6 @@ import { initSentry } from '../../../src/shared/sentry';
 import { Config } from '../../../src/shared/config';
 
 test('init sentry instance', t => {
-  t.plan(1);
   const init = sinon.stub();
   const sentry: Partial<typeof Sentry> = {
     init,

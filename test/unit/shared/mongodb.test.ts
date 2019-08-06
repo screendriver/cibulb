@@ -1,9 +1,8 @@
-import test from 'tape';
+import test from 'ava';
 import sinon from 'sinon';
 import { connect } from '../../../src/shared/mongodb';
 
 test('connect', async t => {
-  t.plan(1);
   const client = {
     connect: sinon.stub(),
   };
