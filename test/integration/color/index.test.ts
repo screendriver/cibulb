@@ -121,6 +121,7 @@ test('returns HTTP 403 when secret is not valid', async t => {
 
 test('call IFTTT webhook event "ci_build_success"', async t => {
   t.plan(1);
+  t.timeout(1000);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const iftttService = micro(req => {
     t.deepEqual(req.url, '/trigger/ci_build_success/with/key/my-key');
