@@ -38,6 +38,7 @@
     "@types/sinon": "7.0.13",
     "@types/tape": "4.2.33",
     "@types/test-listen": "1.1.0",
+    "ava": "2.2.0",
     "jscpd": "2.0.15",
     "mongodb-memory-server": "5.1.9",
     "now": "15.8.7",
