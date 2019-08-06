@@ -1,4 +1,4 @@
-import test from 'tape';
+import test from 'ava';
 import sinon from 'sinon';
 import { GotFn } from 'got';
 import { URL } from 'url';
@@ -21,7 +21,6 @@ function createIftttUrl(status: string): URL {
 }
 
 test('call IFTTT webhook with "success" status', async t => {
-  t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('success', config, got as GotFn);
 
@@ -30,7 +29,6 @@ test('call IFTTT webhook with "success" status', async t => {
 });
 
 test('call IFTTT webhook with "running" status', async t => {
-  t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('running', config, got as GotFn);
 
@@ -39,7 +37,6 @@ test('call IFTTT webhook with "running" status', async t => {
 });
 
 test('call IFTTT webhook with "pending" status', async t => {
-  t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('pending', config, got as GotFn);
 
@@ -48,7 +45,6 @@ test('call IFTTT webhook with "pending" status', async t => {
 });
 
 test('call IFTTT webhook with "failed" status', async t => {
-  t.plan(1);
   const got = sinon.stub().returns({ body: '' });
   await callIftttWebhook('failed', config, got as GotFn);
 
@@ -57,9 +53,8 @@ test('call IFTTT webhook with "failed" status', async t => {
 });
 
 test('return IFTTT response body', async t => {
-  t.plan(1);
   const body = 'Congratulations!';
   const got = sinon.stub().returns({ body });
   const actual = await callIftttWebhook('success', config, got as GotFn);
-  t.equal(actual, body);
+  t.deepEqual(actual, body);
 });

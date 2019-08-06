@@ -1,8 +1,7 @@
-import test from 'tape';
+import test from 'ava';
 import { getConfig, Config } from '../../../src/shared/config';
 
 test('create config object from environment variables', t => {
-  t.plan(1);
   process.env.GITLAB_SECRET_TOKEN = 'my-secret';
   process.env.IFTTT_BASE_URL = 'http://localhost';
   process.env.IFTTT_KEY = 'my-key';
@@ -25,7 +24,6 @@ test('create config object from environment variables', t => {
 });
 
 test('initalize config object with defaults when env variables are not set', t => {
-  t.plan(1);
   const actual = getConfig();
   const expected: Config = {
     gitlabSecretToken: '',
