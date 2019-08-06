@@ -90,7 +90,7 @@ async function getRepositories(
   setupEnvs(iftttServiceUrl, mongoUri);
   try {
     await doNetworkRequest(colorFunctionUrl);
-    return mongoClient
+    return await mongoClient
       .db('cibulb')
       .collection<Repository>('repositories')
       .find()
