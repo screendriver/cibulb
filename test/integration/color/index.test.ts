@@ -121,21 +121,17 @@ test('returns HTTP 403 when secret is not valid', async t => {
 
 test('call IFTTT webhook event "ci_build_success"', async t => {
   t.plan(1);
-  t.timeout(1000);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
-  const iftttService = micro(req => {
+  const iftttService = micro(async req => {
     t.deepEqual(req.url, '/trigger/ci_build_success/with/key/my-key');
+    await closeAll(iftttService, colorFunctionService, mongoClient, mongod);
     return '';
   });
   const colorFunctionService = createColorFunctionService();
   const iftttServiceUrl = await listen(iftttService);
   const colorFunctionUrl = await listen(colorFunctionService);
   setupEnvs(iftttServiceUrl, mongoUri);
-  try {
-    await doNetworkRequest(colorFunctionUrl);
-  } finally {
-    await closeAll(iftttService, colorFunctionService, mongoClient, mongod);
-  }
+  await doNetworkRequest(colorFunctionUrl);
 });
 
 test('inserts repository name and status into MongoDB', async t => {
