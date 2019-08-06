@@ -103,7 +103,7 @@ async function getRepositories(
 function getNameAndStatus(repos: Repository[]) {
   return repos
     .map(({ name, status }) => ({ name, status }))
-    .reduce((_, currentValue) => currentValue);
+    .reduce((_, currentValue) => currentValue, {});
 }
 
 test('returns HTTP 403 when secret is not valid', async t => {
