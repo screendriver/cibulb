@@ -9,7 +9,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "build": "tsc --build",
+    "compile": "tsc --build",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "prettier:check": "prettier --check 'src/**/*.ts?(x)' 'test/**/*.ts?(x)'",
     "copy:paste:detector": "jscpd src test typings",
