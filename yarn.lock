@@ -2491,10 +2491,10 @@ normalize-url@^4.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.3.0.tgz#9c49e10fc1876aeb76dba88bf1b2b5d9fa57b2ee"
   integrity sha512-0NLtR71o4k6GLP+mr6Ty34c5GA6CMoEsncKJxvQd8NzPxaHRJNnb5gZE8R1XF4CPIS7QPHLJ74IFszwtNVAHVQ==
 
-now@15.8.7:
-  version "15.8.7"
-  resolved "https://registry.yarnpkg.com/now/-/now-15.8.7.tgz#bce7fb56a1583cede88196bf0f17e7e3c2764cf0"
-  integrity sha512-jrqfRhCiOND+hdIc7zPtRHXBlrBCFAxSGRZYMN+8LSKNlixrSe+pUDG/Lp732nDP+33+GYFjXY8jxLi5qu5yJA==
+now@16.1.0:
+  version "16.1.0"
+  resolved "https://registry.yarnpkg.com/now/-/now-16.1.0.tgz#4e1a649587f8b2466d40dfbe92a49e17233c36d4"
+  integrity sha512-loIcQ4KQCrAzg6PnlPmpBD3wa05Bd6LhvXbDcDD0jFsja2B0oKDQ3wMEiAExUIZkkidWM9quUPd3Y4dOzz09rw==
 
 nyc@14.1.1:
   version "14.1.1"
