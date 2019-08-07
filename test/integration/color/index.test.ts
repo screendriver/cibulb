@@ -39,9 +39,8 @@ function deleteEnvs() {
 }
 
 function createColorFunctionService() {
-  return micro(async (req, res) => {
-    await colorFunction(req as NowRequest, res as NowResponse);
-    res.end();
+  return micro((req, res) => {
+    return colorFunction(req as NowRequest, res as NowResponse);
   });
 }
 
@@ -90,7 +89,7 @@ async function getRepositories(
   setupEnvs(iftttServiceUrl, mongoUri);
   try {
     await doNetworkRequest(colorFunctionUrl);
-    return await mongoClient
+    return mongoClient
       .db('cibulb')
       .collection<Repository>('repositories')
       .find()
@@ -100,7 +99,7 @@ async function getRepositories(
   }
 }
 
-function getNameAndStatus(repos: Repository[]) {
+function getNameAndStatus(repos: readonly Repository[]) {
   return repos
     .map(({ name, status }) => ({ name, status }))
     .reduce((_, currentValue) => currentValue, {});
@@ -134,7 +133,7 @@ test('call IFTTT webhook event "ci_build_success"', async t => {
   await doNetworkRequest(colorFunctionUrl);
 });
 
-test('inserts repository name and status into MongoDB', async t => {
+test.serial('inserts repository name and status into MongoDB', async t => {
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const repos = await getRepositories(mongod, mongoClient, mongoUri);
   t.deepEqual(getNameAndStatus(repos), {
@@ -143,7 +142,7 @@ test('inserts repository name and status into MongoDB', async t => {
   });
 });
 
-test('updates repository status in MongoDB', async t => {
+test.serial('updates repository status in MongoDB', async t => {
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   await mongoClient
     .db('cibulb')

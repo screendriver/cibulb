@@ -13,5 +13,5 @@ export async function updateDb(
     { $set: { status: repository.status } },
     { upsert: true },
   );
-  return await repositoriesCollection.find().toArray();
+  return repositoriesCollection.find().toArray();
 }
