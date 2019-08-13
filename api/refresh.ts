@@ -3,23 +3,27 @@ import log from 'loglevel';
 import * as Sentry from '@sentry/node';
 import { MongoClient } from 'mongodb';
 import got from 'got';
+import { Server } from 'http';
 import { getConfig } from './shared/config';
 import { initSentry } from './shared/sentry';
 import { startMongoDbMemoryServer, connect } from './shared/mongodb';
 import { allRepositories } from './refresh/mongodb';
 import { getRepositoriesStatus } from './shared/repositories';
-import { callIftttWebhook } from './shared/ifttt';
+import { callIftttWebhook, startLocalIftttServer } from './shared/ifttt';
 
 log.enableAll();
 
 export default async function refresh(_req: NowRequest, res: NowResponse) {
+  let localIftttServer: Server | undefined;
   if (process.env.NODE_ENV === 'development') {
     process.env.MONGO_URI = await startMongoDbMemoryServer();
+    localIftttServer = await startLocalIftttServer();
   }
   const config = getConfig();
   initSentry(Sentry, config, log);
+  let mongoClient: MongoClient | undefined;
   try {
-    const mongoClient = await connect(
+    mongoClient = await connect(
       MongoClient,
       config.mongoDbUri,
     );
@@ -29,10 +33,16 @@ export default async function refresh(_req: NowRequest, res: NowResponse) {
     log.info(`Calling IFTTT webhook with "${overallStatus}" status`);
     const hookResponse = await callIftttWebhook(overallStatus, config, got);
     log.info(hookResponse);
-    mongoClient.close();
     res.statusCode = 200;
     res.send(hookResponse);
   } catch (e) {
     Sentry.captureException(e);
+  } finally {
+    if (mongoClient) {
+      mongoClient.close();
+    }
+    if (localIftttServer) {
+      localIftttServer.close();
+    }
   }
 }
