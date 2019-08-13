@@ -1,7 +1,6 @@
 {
   "files": [],
   "references": [
-    { "path": "./api" },
     { "path": "./api/color" },
     { "path": "./api/refresh" },
     { "path": "./api/shared" },
