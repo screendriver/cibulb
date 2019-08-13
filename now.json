@@ -2,5 +2,17 @@
   "version": 2,
   "name": "cibulb",
   "alias": "cibulb.now.sh",
-  "regions": ["bru"]
+  "regions": ["bru"],
+  "routes": [
+    {
+      "src": "/api/color",
+      "methods": ["POST"],
+      "dest": "/api/color"
+    },
+    {
+      "src": "/api/refresh",
+      "methods": ["GET"],
+      "dest": "/api/refresh"
+    }
+  ]
 }
