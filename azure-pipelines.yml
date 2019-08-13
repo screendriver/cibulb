@@ -23,7 +23,7 @@ steps:
       artifactName: 'CopyPasteDetectorReport'
       targetPath: 'target/jscpd-report.html'
 
-  - script: yarn build
+  - script: yarn compile
     displayName: Compile source code
 
   - script: npm run test:unit:ci
