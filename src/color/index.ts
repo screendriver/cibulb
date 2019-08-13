@@ -2,6 +2,7 @@ import { NowRequest, NowResponse } from '@now/node';
 import log from 'loglevel';
 import * as Sentry from '@sentry/node';
 import { json } from 'micro';
+import { startMongoDbMemoryServer } from '../shared/mongodb';
 import { getConfig } from '../shared/config';
 import { initSentry } from '../shared/sentry';
 import { WebhookRequestBody } from './body';
@@ -11,6 +12,9 @@ import { run } from './run';
 log.enableAll();
 
 export = async function color(req: NowRequest, res: NowResponse) {
+  if (process.env.NODE_ENV === 'development') {
+    process.env.MONGO_URI = await startMongoDbMemoryServer();
+  }
   const config = getConfig();
   initSentry(Sentry, config, log);
   try {

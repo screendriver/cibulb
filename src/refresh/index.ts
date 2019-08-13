@@ -5,7 +5,7 @@ import { MongoClient } from 'mongodb';
 import got from 'got';
 import { getConfig } from '../shared/config';
 import { initSentry } from '../shared/sentry';
-import { connect } from '../shared/mongodb';
+import { startMongoDbMemoryServer, connect } from '../shared/mongodb';
 import { allRepositories } from './mongodb';
 import { getRepositoriesStatus } from '../shared/repositories';
 import { callIftttWebhook } from '../shared/ifttt';
@@ -13,6 +13,9 @@ import { callIftttWebhook } from '../shared/ifttt';
 log.enableAll();
 
 export = async function refresh(_req: NowRequest, res: NowResponse) {
+  if (process.env.NODE_ENV === 'development') {
+    process.env.MONGO_URI = await startMongoDbMemoryServer();
+  }
   const config = getConfig();
   initSentry(Sentry, config, log);
   try {
