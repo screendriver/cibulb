@@ -29,7 +29,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@now/node": "0.12.5",
+    "@now/node": "0.12.6",
     "@types/got": "9.6.6",
     "@types/loglevel": "1.6.3",
     "@types/micro": "7.3.3",
