@@ -1,5 +1,5 @@
 import test from 'tape';
-import { getConfig, Config } from '../../../src/shared/config';
+import { getConfig, Config } from '../../../api/shared/config';
 
 test('create config object from environment variables', t => {
   t.plan(1);

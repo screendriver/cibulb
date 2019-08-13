@@ -1,6 +1,6 @@
 import test from 'tape';
 import { IncomingMessage } from 'http';
-import { xGitlabToken } from '../../../src/color/headers';
+import { xGitlabToken } from '../../../api/color/headers';
 
 test('returns "x-gitlab-token" from request headers', t => {
   t.plan(1);

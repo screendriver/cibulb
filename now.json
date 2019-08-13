@@ -2,21 +2,5 @@
   "version": 2,
   "name": "cibulb",
   "alias": "cibulb.now.sh",
-  "regions": ["bru"],
-  "builds": [
-    { "src": "target/src/color/index.js", "use": "@now/node" },
-    { "src": "target/src/refresh/index.js", "use": "@now/node" }
-  ],
-  "routes": [
-    {
-      "src": "/api/color",
-      "methods": ["POST"],
-      "dest": "/target/src/color/index.js"
-    },
-    {
-      "src": "/api/refresh",
-      "methods": ["GET"],
-      "dest": "/target/src/refresh/index.js"
-    }
-  ]
+  "regions": ["bru"]
 }

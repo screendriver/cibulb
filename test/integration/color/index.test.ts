@@ -6,8 +6,8 @@ import { MongoClient } from 'mongodb';
 import listen from 'test-listen';
 import got from 'got';
 import log from 'loglevel';
-import colorFunction from '../../../src/color/';
-import { Repository } from '../../../src/shared/mongodb';
+import colorFunction from '../../../api/color';
+import { Repository } from '../../../api/shared/mongodb';
 import { Server } from 'http';
 
 log.disableAll();

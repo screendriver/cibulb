@@ -2,8 +2,8 @@ import test from 'tape';
 import sinon from 'sinon';
 import { GotFn } from 'got';
 import { URL } from 'url';
-import { Config } from '../../../src/shared/config';
-import { callIftttWebhook } from '../../../src/shared/ifttt';
+import { Config } from '../../../api/shared/config';
+import { callIftttWebhook } from '../../../api/shared/ifttt';
 
 const config: Config = {
   gitlabSecretToken: 'my-secret',

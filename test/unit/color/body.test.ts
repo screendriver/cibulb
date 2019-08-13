@@ -1,5 +1,5 @@
 import test from 'tape';
-import { isWebhookRequestBody } from '../../../src/color/body';
+import { isWebhookRequestBody } from '../../../api/color/body';
 
 test('returns true when all properties are set', t => {
   t.plan(1);

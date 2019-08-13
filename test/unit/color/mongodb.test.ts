@@ -1,7 +1,7 @@
 import test from 'tape';
 import sinon from 'sinon';
-import { Repository } from '../../../src/shared/mongodb';
-import { updateDb } from '../../../src/color/mongodb';
+import { Repository } from '../../../api/shared/mongodb';
+import { updateDb } from '../../../api/color/mongodb';
 
 function createMongoClient() {
   return {

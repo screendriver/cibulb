@@ -1,7 +1,7 @@
 import test from 'tape';
 import sinon from 'sinon';
-import { Repository } from '../../../src/shared/mongodb';
-import { allRepositories } from '../../../src/refresh/mongodb';
+import { Repository } from '../../../api/shared/mongodb';
+import { allRepositories } from '../../../api/refresh/mongodb';
 
 function createMongoClient(repositoriesToReturn: Repository[] = []) {
   return {

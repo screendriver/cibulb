@@ -1,5 +1,5 @@
 import test from 'tape';
-import { isBranchAllowed } from '../../../src/color/branches';
+import { isBranchAllowed } from '../../../api/color/branches';
 
 test('return true when branch is "master', t => {
   t.plan(1);

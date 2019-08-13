@@ -2,8 +2,8 @@ import test from 'tape';
 import * as Sentry from '@sentry/node';
 import { Logger } from 'loglevel';
 import sinon from 'sinon';
-import { initSentry } from '../../../src/shared/sentry';
-import { Config } from '../../../src/shared/config';
+import { initSentry } from '../../../api/shared/sentry';
+import { Config } from '../../../api/shared/config';
 
 test('init sentry instance', t => {
   t.plan(1);

@@ -1,6 +1,6 @@
 import test from 'tape';
 import sinon from 'sinon';
-import { connect } from '../../../src/shared/mongodb';
+import { connect } from '../../../api/shared/mongodb';
 
 test('connect', async t => {
   t.plan(1);

@@ -1,9 +1,10 @@
 {
   "files": [],
   "references": [
-    { "path": "./src/color" },
-    { "path": "./src/refresh" },
-    { "path": "./src/shared" },
+    { "path": "./api" },
+    { "path": "./api/color" },
+    { "path": "./api/refresh" },
+    { "path": "./api/shared" },
     { "path": "./test/unit/color" },
     { "path": "./test/integration/color" },
     { "path": "./test/unit/refresh" },
