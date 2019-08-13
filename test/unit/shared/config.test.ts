@@ -29,7 +29,7 @@ test('initalize config object with defaults when env variables are not set', t =
   const actual = getConfig();
   const expected: Config = {
     gitlabSecretToken: '',
-    iftttBaseUrl: 'https://maker.ifttt.com',
+    iftttBaseUrl: '',
     iftttKey: '',
     mongoDbUri: '',
     sentryDSN: '',
