@@ -3,17 +3,16 @@
   "temp-dir": "./target/.nyc_output",
   "report-dir": "./target/coverage",
   "include": [
-    "target/src/**/*.js"
+    "target/api/**/*.js"
   ],
   "exclude": [
-    "target/src/color/index.js",
-    "target/src/color/run.js",
-    "target/src/refresh/index.js"
+    "target/api/color/index.js",
+    "target/api/color/run.js",
+    "target/api/refresh/index.js"
   ],
   "exclude-after-remap": false,
   "reporter": [
     "lcov",
-    "cobertura",
     "text-summary"
   ]
 }
