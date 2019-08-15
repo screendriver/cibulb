@@ -2,6 +2,8 @@
   "all": true,
   "temp-dir": "./target/.nyc_output",
   "report-dir": "./target/coverage",
+  "cache-dir": "target/.cache",
+  "exclude-after-remap": false,
   "include": [
     "target/api/**/*.js"
   ],
@@ -10,9 +12,9 @@
     "target/api/color/run.js",
     "target/api/refresh/index.js"
   ],
-  "exclude-after-remap": false,
   "reporter": [
     "lcov",
+    "text",
     "text-summary"
   ]
 }
