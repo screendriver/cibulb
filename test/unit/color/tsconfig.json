@@ -1,7 +1,7 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../../target/test/unit/Color",
+    "outDir": "../../../target/test/unit/color",
     "rootDir": "."
   },
   "include": ["**/*"],
