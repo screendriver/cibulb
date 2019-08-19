@@ -18,7 +18,7 @@
     "test:unit:coverage": "nyc tape -r source-map-support/register 'target/test/unit/**/*.js' | tap-nyc"
   },
   "dependencies": {
-    "@sentry/node": "5.6.1",
+    "@sentry/node": "5.6.2",
     "got": "9.6.0",
     "loglevel": "1.6.3",
     "micro": "9.3.4",
