@@ -26,7 +26,7 @@ jobs:
           yarn test:integration
       - name: Production deploy to ZEIT Now
         if: github.ref == 'refs/heads/master'
-        run: yarn now -t $NOW_TOKEN -e GITLAB_SECRET_TOKEN -e IFTTT_BASE_URL -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN --target production
+        run: yarn now -t $NOW_TOKEN -e GITLAB_SECRET_TOKEN -e IFTTT_BASE_URL -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN --prod
         env:
           NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
           GITLAB_SECRET_TOKEN: ${{ secrets.GITLAB_SECRET_TOKEN }}
