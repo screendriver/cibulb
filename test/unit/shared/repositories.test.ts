@@ -1,51 +1,45 @@
-import test from 'tape';
 import { Repository } from '../../../api/shared/mongodb';
 import { getRepositoriesStatus } from '../../../api/shared/repositories';
 
-test('returns "success" when repositories are empty', t => {
-  t.plan(1);
+test('returns "success" when repositories are empty', () => {
   const status = getRepositoriesStatus([]);
-  t.equal(status, 'success');
+  expect(status).toBe('success');
 });
 
-test('returns "success" when all repositories are in status "success"', t => {
-  t.plan(1);
+test('returns "success" when all repositories are in status "success"', () => {
   const repositories: Repository[] = [
     { name: 'repoA', status: 'success' },
     { name: 'repoB', status: 'success' },
   ];
   const status = getRepositoriesStatus(repositories);
-  t.equal(status, 'success');
+  expect(status).toBe('success');
 });
 
-test('returns "pending" when one repository is in status "pending"', t => {
-  t.plan(1);
+test('returns "pending" when one repository is in status "pending"', () => {
   const repositories: Repository[] = [
     { name: 'repoA', status: 'success' },
     { name: 'repoB', status: 'failed' },
     { name: 'repoC', status: 'pending' },
   ];
   const status = getRepositoriesStatus(repositories);
-  t.equal(status, 'pending');
+  expect(status).toBe('pending');
 });
 
-test('returns "pending" when one repository is in status "running"', t => {
-  t.plan(1);
+test('returns "pending" when one repository is in status "running"', () => {
   const repositories: Repository[] = [
     { name: 'repoA', status: 'success' },
     { name: 'repoB', status: 'failed' },
     { name: 'repoC', status: 'running' },
   ];
   const status = getRepositoriesStatus(repositories);
-  t.equal(status, 'pending');
+  expect(status).toBe('pending');
 });
 
-test('returns "failed" when one repository is in status "failed"', t => {
-  t.plan(1);
+test('returns "failed" when one repository is in status "failed"', () => {
   const repositories: Repository[] = [
     { name: 'repoA', status: 'success' },
     { name: 'repoB', status: 'failed' },
   ];
   const status = getRepositoriesStatus(repositories);
-  t.equal(status, 'failed');
+  expect(status).toBe('failed');
 });

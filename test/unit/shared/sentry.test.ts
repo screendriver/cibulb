@@ -1,13 +1,10 @@
-import test from 'tape';
 import * as Sentry from '@sentry/node';
 import { Logger } from 'loglevel';
-import sinon from 'sinon';
 import { initSentry } from '../../../api/shared/sentry';
 import { Config } from '../../../api/shared/config';
 
-test('init sentry instance', t => {
-  t.plan(1);
-  const init = sinon.stub();
+test('init sentry instance', () => {
+  const init = jest.fn();
   const sentry: Partial<typeof Sentry> = {
     init,
   };
@@ -15,8 +12,8 @@ test('init sentry instance', t => {
     sentryDSN: 'https://123@sentry.io/456',
   };
   const logger: Partial<Logger> = {
-    error: sinon.stub(),
+    error: jest.fn(),
   };
   initSentry(sentry as typeof Sentry, config as Config, logger as Logger);
-  t.true(init.calledWith({ dsn: 'https://123@sentry.io/456' }));
+  expect(init).toHaveBeenCalledWith({ dsn: 'https://123@sentry.io/456' });
 });

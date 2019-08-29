@@ -1,8 +1,6 @@
-import test from 'tape';
 import { getConfig, Config } from '../../../api/shared/config';
 
-test('create config object from environment variables', t => {
-  t.plan(1);
+test('create config object from environment variables', () => {
   process.env.GITLAB_SECRET_TOKEN = 'my-secret';
   process.env.IFTTT_BASE_URL = 'http://localhost';
   process.env.IFTTT_KEY = 'my-key';
@@ -21,11 +19,10 @@ test('create config object from environment variables', t => {
   delete process.env.IFTTT_KEY;
   delete process.env.MONGO_URI;
   delete process.env.SENTRY_DSN;
-  t.deepEqual(actual, expected);
+  expect(actual).toEqual(expected);
 });
 
-test('initalize config object with defaults when env variables are not set', t => {
-  t.plan(1);
+test('initalize config object with defaults when env variables are not set', () => {
   const actual = getConfig();
   const expected: Config = {
     gitlabSecretToken: '',
@@ -34,5 +31,5 @@ test('initalize config object with defaults when env variables are not set', t =
     mongoDbUri: '',
     sentryDSN: '',
   };
-  t.deepEqual(actual, expected);
+  expect(actual).toEqual(expected);
 });

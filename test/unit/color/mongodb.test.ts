@@ -1,21 +1,19 @@
-import test from 'tape';
-import sinon from 'sinon';
 import { Repository } from '../../../api/shared/mongodb';
 import { updateDb } from '../../../api/color/mongodb';
 
 function createMongoClient() {
   return {
-    db: sinon.stub().returns({
-      collection: sinon.stub().returns({
-        findOneAndUpdate: sinon.stub(),
+    db: jest.fn().mockReturnValue({
+      collection: jest.fn().mockReturnValue({
+        findOneAndUpdate: jest.fn(),
         find() {
           return {
-            toArray: sinon.stub(),
+            toArray: jest.fn(),
           };
         },
       }),
     }),
-    close: sinon.stub(),
+    close: jest.fn(),
   };
 }
 
@@ -26,33 +24,25 @@ function createRepository(): Repository {
   };
 }
 
-test('use "cibulb" db', async t => {
-  t.plan(1);
+test('use "cibulb" db', async () => {
   const client = createMongoClient();
   await updateDb(client as any, createRepository());
-  t.true(client.db.calledWith('cibulb'));
+  expect(client.db).toHaveBeenCalledWith('cibulb');
 });
 
-test('use "repositories" collection', async t => {
-  t.plan(1);
+test('use "repositories" collection', async () => {
   const client = createMongoClient();
   await updateDb(client as any, createRepository());
-  t.true(client.db().collection.calledWith('repositories'));
+  expect(client.db().collection).toHaveBeenCalledWith('repositories');
 });
 
-test('update DB with given repository', async t => {
-  t.plan(1);
+test('update DB with given repository', async () => {
   const repository = createRepository();
   const client = createMongoClient();
   await updateDb(client as any, repository);
-  t.true(
-    client
-      .db()
-      .collection()
-      .findOneAndUpdate.calledWith(
-        { name: repository.name },
-        { $set: { status: repository.status } },
-        { upsert: true },
-      ),
+  expect(client.db().collection().findOneAndUpdate).toHaveBeenCalledWith(
+    { name: repository.name },
+    { $set: { status: repository.status } },
+    { upsert: true },
   );
 });

@@ -1,16 +1,13 @@
-import test from 'tape';
-import sinon from 'sinon';
 import { connect } from '../../../api/shared/mongodb';
 
-test('connect', async t => {
-  t.plan(1);
+test('connect', async () => {
   const client = {
-    connect: sinon.stub(),
+    connect: jest.fn(),
   };
   const dbUri = 'mongodb://localhost';
   await connect(
     client as any,
     dbUri,
   );
-  t.true(client.connect.calledWith(dbUri, { useNewUrlParser: true }));
+  expect(client.connect).toHaveBeenCalledWith(dbUri, { useNewUrlParser: true });
 });
