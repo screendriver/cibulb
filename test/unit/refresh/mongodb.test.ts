@@ -1,13 +1,11 @@
-import test from 'tape';
-import sinon from 'sinon';
 import { Repository } from '../../../api/shared/mongodb';
 import { allRepositories } from '../../../api/refresh/mongodb';
 
 function createMongoClient(repositoriesToReturn: Repository[] = []) {
   return {
-    db: sinon.stub().returns({
-      collection: sinon.stub().returns({
-        find: sinon.stub().returns({
+    db: jest.fn().mockReturnValue({
+      collection: jest.fn().mockReturnValue({
+        find: jest.fn().mockReturnValue({
           toArray() {
             return repositoriesToReturn;
           },
@@ -17,24 +15,21 @@ function createMongoClient(repositoriesToReturn: Repository[] = []) {
   };
 }
 
-test('use "cibulb" db', async t => {
-  t.plan(1);
+test('use "cibulb" db', async () => {
   const client = createMongoClient();
   await allRepositories(client as any);
-  t.true(client.db.calledWith('cibulb'));
+  expect(client.db).toHaveBeenCalledWith('cibulb');
 });
 
-test('use "repositories" collection', async t => {
-  t.plan(1);
+test('use "repositories" collection', async () => {
   const client = createMongoClient();
   await allRepositories(client as any);
-  t.true(client.db().collection.calledWith('repositories'));
+  expect(client.db().collection).toHaveBeenCalledWith('repositories');
 });
 
-test('return all found repositories', async t => {
-  t.plan(1);
+test('return all found repositories', async () => {
   const foundRepositories: Repository[] = [];
   const client = createMongoClient(foundRepositories);
   const actual = await allRepositories(client as any);
-  t.equal(actual, foundRepositories);
+  expect(actual).toEqual(foundRepositories);
 });

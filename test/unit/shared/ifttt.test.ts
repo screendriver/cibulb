@@ -1,5 +1,3 @@
-import test from 'tape';
-import sinon from 'sinon';
 import { GotFn } from 'got';
 import { URL } from 'url';
 import { Config } from '../../../api/shared/config';
@@ -20,46 +18,41 @@ function createIftttUrl(status: string): URL {
   );
 }
 
-test('call IFTTT webhook with "success" status', async t => {
-  t.plan(1);
-  const got = sinon.stub().returns({ body: '' });
+test('call IFTTT webhook with "success" status', async () => {
+  const got = jest.fn().mockResolvedValue({ body: '' });
   await callIftttWebhook('success', config, got as GotFn);
 
   const iftttUrl = createIftttUrl('ci_build_success');
-  t.true(got.calledWith(iftttUrl));
+  expect(got).toHaveBeenCalledWith(iftttUrl);
 });
 
-test('call IFTTT webhook with "running" status', async t => {
-  t.plan(1);
-  const got = sinon.stub().returns({ body: '' });
+test('call IFTTT webhook with "running" status', async () => {
+  const got = jest.fn().mockResolvedValue({ body: '' });
   await callIftttWebhook('running', config, got as GotFn);
 
   const iftttUrl = createIftttUrl('ci_build_pending');
-  t.true(got.calledWith(iftttUrl));
+  expect(got).toHaveBeenCalledWith(iftttUrl);
 });
 
-test('call IFTTT webhook with "pending" status', async t => {
-  t.plan(1);
-  const got = sinon.stub().returns({ body: '' });
+test('call IFTTT webhook with "pending" status', async () => {
+  const got = jest.fn().mockResolvedValue({ body: '' });
   await callIftttWebhook('pending', config, got as GotFn);
 
   const iftttUrl = createIftttUrl('ci_build_pending');
-  t.true(got.calledWith(iftttUrl));
+  expect(got).toHaveBeenCalledWith(iftttUrl);
 });
 
-test('call IFTTT webhook with "failed" status', async t => {
-  t.plan(1);
-  const got = sinon.stub().returns({ body: '' });
+test('call IFTTT webhook with "failed" status', async () => {
+  const got = jest.fn().mockResolvedValue({ body: '' });
   await callIftttWebhook('failed', config, got as GotFn);
 
   const iftttUrl = createIftttUrl('ci_build_failure');
-  t.true(got.calledWith(iftttUrl));
+  expect(got).toHaveBeenCalledWith(iftttUrl);
 });
 
-test('return IFTTT response body', async t => {
-  t.plan(1);
+test('return IFTTT response body', async () => {
   const body = 'Congratulations!';
-  const got = sinon.stub().returns({ body });
+  const got = jest.fn().mockResolvedValue({ body });
   const actual = await callIftttWebhook('success', config, got as GotFn);
-  t.equal(actual, body);
+  expect(actual).toEqual(body);
 });
