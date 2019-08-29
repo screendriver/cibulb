@@ -19,25 +19,6 @@ const noContentResult: Result = {
   statusCode: 204,
 };
 
-export async function run(
-  config: Config,
-  requestBody: WebhookRequestBody,
-  xGitlabToken: string,
-): Promise<Result> {
-  const { project } = requestBody;
-  if (project) {
-    log.info(`Called from repository ${project.path_with_namespace}`);
-  }
-  const isSecretValid = xGitlabToken === config.gitlabSecretToken;
-  return !isSecretValid
-    ? forbidden()
-    : !isWebhookRequestBody(requestBody)
-    ? noContentResult
-    : isBranchAllowed(requestBody.object_attributes.ref)
-    ? ifttt(requestBody, config)
-    : wrongBranch(requestBody);
-}
-
 function wrongBranch(requestBody: WebhookRequestBody): Result {
   log.info(
     `Called from "${requestBody.object_attributes.ref}" instead of "master" branch. Doing nothing.`,
@@ -75,4 +56,23 @@ function forbidden(): Result {
   log.error(message);
   Sentry.captureMessage(message, Sentry.Severity.Error);
   return { statusCode: 403, text: 'Forbidden' };
+}
+
+export async function run(
+  config: Config,
+  requestBody: WebhookRequestBody,
+  xGitlabToken: string,
+): Promise<Result> {
+  const { project } = requestBody;
+  if (project) {
+    log.info(`Called from repository ${project.path_with_namespace}`);
+  }
+  const isSecretValid = xGitlabToken === config.gitlabSecretToken;
+  return !isSecretValid
+    ? forbidden()
+    : !isWebhookRequestBody(requestBody)
+    ? noContentResult
+    : isBranchAllowed(requestBody.object_attributes.ref)
+    ? ifttt(requestBody, config)
+    : wrongBranch(requestBody);
 }
