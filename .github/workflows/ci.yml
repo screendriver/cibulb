@@ -21,7 +21,7 @@ jobs:
         run: yarn compile
       - name: Run tests
         run: |
-          yarn test:unit:coverage
+          yarn test:unit --coverage
           yarn test:integration
       - name: Production deploy to ZEIT Now
         if: github.ref == 'refs/heads/master'
