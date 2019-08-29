@@ -10,7 +10,7 @@
   },
   "scripts": {
     "compile": "tsc --build",
-    "lint": "eslint --ignore-path .gitignore . --ext ts api test",
+    "lint": "eslint --ignore-path .gitignore --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
     "test:integration": "tape -r source-map-support/register 'target/test/integration/**/*.js' | tap-nirvana",
     "test:unit": "tape -r source-map-support/register 'target/test/unit/**/*.js' | tap-nirvana",
