@@ -12,8 +12,8 @@
     "compile": "tsc --build",
     "lint": "eslint --ignore-path .gitignore --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
-    "test:integration": "jest target/test/integration",
-    "test:unit": "jest target/test/unit"
+    "test:integration": "jest test/integration",
+    "test:unit": "jest test/unit"
   },
   "dependencies": {
     "@sentry/node": "5.6.2",
