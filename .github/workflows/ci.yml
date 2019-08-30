@@ -23,6 +23,11 @@ jobs:
         run: |
           yarn test:unit --coverage
           yarn test:integration
+      - name: Upload code coverage to Codecov
+        uses: codecov/codecov-action@v1.0.2
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          file: target/coverage/clover.xml
       - name: Production deploy to ZEIT Now
         if: github.ref == 'refs/heads/master'
         run: yarn now -t $NOW_TOKEN -e GITLAB_SECRET_TOKEN -e IFTTT_BASE_URL -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN --prod
