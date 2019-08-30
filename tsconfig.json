@@ -1,12 +1,22 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./api/color" },
-    { "path": "./api/refresh" },
-    { "path": "./api/shared" },
-    { "path": "./test/unit/color" },
-    { "path": "./test/integration/color" },
-    { "path": "./test/unit/refresh" },
-    { "path": "./test/unit/shared" }
-  ]
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "outDir": "target",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "importHelpers": true,
+    "sourceMap": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "incremental": true,
+    "lib": ["es2018"]
+  },
+  "exclude": ["node_modules"],
+  "include": ["api", "test"]
 }

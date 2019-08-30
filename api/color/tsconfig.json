@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../../target/api/color",
-    "rootDir": "."
-  },
-  "include": ["**/*"],
-  "references": [{ "path": "../shared" }]
-}
