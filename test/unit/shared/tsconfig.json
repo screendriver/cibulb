@@ -1,9 +1,0 @@
-{
-  "extends": "../../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "../../../target/test/unit/shared",
-    "rootDir": "."
-  },
-  "include": ["**/*"],
-  "references": [{ "path": "../../../api/shared" }]
-}
