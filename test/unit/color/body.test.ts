@@ -1,6 +1,7 @@
+import test from 'ava';
 import { isWebhookRequestBody } from '../../../api/color/body';
 
-test('returns true when all properties are set', () => {
+test('returns true when all properties are set', t => {
   const body = {
     object_attributes: {
       id: 123,
@@ -11,10 +12,10 @@ test('returns true when all properties are set', () => {
       path_with_namespace: 'my-project',
     },
   };
-  expect(isWebhookRequestBody(body)).toBe(true);
+  t.is(isWebhookRequestBody(body), true);
 });
 
-test('returns false when object_attributes.id property is missing', () => {
+test('returns false when object_attributes.id property is missing', t => {
   const body = {
     object_attributes: {
       ref: 'master',
@@ -24,10 +25,10 @@ test('returns false when object_attributes.id property is missing', () => {
       path_with_namespace: 'my-project',
     },
   };
-  expect(isWebhookRequestBody(body)).toBe(false);
+  t.is(isWebhookRequestBody(body), false);
 });
 
-test('returns false when object_attributes.ref property is missing', () => {
+test('returns false when object_attributes.ref property is missing', t => {
   const body = {
     object_attributes: {
       id: 123,
@@ -37,10 +38,10 @@ test('returns false when object_attributes.ref property is missing', () => {
       path_with_namespace: 'my-project',
     },
   };
-  expect(isWebhookRequestBody(body)).toBe(false);
+  t.is(isWebhookRequestBody(body), false);
 });
 
-test('returns false when object_attributes.status property is missing', () => {
+test('returns false when object_attributes.status property is missing', t => {
   const body = {
     object_attributes: {
       id: 123,
@@ -50,10 +51,10 @@ test('returns false when object_attributes.status property is missing', () => {
       path_with_namespace: 'my-project',
     },
   };
-  expect(isWebhookRequestBody(body)).toBe(false);
+  t.is(isWebhookRequestBody(body), false);
 });
 
-test('returns false when project property is missing', () => {
+test('returns false when project property is missing', t => {
   const body = {
     object_attributes: {
       id: 123,
@@ -61,10 +62,10 @@ test('returns false when project property is missing', () => {
       status: 'success',
     },
   };
-  expect(isWebhookRequestBody(body)).toBe(false);
+  t.is(isWebhookRequestBody(body), false);
 });
 
-test('returns false when project.path_with_namespace property is missing', () => {
+test('returns false when project.path_with_namespace property is missing', t => {
   const body = {
     object_attributes: {
       id: 123,
@@ -73,10 +74,10 @@ test('returns false when project.path_with_namespace property is missing', () =>
     },
     project: {},
   };
-  expect(isWebhookRequestBody(body)).toBe(false);
+  t.is(isWebhookRequestBody(body), false);
 });
 
-test('returns false when all properties are missing', () => {
+test('returns false when all properties are missing', t => {
   const body = {};
-  expect(isWebhookRequestBody(body)).toBe(false);
+  t.is(isWebhookRequestBody(body), false);
 });

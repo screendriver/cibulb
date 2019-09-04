@@ -1,13 +1,16 @@
+import test from 'ava';
+import sinon from 'sinon';
 import { connect } from '../../../api/shared/mongodb';
 
-test('connect', async () => {
+test('connect', async t => {
   const client = {
-    connect: jest.fn(),
+    connect: sinon.fake(),
   };
   const dbUri = 'mongodb://localhost';
   await connect(
     client as any,
     dbUri,
   );
-  expect(client.connect).toHaveBeenCalledWith(dbUri, { useNewUrlParser: true });
+  sinon.assert.calledWith(client.connect, dbUri, { useNewUrlParser: true });
+  t.pass();
 });
