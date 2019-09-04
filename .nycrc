@@ -1,0 +1,20 @@
+{
+  "all": true,
+  "temp-dir": "target/.nyc_output",
+  "report-dir": "target/coverage",
+  "cache-dir": "target/.cache",
+  "exclude-after-remap": false,
+  "include": [
+    "target/api/**/*.js"
+  ],
+  "exclude": [
+    "target/api/color/index.js",
+    "target/api/color/run.js",
+    "target/api/refresh/index.js"
+  ],
+  "reporter": [
+    "lcov",
+    "text",
+    "clover"
+  ]
+}
