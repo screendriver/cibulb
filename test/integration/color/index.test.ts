@@ -1,3 +1,4 @@
+import test from 'ava';
 import micro from 'micro';
 import { NowRequest, NowResponse } from '@now/node';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -105,24 +106,24 @@ function getNameAndStatus(repos: Repository[]) {
     .reduce((_, currentValue) => currentValue);
 }
 
-test('returns HTTP 403 when secret is not valid', async () => {
+test('returns HTTP 403 when secret is not valid', async t => {
   process.env.GITLAB_SECRET_TOKEN = 'foo';
   const colorFunctionService = createColorFunctionService();
   const colorFunctionUrl = await listen(colorFunctionService);
   try {
     const response = await doNetworkRequest(colorFunctionUrl);
-    expect(response.statusCode).toBe(403);
+    t.is(response.statusCode, 403);
   } finally {
     colorFunctionService.close();
     deleteEnvs();
   }
 });
 
-test('call IFTTT webhook event "ci_build_success"', async () => {
-  expect.assertions(1);
+test('call IFTTT webhook event "ci_build_success"', async t => {
+  t.plan(1);
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const iftttService = micro(req => {
-    expect(req.url).toBe('/trigger/ci_build_success/with/key/my-key');
+    t.is(req.url, '/trigger/ci_build_success/with/key/my-key');
     return '';
   });
   const colorFunctionService = createColorFunctionService();
@@ -136,16 +137,16 @@ test('call IFTTT webhook event "ci_build_success"', async () => {
   }
 });
 
-test('inserts repository name and status into MongoDB', async () => {
+test('inserts repository name and status into MongoDB', async t => {
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   const repos = await getRepositories(mongod, mongoClient, mongoUri);
-  expect(getNameAndStatus(repos)).toEqual({
+  t.deepEqual(getNameAndStatus(repos), {
     name: 'test',
     status: 'success',
   });
 });
 
-test('updates repository status in MongoDB', async () => {
+test('updates repository status in MongoDB', async t => {
   const [mongod, mongoClient, mongoUri] = await createMongoDb();
   await mongoClient
     .db('cibulb')
@@ -155,7 +156,7 @@ test('updates repository status in MongoDB', async () => {
       status: 'pending',
     });
   const repos = await getRepositories(mongod, mongoClient, mongoUri);
-  expect(getNameAndStatus(repos)).toEqual({
+  t.deepEqual(getNameAndStatus(repos), {
     name: 'test',
     status: 'success',
   });
