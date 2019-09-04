@@ -9,7 +9,7 @@
     "node": "10.x"
   },
   "scripts": {
-    "compile": "tsc --build",
+    "compile": "tsc",
     "lint": "eslint --ignore-path .gitignore --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
     "test:integration": "ava --config ava.config.integration.js",
