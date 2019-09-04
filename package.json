@@ -12,8 +12,8 @@
     "compile": "tsc --build",
     "lint": "eslint --ignore-path .gitignore --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
-    "test:integration": "jest test/integration",
-    "test:unit": "jest test/unit"
+    "test:integration": "ava --config ava.config.integration.js",
+    "test:unit": "ava --config ava.config.unit.js"
   },
   "dependencies": {
     "@sentry/node": "5.6.2",
