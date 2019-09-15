@@ -11,15 +11,17 @@
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
     "plugin:prettier/recommended",
-    "prettier/@typescript-eslint"
+    "prettier/@typescript-eslint",
+    "plugin:ava/recommended"
   ],
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "ava"],
   "env": {
     "node": true
   },
   "rules": {
     "require-atomic-updates": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/camelcase": "off"
+    "@typescript-eslint/camelcase": "off",
+    "ava/no-ignored-test-files": "off"
   }
 }
