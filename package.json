@@ -13,8 +13,8 @@
     "lint": "eslint --ignore-path .gitignore --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
     "test:integration": "ava --config ava.config.integration.js --serial",
-    "test:unit": "ava --config ava.config.unit.js",
-    "test:unit:coverage": "nyc ava --config ava.config.unit.js"
+    "test:unit": "ava",
+    "test:unit:coverage": "nyc ava"
   },
   "dependencies": {
     "@sentry/node": "5.6.2",
