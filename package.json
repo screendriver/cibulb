@@ -28,7 +28,7 @@
     "@now/node": "1.0.0",
     "@types/got": "9.6.7",
     "@types/micro": "7.3.3",
-    "@types/mongodb": "3.3.1",
+    "@types/mongodb": "3.3.3",
     "@types/mongodb-memory-server": "1.8.0",
     "@types/sinon": "7.0.13",
     "@types/test-listen": "1.1.0",
