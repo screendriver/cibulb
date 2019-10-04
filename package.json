@@ -40,7 +40,7 @@
     "eslint-plugin-ava": "9.0.0",
     "eslint-plugin-prettier": "3.1.1",
     "jscpd": "2.0.16",
-    "mongodb-memory-server": "5.2.5",
+    "mongodb-memory-server": "5.2.6",
     "now": "16.3.1",
     "nyc": "14.1.1",
     "prettier": "1.18.2",
