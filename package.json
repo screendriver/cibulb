@@ -30,7 +30,7 @@
     "@types/micro": "7.3.3",
     "@types/mongodb": "3.3.3",
     "@types/mongodb-memory-server": "1.8.0",
-    "@types/sinon": "7.0.13",
+    "@types/sinon": "7.5.0",
     "@types/test-listen": "1.1.0",
     "@typescript-eslint/eslint-plugin": "2.3.2",
     "@typescript-eslint/parser": "2.3.2",
