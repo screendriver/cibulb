@@ -46,6 +46,6 @@
     "prettier": "1.18.2",
     "sinon": "7.5.0",
     "test-listen": "1.1.0",
-    "typescript": "3.6.3"
+    "typescript": "3.6.4"
   }
 }
