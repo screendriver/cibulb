@@ -41,7 +41,7 @@
     "eslint-plugin-prettier": "3.1.1",
     "jscpd": "2.0.16",
     "mongodb-memory-server": "5.2.8",
-    "now": "16.3.1",
+    "now": "16.4.0",
     "nyc": "14.1.1",
     "prettier": "1.18.2",
     "sinon": "7.5.0",
