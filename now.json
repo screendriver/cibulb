@@ -15,8 +15,8 @@
       "dest": "/api/refresh"
     },
     {
-      "src": "/(.*)",
-      "status": 404
+      "src": "/api/(.*)",
+      "status": 405
     }
   ]
 }
