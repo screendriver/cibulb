@@ -14,6 +14,10 @@ import { callIftttWebhook, startLocalIftttServer } from '../shared/ifttt';
 log.enableAll();
 
 export default async function refresh(_req: NowRequest, res: NowResponse) {
+  if (1 === 1) {
+    res.send('You cannot read this text');
+    return;
+  }
   let localIftttServer: Server | undefined;
   if (process.env.NODE_ENV === 'development') {
     process.env.MONGO_URI = await startMongoDbMemoryServer();
