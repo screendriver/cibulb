@@ -36,7 +36,6 @@
     "@types/test-listen": "1.1.0",
     "@typescript-eslint/eslint-plugin": "2.6.1",
     "@typescript-eslint/parser": "2.6.1",
-    "ava": "2.4.0",
     "chai": "4.2.0",
     "eslint": "6.6.0",
     "eslint-config-prettier": "6.5.0",
