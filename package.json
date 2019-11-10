@@ -26,6 +26,7 @@
   },
   "devDependencies": {
     "@now/node": "1.0.2",
+    "@types/chai": "4.2.4",
     "@types/got": "9.6.9",
     "@types/micro": "7.3.3",
     "@types/mocha": "5.2.7",
@@ -36,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "2.6.1",
     "@typescript-eslint/parser": "2.6.1",
     "ava": "2.4.0",
+    "chai": "4.2.0",
     "eslint": "6.6.0",
     "eslint-config-prettier": "6.5.0",
     "eslint-plugin-ava": "9.0.0",
