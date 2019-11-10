@@ -4,14 +4,14 @@
   "report-dir": "target/coverage",
   "cache-dir": "target/.cache",
   "exclude-after-remap": false,
-  "include": [
-    "target/api/**/*.js"
-  ],
+  "extension": [".ts"],
+  "include": ["api/**/*.ts"],
   "exclude": [
-    "target/api/color/index.js",
-    "target/api/color/run.js",
-    "target/api/refresh/index.js"
+    "api/color/index.ts",
+    "api/color/run.ts",
+    "api/refresh/index.ts"
   ],
+  "require": ["ts-node/register"],
   "reporter": [
     "lcov",
     "text",
