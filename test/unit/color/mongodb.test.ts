@@ -1,4 +1,3 @@
-import test from 'ava';
 import sinon from 'sinon';
 import { Repository } from '../../../api/shared/mongodb';
 import { updateDb } from '../../../api/color/mongodb';
@@ -26,29 +25,28 @@ function createRepository(): Repository {
   };
 }
 
-test('use "cibulb" db', async t => {
-  const client = createMongoClient();
-  await updateDb(client as any, createRepository());
-  sinon.assert.calledWith(client.db, 'cibulb');
-  t.pass();
-});
+describe('mongodb', () => {
+  it('use "cibulb" db', async () => {
+    const client = createMongoClient();
+    await updateDb(client as any, createRepository());
+    sinon.assert.calledWith(client.db, 'cibulb');
+  });
 
-test('use "repositories" collection', async t => {
-  const client = createMongoClient();
-  await updateDb(client as any, createRepository());
-  sinon.assert.calledWith(client.db().collection, 'repositories');
-  t.pass();
-});
+  it('use "repositories" collection', async () => {
+    const client = createMongoClient();
+    await updateDb(client as any, createRepository());
+    sinon.assert.calledWith(client.db().collection, 'repositories');
+  });
 
-test('update DB with given repository', async t => {
-  const repository = createRepository();
-  const client = createMongoClient();
-  await updateDb(client as any, repository);
-  sinon.assert.calledWith(
-    client.db().collection().findOneAndUpdate,
-    { name: repository.name },
-    { $set: { status: repository.status } },
-    { upsert: true },
-  );
-  t.pass();
+  it('update DB with given repository', async () => {
+    const repository = createRepository();
+    const client = createMongoClient();
+    await updateDb(client as any, repository);
+    sinon.assert.calledWith(
+      client.db().collection().findOneAndUpdate,
+      { name: repository.name },
+      { $set: { status: repository.status } },
+      { upsert: true },
+    );
+  });
 });
