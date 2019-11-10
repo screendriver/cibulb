@@ -12,9 +12,9 @@
     "compile": "tsc",
     "lint": "eslint --ignore-path .gitignore --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
-    "test:integration": "ava --config ava.config.integration.js --serial",
-    "test:unit": "ava",
-    "test:unit:coverage": "nyc ava"
+    "test:integration": "mocha test/integration/**/*.test.*",
+    "test:unit": "mocha test/unit/**/*.test.*",
+    "test:unit:coverage": "nyc mocha test/unit/**/*.test.*"
   },
   "dependencies": {
     "@sentry/node": "5.7.1",
@@ -26,26 +26,30 @@
   },
   "devDependencies": {
     "@now/node": "1.0.2",
+    "@types/chai": "4.2.4",
     "@types/got": "9.6.9",
     "@types/micro": "7.3.3",
+    "@types/mocha": "5.2.7",
     "@types/mongodb": "3.3.10",
     "@types/mongodb-memory-server": "1.8.0",
     "@types/sinon": "7.5.0",
     "@types/test-listen": "1.1.0",
     "@typescript-eslint/eslint-plugin": "2.6.1",
     "@typescript-eslint/parser": "2.6.1",
-    "ava": "2.4.0",
+    "chai": "4.2.0",
     "eslint": "6.6.0",
     "eslint-config-prettier": "6.5.0",
     "eslint-plugin-ava": "9.0.0",
     "eslint-plugin-prettier": "3.1.1",
     "jscpd": "2.0.16",
+    "mocha": "6.2.2",
     "mongodb-memory-server": "6.0.1",
     "now": "16.4.4",
     "nyc": "14.1.1",
     "prettier": "1.19.1",
     "sinon": "7.5.0",
     "test-listen": "1.1.0",
+    "ts-node": "8.4.1",
     "typescript": "3.7.2"
   }
 }

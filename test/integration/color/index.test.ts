@@ -1,4 +1,4 @@
-import test from 'ava';
+import { expect } from 'chai';
 import micro from 'micro';
 import { NowRequest, NowResponse } from '@now/node';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -106,58 +106,59 @@ function getNameAndStatus(repos: Repository[]) {
     .reduce((_, currentValue) => currentValue);
 }
 
-test('returns HTTP 403 when secret is not valid', async t => {
-  process.env.GITLAB_SECRET_TOKEN = 'foo';
-  const colorFunctionService = createColorFunctionService();
-  const colorFunctionUrl = await listen(colorFunctionService);
-  try {
-    const response = await doNetworkRequest(colorFunctionUrl);
-    t.is(response.statusCode, 403);
-  } finally {
-    colorFunctionService.close();
-    deleteEnvs();
-  }
-});
-
-test('call IFTTT webhook event "ci_build_success"', async t => {
-  t.plan(1);
-  const [mongod, mongoClient, mongoUri] = await createMongoDb();
-  const iftttService = micro(req => {
-    t.is(req.url, '/trigger/ci_build_success/with/key/my-key');
-    return '';
+describe('color', () => {
+  it('returns HTTP 403 when secret is not valid', async () => {
+    process.env.GITLAB_SECRET_TOKEN = 'foo';
+    const colorFunctionService = createColorFunctionService();
+    const colorFunctionUrl = await listen(colorFunctionService);
+    try {
+      const response = await doNetworkRequest(colorFunctionUrl);
+      expect(response.statusCode).to.equal(403);
+    } finally {
+      colorFunctionService.close();
+      deleteEnvs();
+    }
   });
-  const colorFunctionService = createColorFunctionService();
-  const iftttServiceUrl = await listen(iftttService);
-  const colorFunctionUrl = await listen(colorFunctionService);
-  setupEnvs(iftttServiceUrl, mongoUri);
-  try {
-    await doNetworkRequest(colorFunctionUrl);
-  } finally {
-    await closeAll(iftttService, colorFunctionService, mongoClient, mongod);
-  }
-});
 
-test('inserts repository name and status into MongoDB', async t => {
-  const [mongod, mongoClient, mongoUri] = await createMongoDb();
-  const repos = await getRepositories(mongod, mongoClient, mongoUri);
-  t.deepEqual(getNameAndStatus(repos), {
-    name: 'test',
-    status: 'success',
-  });
-});
-
-test('updates repository status in MongoDB', async t => {
-  const [mongod, mongoClient, mongoUri] = await createMongoDb();
-  await mongoClient
-    .db('cibulb')
-    .collection<Repository>('repositories')
-    .insertOne({
-      name: 'test',
-      status: 'pending',
+  it('call IFTTT webhook event "ci_build_success"', async () => {
+    const [mongod, mongoClient, mongoUri] = await createMongoDb();
+    const iftttService = micro(req => {
+      expect(req.url).to.equal('/trigger/ci_build_success/with/key/my-key');
+      return '';
     });
-  const repos = await getRepositories(mongod, mongoClient, mongoUri);
-  t.deepEqual(getNameAndStatus(repos), {
-    name: 'test',
-    status: 'success',
+    const colorFunctionService = createColorFunctionService();
+    const iftttServiceUrl = await listen(iftttService);
+    const colorFunctionUrl = await listen(colorFunctionService);
+    setupEnvs(iftttServiceUrl, mongoUri);
+    try {
+      await doNetworkRequest(colorFunctionUrl);
+    } finally {
+      await closeAll(iftttService, colorFunctionService, mongoClient, mongod);
+    }
+  });
+
+  it('inserts repository name and status into MongoDB', async () => {
+    const [mongod, mongoClient, mongoUri] = await createMongoDb();
+    const repos = await getRepositories(mongod, mongoClient, mongoUri);
+    expect(getNameAndStatus(repos)).to.deep.equal({
+      name: 'test',
+      status: 'success',
+    });
+  });
+
+  it('updates repository status in MongoDB', async () => {
+    const [mongod, mongoClient, mongoUri] = await createMongoDb();
+    await mongoClient
+      .db('cibulb')
+      .collection<Repository>('repositories')
+      .insertOne({
+        name: 'test',
+        status: 'pending',
+      });
+    const repos = await getRepositories(mongod, mongoClient, mongoUri);
+    expect(getNameAndStatus(repos)).to.deep.equal({
+      name: 'test',
+      status: 'success',
+    });
   });
 });

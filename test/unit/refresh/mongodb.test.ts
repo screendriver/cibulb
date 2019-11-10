@@ -1,4 +1,4 @@
-import test from 'ava';
+import { expect } from 'chai';
 import sinon from 'sinon';
 import { Repository } from '../../../api/shared/mongodb';
 import { allRepositories } from '../../../api/refresh/mongodb';
@@ -15,23 +15,23 @@ function createMongoClient(repositoriesToReturn: Repository[] = []) {
   };
 }
 
-test('use "cibulb" db', async t => {
-  const client = createMongoClient();
-  await allRepositories(client as any);
-  sinon.assert.calledWith(client.db, 'cibulb');
-  t.pass();
-});
+describe('mongodb', () => {
+  it('use "cibulb" db', async () => {
+    const client = createMongoClient();
+    await allRepositories(client as any);
+    sinon.assert.calledWith(client.db, 'cibulb');
+  });
 
-test('use "repositories" collection', async t => {
-  const client = createMongoClient();
-  await allRepositories(client as any);
-  sinon.assert.calledWith(client.db().collection, 'repositories');
-  t.pass();
-});
+  it('use "repositories" collection', async () => {
+    const client = createMongoClient();
+    await allRepositories(client as any);
+    sinon.assert.calledWith(client.db().collection, 'repositories');
+  });
 
-test('return all found repositories', async t => {
-  const foundRepositories: Repository[] = [];
-  const client = createMongoClient(foundRepositories);
-  const actual = await allRepositories(client as any);
-  t.deepEqual(actual, foundRepositories);
+  it('return all found repositories', async () => {
+    const foundRepositories: Repository[] = [];
+    const client = createMongoClient(foundRepositories);
+    const actual = await allRepositories(client as any);
+    expect(actual).to.deep.equal(foundRepositories);
+  });
 });
