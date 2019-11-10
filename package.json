@@ -12,7 +12,7 @@
     "compile": "tsc",
     "lint": "eslint --ignore-path .gitignore --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
-    "test:integration": "ava --config ava.config.integration.js --serial",
+    "test:integration": "mocha test/integration/**/*.test.*",
     "test:unit": "mocha test/unit/**/*.test.*",
     "test:unit:coverage": "nyc ava"
   },
