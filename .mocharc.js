@@ -1,5 +1,4 @@
 module.exports = {
-  spec: 'test/**/*.test.*',
-  require: 'esm',
+  require: ['ts-node/register'],
   extension: ['ts'],
 };
