@@ -43,7 +43,7 @@
     "mongodb-memory-server": "6.0.1",
     "now": "16.4.4",
     "nyc": "14.1.1",
-    "prettier": "1.18.2",
+    "prettier": "1.19.1",
     "sinon": "7.5.0",
     "test-listen": "1.1.0",
     "typescript": "3.7.2"

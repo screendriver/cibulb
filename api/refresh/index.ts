@@ -23,10 +23,7 @@ export default async function refresh(_req: NowRequest, res: NowResponse) {
   initSentry(Sentry, config, log);
   let mongoClient: MongoClient | undefined;
   try {
-    mongoClient = await connect(
-      MongoClient,
-      config.mongoDbUri,
-    );
+    mongoClient = await connect(MongoClient, config.mongoDbUri);
     log.info('Reading all repositories from MongoDB');
     const repositories = await allRepositories(mongoClient);
     const overallStatus = getRepositoriesStatus(repositories);

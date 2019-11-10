@@ -30,10 +30,7 @@ async function ifttt(
   requestBody: WebhookRequestBody,
   config: Config,
 ): Promise<Result> {
-  const mongoClient = await connect(
-    MongoClient,
-    config.mongoDbUri,
-  );
+  const mongoClient = await connect(MongoClient, config.mongoDbUri);
   const repository: Repository = {
     name: requestBody.project.path_with_namespace,
     status: requestBody.object_attributes.status,

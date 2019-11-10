@@ -7,10 +7,7 @@ test('connect', async t => {
     connect: sinon.fake(),
   };
   const dbUri = 'mongodb://localhost';
-  await connect(
-    client as any,
-    dbUri,
-  );
+  await connect(client as any, dbUri);
   sinon.assert.calledWith(client.connect, dbUri, { useNewUrlParser: true });
   t.pass();
 });
