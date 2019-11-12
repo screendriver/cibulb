@@ -2922,10 +2922,10 @@ normalize-url@^4.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.5.0.tgz#453354087e6ca96957bd8f5baf753f5982142129"
   integrity sha512-2s47yzUxdexf1OhyRi4Em83iQk0aPvwTddtFz4hnSSw9dCEsLEGf6SwIO8ss/19S9iBb5sJaOuTvTGDeZI00BQ==
 
-now@16.5.0:
-  version "16.5.0"
-  resolved "https://registry.yarnpkg.com/now/-/now-16.5.0.tgz#8ef78ab608b8fecaddaac0626831fd484a0c6b0e"
-  integrity sha512-Qpy4ZW5yMGMqYh9abBeHF9e57ZO0Az1HMZHQtzN8G4AeDIDLDPb229FFixYzCUwLB41n4Xz09sxb6MoxDlJTBQ==
+now@16.5.2:
+  version "16.5.2"
+  resolved "https://registry.yarnpkg.com/now/-/now-16.5.2.tgz#0c19c2d1197dcd2aed2dc08fd9610383fcea96a7"
+  integrity sha512-Pv8HMpeTaiLLoNh93Poy5GbiM0oc/CPo1ZXa+o70Nd/ospRaLg7gaFtpZH+My/vS9+xWTDq7hmHjXPCXPtD/pg==
 
 nyc@14.1.1:
   version "14.1.1"
