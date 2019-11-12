@@ -25,7 +25,7 @@
     "tslib": "1.10.0"
   },
   "devDependencies": {
-    "@now/node": "1.0.2",
+    "@now/node": "1.1.0",
     "@types/chai": "4.2.4",
     "@types/got": "9.6.9",
     "@types/micro": "7.3.3",
