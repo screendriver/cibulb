@@ -4,8 +4,8 @@ import { Logger } from 'loglevel';
 import { initSentry } from '../../../api/shared/sentry';
 import { Config } from '../../../api/shared/config';
 
-describe('sentry', () => {
-  it('init sentry instance', () => {
+suite('sentry', () => {
+  test('init sentry instance', () => {
     const init = sinon.fake();
     const sentry: Partial<typeof Sentry> = {
       init,

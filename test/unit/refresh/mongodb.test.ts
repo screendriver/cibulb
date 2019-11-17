@@ -15,20 +15,20 @@ function createMongoClient(repositoriesToReturn: Repository[] = []) {
   };
 }
 
-describe('mongodb', () => {
-  it('use "cibulb" db', async () => {
+suite('mongodb', () => {
+  test('use "cibulb" db', async () => {
     const client = createMongoClient();
     await allRepositories(client as any);
     sinon.assert.calledWith(client.db, 'cibulb');
   });
 
-  it('use "repositories" collection', async () => {
+  test('use "repositories" collection', async () => {
     const client = createMongoClient();
     await allRepositories(client as any);
     sinon.assert.calledWith(client.db().collection, 'repositories');
   });
 
-  it('return all found repositories', async () => {
+  test('return all found repositories', async () => {
     const foundRepositories: Repository[] = [];
     const client = createMongoClient(foundRepositories);
     const actual = await allRepositories(client as any);

@@ -106,8 +106,8 @@ function getNameAndStatus(repos: Repository[]) {
     .reduce((_, currentValue) => currentValue);
 }
 
-describe('color', () => {
-  it('returns HTTP 403 when secret is not valid', async () => {
+suite('color', () => {
+  test('returns HTTP 403 when secret is not valid', async () => {
     process.env.GITLAB_SECRET_TOKEN = 'foo';
     const colorFunctionService = createColorFunctionService();
     const colorFunctionUrl = await listen(colorFunctionService);
@@ -120,7 +120,7 @@ describe('color', () => {
     }
   });
 
-  it('call IFTTT webhook event "ci_build_success"', async () => {
+  test('call IFTTT webhook event "ci_build_success"', async () => {
     const [mongod, mongoClient, mongoUri] = await createMongoDb();
     const iftttService = micro(req => {
       expect(req.url).to.equal('/trigger/ci_build_success/with/key/my-key');
@@ -137,7 +137,7 @@ describe('color', () => {
     }
   });
 
-  it('inserts repository name and status into MongoDB', async () => {
+  test('inserts repository name and status into MongoDB', async () => {
     const [mongod, mongoClient, mongoUri] = await createMongoDb();
     const repos = await getRepositories(mongod, mongoClient, mongoUri);
     expect(getNameAndStatus(repos)).to.deep.equal({
@@ -146,7 +146,7 @@ describe('color', () => {
     });
   });
 
-  it('updates repository status in MongoDB', async () => {
+  test('updates repository status in MongoDB', async () => {
     const [mongod, mongoClient, mongoUri] = await createMongoDb();
     await mongoClient
       .db('cibulb')

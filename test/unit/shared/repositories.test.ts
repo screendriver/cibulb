@@ -2,13 +2,13 @@ import { expect } from 'chai';
 import { Repository } from '../../../api/shared/mongodb';
 import { getRepositoriesStatus } from '../../../api/shared/repositories';
 
-describe('repositories', () => {
-  it('returns "success" when repositories are empty', () => {
+suite('repositories', () => {
+  test('returns "success" when repositories are empty', () => {
     const status = getRepositoriesStatus([]);
     expect(status).to.equal('success');
   });
 
-  it('returns "success" when all repositories are in status "success"', () => {
+  test('returns "success" when all repositories are in status "success"', () => {
     const repositories: Repository[] = [
       { name: 'repoA', status: 'success' },
       { name: 'repoB', status: 'success' },
@@ -17,7 +17,7 @@ describe('repositories', () => {
     expect(status).to.equal('success');
   });
 
-  it('returns "pending" when one repository is in status "pending"', () => {
+  test('returns "pending" when one repository is in status "pending"', () => {
     const repositories: Repository[] = [
       { name: 'repoA', status: 'success' },
       { name: 'repoB', status: 'failed' },
@@ -27,7 +27,7 @@ describe('repositories', () => {
     expect(status).to.equal('pending');
   });
 
-  it('returns "pending" when one repository is in status "running"', () => {
+  test('returns "pending" when one repository is in status "running"', () => {
     const repositories: Repository[] = [
       { name: 'repoA', status: 'success' },
       { name: 'repoB', status: 'failed' },
@@ -37,7 +37,7 @@ describe('repositories', () => {
     expect(status).to.equal('pending');
   });
 
-  it('returns "failed" when one repository is in status "failed"', () => {
+  test('returns "failed" when one repository is in status "failed"', () => {
     const repositories: Repository[] = [
       { name: 'repoA', status: 'success' },
       { name: 'repoB', status: 'failed' },

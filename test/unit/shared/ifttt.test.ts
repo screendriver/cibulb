@@ -20,8 +20,8 @@ function createIftttUrl(status: string): URL {
   );
 }
 
-describe('ifttt', () => {
-  it('call IFTTT webhook with "success" status', async () => {
+suite('ifttt', () => {
+  test('call IFTTT webhook with "success" status', async () => {
     const got = sinon.fake.resolves({ body: '' });
     await callIftttWebhook('success', config, got as GotFn);
 
@@ -29,7 +29,7 @@ describe('ifttt', () => {
     sinon.assert.calledWith(got, iftttUrl);
   });
 
-  it('call IFTTT webhook with "running" status', async () => {
+  test('call IFTTT webhook with "running" status', async () => {
     const got = sinon.fake.resolves({ body: '' });
     await callIftttWebhook('running', config, got as GotFn);
 
@@ -37,7 +37,7 @@ describe('ifttt', () => {
     sinon.assert.calledWith(got, iftttUrl);
   });
 
-  it('call IFTTT webhook with "pending" status', async () => {
+  test('call IFTTT webhook with "pending" status', async () => {
     const got = sinon.fake.resolves({ body: '' });
     await callIftttWebhook('pending', config, got as GotFn);
 
@@ -45,7 +45,7 @@ describe('ifttt', () => {
     sinon.assert.calledWith(got, iftttUrl);
   });
 
-  it('call IFTTT webhook with "failed" status', async () => {
+  test('call IFTTT webhook with "failed" status', async () => {
     const got = sinon.fake.resolves({ body: '' });
     await callIftttWebhook('failed', config, got as GotFn);
 
@@ -53,7 +53,7 @@ describe('ifttt', () => {
     sinon.assert.calledWith(got, iftttUrl);
   });
 
-  it('return IFTTT response body', async () => {
+  test('return IFTTT response body', async () => {
     const body = 'Congratulations!';
     const got = sinon.fake.resolves({ body });
     const actual = await callIftttWebhook('success', config, got as GotFn);

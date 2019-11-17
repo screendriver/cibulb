@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { connect } from '../../../api/shared/mongodb';
 
-describe('mongodb', () => {
-  it('connect', async () => {
+suite('mongodb', () => {
+  test('connect', async () => {
     const client = {
       connect: sinon.fake(),
     };

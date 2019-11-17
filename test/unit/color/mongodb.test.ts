@@ -25,20 +25,20 @@ function createRepository(): Repository {
   };
 }
 
-describe('mongodb', () => {
-  it('use "cibulb" db', async () => {
+suite('mongodb', () => {
+  test('use "cibulb" db', async () => {
     const client = createMongoClient();
     await updateDb(client as any, createRepository());
     sinon.assert.calledWith(client.db, 'cibulb');
   });
 
-  it('use "repositories" collection', async () => {
+  test('use "repositories" collection', async () => {
     const client = createMongoClient();
     await updateDb(client as any, createRepository());
     sinon.assert.calledWith(client.db().collection, 'repositories');
   });
 
-  it('update DB with given repository', async () => {
+  test('update DB with given repository', async () => {
     const repository = createRepository();
     const client = createMongoClient();
     await updateDb(client as any, repository);
