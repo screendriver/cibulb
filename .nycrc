@@ -11,7 +11,7 @@
     "api/color/run.ts",
     "api/refresh/index.ts"
   ],
-  "require": ["ts-node/register"],
+  "require": ["ts-node/register/transpile-only"],
   "reporter": [
     "lcov",
     "text",

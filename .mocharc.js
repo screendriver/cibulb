@@ -1,5 +1,5 @@
 module.exports = {
-  require: ['ts-node/register', './test/setup.ts'],
+  require: ['ts-node/register/transpile-only', './test/setup.ts'],
   extension: ['ts'],
   ui: 'tdd',
 };
