@@ -19,13 +19,13 @@ suite('mongodb', () => {
   test('use "cibulb" db', async () => {
     const client = createMongoClient();
     await allRepositories(client as any);
-    sinon.assert.calledWith(client.db, 'cibulb');
+    expect(client.db).to.have.been.calledWith('cibulb');
   });
 
   test('use "repositories" collection', async () => {
     const client = createMongoClient();
     await allRepositories(client as any);
-    sinon.assert.calledWith(client.db().collection, 'repositories');
+    expect(client.db().collection).to.have.been.calledWith('repositories');
   });
 
   test('return all found repositories', async () => {

@@ -1,3 +1,4 @@
+import { expect } from 'chai';
 import sinon from 'sinon';
 import * as Sentry from '@sentry/node';
 import { Logger } from 'loglevel';
@@ -17,6 +18,6 @@ suite('sentry', () => {
       error: sinon.fake(),
     };
     initSentry(sentry as typeof Sentry, config as Config, logger as Logger);
-    sinon.assert.calledWith(init, { dsn: 'https://123@sentry.io/456' });
+    expect(init).to.have.been.calledWith({ dsn: 'https://123@sentry.io/456' });
   });
 });
