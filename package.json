@@ -30,7 +30,7 @@
     "@types/got": "9.6.9",
     "@types/micro": "7.3.3",
     "@types/mocha": "5.2.7",
-    "@types/mongodb": "3.3.10",
+    "@types/mongodb": "3.3.11",
     "@types/mongodb-memory-server": "1.8.0",
     "@types/sinon": "7.5.0",
     "@types/sinon-chai": "3.2.3",
