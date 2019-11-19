@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import { IncomingMessage } from 'http';
 import { xGitlabToken } from '../../../api/color/headers';
 
-suite('headers', () => {
-  test('returns "x-gitlab-token" from request headers', () => {
+suite('headers', function() {
+  test('returns "x-gitlab-token" from request headers', function() {
     const req: Partial<IncomingMessage> = {
       headers: {
         'x-gitlab-token': 'foo',
@@ -13,7 +13,7 @@ suite('headers', () => {
     expect(actual).to.equal('foo');
   });
 
-  test('returns an empty string when "x-gitlab-token" is not present', () => {
+  test('returns an empty string when "x-gitlab-token" is not present', function() {
     const req: Partial<IncomingMessage> = {
       headers: {},
     };

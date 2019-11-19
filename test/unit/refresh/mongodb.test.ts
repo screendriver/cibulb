@@ -15,20 +15,20 @@ function createMongoClient(repositoriesToReturn: Repository[] = []) {
   };
 }
 
-suite('mongodb', () => {
-  test('use "cibulb" db', async () => {
+suite('mongodb', function() {
+  test('use "cibulb" db', async function() {
     const client = createMongoClient();
     await allRepositories(client as any);
     expect(client.db).to.have.been.calledWith('cibulb');
   });
 
-  test('use "repositories" collection', async () => {
+  test('use "repositories" collection', async function() {
     const client = createMongoClient();
     await allRepositories(client as any);
     expect(client.db().collection).to.have.been.calledWith('repositories');
   });
 
-  test('return all found repositories', async () => {
+  test('return all found repositories', async function() {
     const foundRepositories: Repository[] = [];
     const client = createMongoClient(foundRepositories);
     const actual = await allRepositories(client as any);
