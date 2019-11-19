@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { getConfig, Config } from '../../../api/shared/config';
 
-suite('config', () => {
-  test('create config object from environment variables', () => {
+suite('config', function() {
+  test('create config object from environment variables', function() {
     process.env.GITLAB_SECRET_TOKEN = 'my-secret';
     process.env.IFTTT_BASE_URL = 'http://localhost';
     process.env.IFTTT_KEY = 'my-key';
@@ -24,7 +24,7 @@ suite('config', () => {
     expect(actual).to.deep.equal(expected);
   });
 
-  test('initalize config object with defaults when env variables are not set', () => {
+  test('initalize config object with defaults when env variables are not set', function() {
     const actual = getConfig();
     const expected: Config = {
       gitlabSecretToken: '',

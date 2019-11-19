@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { connect } from '../../../api/shared/mongodb';
 
-suite('mongodb', () => {
-  test('connect', async () => {
+suite('mongodb', function() {
+  test('connect', async function() {
     const client = {
       connect: sinon.fake(),
     };
