@@ -45,7 +45,7 @@
     "jscpd": "2.0.16",
     "mocha": "6.2.2",
     "mongodb-memory-server": "6.0.1",
-    "now": "16.5.2",
+    "now": "16.6.0",
     "nyc": "14.1.1",
     "prettier": "1.19.1",
     "sinon": "7.5.0",
