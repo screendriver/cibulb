@@ -4,12 +4,12 @@ import * as Sentry from '@sentry/node';
 import { MongoClient } from 'mongodb';
 import got from 'got';
 import { Server } from 'http';
-import { getConfig } from '../shared/config';
-import { initSentry } from '../shared/sentry';
-import { startMongoDbMemoryServer, connect } from '../shared/mongodb';
+import { getConfig } from '../_shared/config';
+import { initSentry } from '../_shared/sentry';
+import { startMongoDbMemoryServer, connect } from '../_shared/mongodb';
 import { allRepositories } from '../refresh/mongodb';
-import { getRepositoriesStatus } from '../shared/repositories';
-import { callIftttWebhook, startLocalIftttServer } from '../shared/ifttt';
+import { getRepositoriesStatus } from '../_shared/repositories';
+import { callIftttWebhook, startLocalIftttServer } from '../_shared/ifttt';
 
 log.enableAll();
 

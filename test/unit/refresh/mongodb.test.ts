@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { Repository } from '../../../api/shared/mongodb';
+import { Repository } from '../../../api/_shared/mongodb';
 import { allRepositories } from '../../../api/refresh/mongodb';
 
 function createMongoClient(repositoriesToReturn: Repository[] = []) {

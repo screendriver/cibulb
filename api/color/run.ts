@@ -2,13 +2,13 @@ import log from 'loglevel';
 import { MongoClient } from 'mongodb';
 import got from 'got';
 import * as Sentry from '@sentry/node';
-import { Config } from '../shared/config';
+import { Config } from '../_shared/config';
 import { isWebhookRequestBody, WebhookRequestBody } from './body';
 import { isBranchAllowed } from './branches';
-import { connect, Repository } from '../shared/mongodb';
+import { connect, Repository } from '../_shared/mongodb';
 import { updateDb } from './mongodb';
-import { getRepositoriesStatus } from '../shared/repositories';
-import { callIftttWebhook } from '../shared/ifttt';
+import { getRepositoriesStatus } from '../_shared/repositories';
+import { callIftttWebhook } from '../_shared/ifttt';
 
 interface Result {
   statusCode: number;

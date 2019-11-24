@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { getConfig, Config } from '../../../api/shared/config';
+import { getConfig, Config } from '../../../api/_shared/config';
 
 suite('config', function() {
   test('create config object from environment variables', function() {

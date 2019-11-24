@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import * as Sentry from '@sentry/node';
 import { Logger } from 'loglevel';
-import { initSentry } from '../../../api/shared/sentry';
-import { Config } from '../../../api/shared/config';
+import { initSentry } from '../../../api/_shared/sentry';
+import { Config } from '../../../api/_shared/config';
 
 suite('sentry', function() {
   test('init sentry instance', function() {

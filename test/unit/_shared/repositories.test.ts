@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { Repository } from '../../../api/shared/mongodb';
-import { getRepositoriesStatus } from '../../../api/shared/repositories';
+import { Repository } from '../../../api/_shared/mongodb';
+import { getRepositoriesStatus } from '../../../api/_shared/repositories';
 
 suite('repositories', function() {
   test('returns "success" when repositories are empty', function() {

@@ -1,6 +1,6 @@
 import { GotFn } from 'got';
 import { URL } from 'url';
-import { Config } from '../shared/config';
+import { Config } from './config';
 import { Status } from './repositories';
 import { Server } from 'http';
 

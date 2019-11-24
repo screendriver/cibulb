@@ -2,8 +2,8 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import { GotFn } from 'got';
 import { URL } from 'url';
-import { Config } from '../../../api/shared/config';
-import { callIftttWebhook } from '../../../api/shared/ifttt';
+import { Config } from '../../../api/_shared/config';
+import { callIftttWebhook } from '../../../api/_shared/ifttt';
 
 const config: Config = {
   gitlabSecretToken: 'my-secret',

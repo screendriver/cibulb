@@ -1,4 +1,4 @@
-import { Status } from '../shared/repositories';
+import { Status } from '../_shared/repositories';
 
 export interface WebhookRequestBody {
   object_attributes: {

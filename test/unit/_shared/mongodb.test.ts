@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { connect } from '../../../api/shared/mongodb';
+import { connect } from '../../../api/_shared/mongodb';
 
 suite('mongodb', function() {
   test('connect', async function() {

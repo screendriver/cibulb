@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { Repository } from '../shared/mongodb';
+import { Repository } from '../_shared/mongodb';
 
 export async function updateDb(
   mongoClient: MongoClient,
