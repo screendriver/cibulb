@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import sinon from 'sinon';
 import { connect } from '../../../api/_shared/mongodb';
 
@@ -9,7 +8,7 @@ suite('mongodb', function() {
     };
     const dbUri = 'mongodb://localhost';
     await connect(client as any, dbUri);
-    expect(client.connect).to.have.been.calledWith(dbUri, {
+    sinon.assert.calledWith(client.connect, dbUri, {
       useNewUrlParser: true,
     });
   });

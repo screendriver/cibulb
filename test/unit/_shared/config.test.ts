@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert } from 'chai';
 import { getConfig, Config } from '../../../api/_shared/config';
 
 suite('config', function() {
@@ -21,7 +21,7 @@ suite('config', function() {
     delete process.env.IFTTT_KEY;
     delete process.env.MONGO_URI;
     delete process.env.SENTRY_DSN;
-    expect(actual).to.deep.equal(expected);
+    assert.deepEqual(actual, expected);
   });
 
   test('initalize config object with defaults when env variables are not set', function() {
@@ -33,6 +33,6 @@ suite('config', function() {
       mongoDbUri: '',
       sentryDSN: '',
     };
-    expect(actual).to.deep.equal(expected);
+    assert.deepEqual(actual, expected);
   });
 });

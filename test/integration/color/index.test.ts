@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert } from 'chai';
 import micro from 'micro';
 import { NowRequest, NowResponse } from '@now/node';
 import { MongoMemoryServer } from 'mongodb-memory-server';
@@ -113,7 +113,7 @@ suite('color', function() {
     const colorFunctionUrl = await listen(colorFunctionService);
     try {
       const response = await doNetworkRequest(colorFunctionUrl);
-      expect(response.statusCode).to.equal(403);
+      assert.equal(response.statusCode, 403);
     } finally {
       colorFunctionService.close();
       deleteEnvs();
@@ -123,7 +123,7 @@ suite('color', function() {
   test('call IFTTT webhook event "ci_build_success"', async function() {
     const [mongod, mongoClient, mongoUri] = await createMongoDb();
     const iftttService = micro(req => {
-      expect(req.url).to.equal('/trigger/ci_build_success/with/key/my-key');
+      assert.equal(req.url, '/trigger/ci_build_success/with/key/my-key');
       return '';
     });
     const colorFunctionService = createColorFunctionService();
@@ -140,7 +140,7 @@ suite('color', function() {
   test('inserts repository name and status into MongoDB', async function() {
     const [mongod, mongoClient, mongoUri] = await createMongoDb();
     const repos = await getRepositories(mongod, mongoClient, mongoUri);
-    expect(getNameAndStatus(repos)).to.deep.equal({
+    assert.deepEqual(getNameAndStatus(repos), {
       name: 'test',
       status: 'success',
     });
@@ -156,7 +156,7 @@ suite('color', function() {
         status: 'pending',
       });
     const repos = await getRepositories(mongod, mongoClient, mongoUri);
-    expect(getNameAndStatus(repos)).to.deep.equal({
+    assert.deepEqual(getNameAndStatus(repos), {
       name: 'test',
       status: 'success',
     });

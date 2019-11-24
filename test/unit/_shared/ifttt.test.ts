@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert } from 'chai';
 import sinon from 'sinon';
 import { GotFn } from 'got';
 import { URL } from 'url';
@@ -26,7 +26,7 @@ suite('ifttt', function() {
     await callIftttWebhook('success', config, got as GotFn);
 
     const iftttUrl = createIftttUrl('ci_build_success');
-    expect(got).to.have.been.calledWith(iftttUrl);
+    sinon.assert.calledWith(got, iftttUrl);
   });
 
   test('call IFTTT webhook with "running" status', async function() {
@@ -34,7 +34,7 @@ suite('ifttt', function() {
     await callIftttWebhook('running', config, got as GotFn);
 
     const iftttUrl = createIftttUrl('ci_build_pending');
-    expect(got).to.have.been.calledWith(iftttUrl);
+    sinon.assert.calledWith(got, iftttUrl);
   });
 
   test('call IFTTT webhook with "pending" status', async function() {
@@ -42,7 +42,7 @@ suite('ifttt', function() {
     await callIftttWebhook('pending', config, got as GotFn);
 
     const iftttUrl = createIftttUrl('ci_build_pending');
-    expect(got).to.have.been.calledWith(iftttUrl);
+    sinon.assert.calledWith(got, iftttUrl);
   });
 
   test('call IFTTT webhook with "failed" status', async function() {
@@ -50,13 +50,13 @@ suite('ifttt', function() {
     await callIftttWebhook('failed', config, got as GotFn);
 
     const iftttUrl = createIftttUrl('ci_build_failure');
-    expect(got).to.have.been.calledWith(iftttUrl);
+    sinon.assert.calledWith(got, iftttUrl);
   });
 
   test('return IFTTT response body', async function() {
     const body = 'Congratulations!';
     const got = sinon.fake.resolves({ body });
     const actual = await callIftttWebhook('success', config, got as GotFn);
-    expect(actual).to.deep.equal(body);
+    assert.deepEqual(actual, body);
   });
 });

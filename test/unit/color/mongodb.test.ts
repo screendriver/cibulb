@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import sinon from 'sinon';
 import { Repository } from '../../../api/_shared/mongodb';
 import { updateDb } from '../../../api/color/mongodb';
@@ -30,20 +29,21 @@ suite('mongodb', function() {
   test('use "cibulb" db', async function() {
     const client = createMongoClient();
     await updateDb(client as any, createRepository());
-    expect(client.db).to.have.been.calledWith('cibulb');
+    sinon.assert.calledWith(client.db, 'cibulb');
   });
 
   test('use "repositories" collection', async function() {
     const client = createMongoClient();
     await updateDb(client as any, createRepository());
-    expect(client.db().collection).to.have.been.calledWith('repositories');
+    sinon.assert.calledWith(client.db().collection, 'repositories');
   });
 
   test('update DB with given repository', async function() {
     const repository = createRepository();
     const client = createMongoClient();
     await updateDb(client as any, repository);
-    expect(client.db().collection().findOneAndUpdate).to.have.been.calledWith(
+    sinon.assert.calledWith(
+      client.db().collection().findOneAndUpdate,
       { name: repository.name },
       { $set: { status: repository.status } },
       { upsert: true },

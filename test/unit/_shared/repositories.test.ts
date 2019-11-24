@@ -1,11 +1,11 @@
-import { expect } from 'chai';
+import { assert } from 'chai';
 import { Repository } from '../../../api/_shared/mongodb';
 import { getRepositoriesStatus } from '../../../api/_shared/repositories';
 
 suite('repositories', function() {
   test('returns "success" when repositories are empty', function() {
     const status = getRepositoriesStatus([]);
-    expect(status).to.equal('success');
+    assert.equal(status, 'success');
   });
 
   test('returns "success" when all repositories are in status "success"', function() {
@@ -14,7 +14,7 @@ suite('repositories', function() {
       { name: 'repoB', status: 'success' },
     ];
     const status = getRepositoriesStatus(repositories);
-    expect(status).to.equal('success');
+    assert.equal(status, 'success');
   });
 
   test('returns "pending" when one repository is in status "pending"', function() {
@@ -24,7 +24,7 @@ suite('repositories', function() {
       { name: 'repoC', status: 'pending' },
     ];
     const status = getRepositoriesStatus(repositories);
-    expect(status).to.equal('pending');
+    assert.equal(status, 'pending');
   });
 
   test('returns "pending" when one repository is in status "running"', function() {
@@ -34,7 +34,7 @@ suite('repositories', function() {
       { name: 'repoC', status: 'running' },
     ];
     const status = getRepositoriesStatus(repositories);
-    expect(status).to.equal('pending');
+    assert.equal(status, 'pending');
   });
 
   test('returns "failed" when one repository is in status "failed"', function() {
@@ -43,6 +43,6 @@ suite('repositories', function() {
       { name: 'repoB', status: 'failed' },
     ];
     const status = getRepositoriesStatus(repositories);
-    expect(status).to.equal('failed');
+    assert.equal(status, 'failed');
   });
 });

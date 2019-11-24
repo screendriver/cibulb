@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert } from 'chai';
 import { isWebhookRequestBody } from '../../../api/color/body';
 
 suite('body', function() {
@@ -13,8 +13,8 @@ suite('body', function() {
         path_with_namespace: 'my-project',
       },
     };
-    expect(isWebhookRequestBody(body)).to.be.true;
-    expect(isWebhookRequestBody(body)).to.be.true;
+    assert.isTrue(isWebhookRequestBody(body));
+    assert.isTrue(isWebhookRequestBody(body));
   });
 
   test('returns false when object_attributes.id property is missing', function() {
@@ -27,7 +27,7 @@ suite('body', function() {
         path_with_namespace: 'my-project',
       },
     };
-    expect(isWebhookRequestBody(body)).to.be.false;
+    assert.isFalse(isWebhookRequestBody(body));
   });
 
   test('returns false when object_attributes.ref property is missing', function() {
@@ -40,7 +40,7 @@ suite('body', function() {
         path_with_namespace: 'my-project',
       },
     };
-    expect(isWebhookRequestBody(body)).to.be.false;
+    assert.isFalse(isWebhookRequestBody(body));
   });
 
   test('returns false when object_attributes.status property is missing', function() {
@@ -53,7 +53,7 @@ suite('body', function() {
         path_with_namespace: 'my-project',
       },
     };
-    expect(isWebhookRequestBody(body)).to.be.false;
+    assert.isFalse(isWebhookRequestBody(body));
   });
 
   test('returns false when project property is missing', function() {
@@ -64,7 +64,7 @@ suite('body', function() {
         status: 'success',
       },
     };
-    expect(isWebhookRequestBody(body)).to.be.false;
+    assert.isFalse(isWebhookRequestBody(body));
   });
 
   test('returns false when project.path_with_namespace property is missing', function() {
@@ -76,11 +76,11 @@ suite('body', function() {
       },
       project: {},
     };
-    expect(isWebhookRequestBody(body)).to.be.false;
+    assert.isFalse(isWebhookRequestBody(body));
   });
 
   test('returns false when all properties are missing', function() {
     const body = {};
-    expect(isWebhookRequestBody(body)).to.be.false;
+    assert.isFalse(isWebhookRequestBody(body));
   });
 });

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { assert } from 'chai';
 import { IncomingMessage } from 'http';
 import { xGitlabToken } from '../../../api/color/headers';
 
@@ -10,7 +10,7 @@ suite('headers', function() {
       },
     };
     const actual = xGitlabToken(req as IncomingMessage);
-    expect(actual).to.equal('foo');
+    assert.equal(actual, 'foo');
   });
 
   test('returns an empty string when "x-gitlab-token" is not present', function() {
@@ -18,6 +18,6 @@ suite('headers', function() {
       headers: {},
     };
     const actual = xGitlabToken(req as IncomingMessage);
-    expect(actual).to.equal('');
+    assert.equal(actual, '');
   });
 });
