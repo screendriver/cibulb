@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { IncomingMessage } from 'http';
-import { xGitlabToken } from '../../../api/color/headers';
+import { xGitlabToken } from '../../../api/_color/headers';
 
 suite('headers', function() {
   test('returns "x-gitlab-token" from request headers', function() {

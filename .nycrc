@@ -7,9 +7,9 @@
   "extension": [".ts"],
   "include": ["api/**/*.ts"],
   "exclude": [
-    "api/color/index.ts",
-    "api/color/run.ts",
-    "api/refresh/index.ts"
+    "api/color.ts",
+    "api/_color/run.ts",
+    "api/refresh.ts"
   ],
   "require": ["ts-node/register/transpile-only"],
   "reporter": [

@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { isBranchAllowed } from '../../../api/color/branches';
+import { isBranchAllowed } from '../../../api/_color/branches';
 
 suite('branches', function() {
   test('return true when branch is "master', function() {

@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { Repository } from '../../../api/_shared/mongodb';
-import { updateDb } from '../../../api/color/mongodb';
+import { updateDb } from '../../../api/_color/mongodb';
 
 function createMongoClient() {
   return {

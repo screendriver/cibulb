@@ -7,12 +7,12 @@
     {
       "src": "/api/color",
       "methods": ["POST"],
-      "dest": "/api/color"
+      "dest": "/api/color.ts"
     },
     {
       "src": "/api/refresh",
       "methods": ["GET"],
-      "dest": "/api/refresh"
+      "dest": "/api/refresh.ts"
     },
     {
       "src": "/api/(.*)",

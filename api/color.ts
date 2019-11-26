@@ -3,13 +3,13 @@ import log from 'loglevel';
 import * as Sentry from '@sentry/node';
 import { json } from 'micro';
 import { Server } from 'http';
-import { startMongoDbMemoryServer } from '../_shared/mongodb';
-import { getConfig } from '../_shared/config';
-import { initSentry } from '../_shared/sentry';
-import { WebhookRequestBody } from '../color/body';
-import { xGitlabToken } from '../color/headers';
-import { run } from '../color/run';
-import { startLocalIftttServer } from '../_shared/ifttt';
+import { startMongoDbMemoryServer } from './_shared/mongodb';
+import { getConfig } from './_shared/config';
+import { initSentry } from './_shared/sentry';
+import { WebhookRequestBody } from './_color/body';
+import { xGitlabToken } from './_color/headers';
+import { run } from './_color/run';
+import { startLocalIftttServer } from './_shared/ifttt';
 
 log.enableAll();
 

@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { isWebhookRequestBody } from '../../../api/color/body';
+import { isWebhookRequestBody } from '../../../api/_color/body';
 
 suite('body', function() {
   test('returns true when all properties are set', function() {
