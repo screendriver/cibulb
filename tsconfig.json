@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es2020",
     "module": "commonjs",
     "outDir": "target",
     "moduleResolution": "node",
@@ -14,7 +14,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "incremental": true,
-    "lib": ["es2018"]
+    "lib": ["es2020"]
   },
   "exclude": ["node_modules"],
   "include": ["api", "test"]

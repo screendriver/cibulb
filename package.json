@@ -6,7 +6,7 @@
   "author": "Christian Rackerseder <git@echooff.de>",
   "license": "MIT",
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "scripts": {
     "compile": "tsc",
