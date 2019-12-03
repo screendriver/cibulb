@@ -3,22 +3,16 @@ import log from 'loglevel';
 import * as Sentry from '@sentry/node';
 import { MongoClient } from 'mongodb';
 import got from 'got';
-import { Server } from 'http';
 import { getConfig } from './_shared/config';
 import { initSentry } from './_shared/sentry';
-import { startMongoDbMemoryServer, connect } from './_shared/mongodb';
+import { connect } from './_shared/mongodb';
 import { allRepositories } from './_refresh/mongodb';
 import { getRepositoriesStatus } from './_shared/repositories';
-import { callIftttWebhook, startLocalIftttServer } from './_shared/ifttt';
+import { callIftttWebhook } from './_shared/ifttt';
 
 log.enableAll();
 
 export default async function refresh(_req: NowRequest, res: NowResponse) {
-  let localIftttServer: Server | undefined;
-  if (process.env.NODE_ENV === 'development') {
-    process.env.MONGO_URI = await startMongoDbMemoryServer();
-    localIftttServer = await startLocalIftttServer();
-  }
   const config = getConfig();
   initSentry(Sentry, config, log);
   let mongoClient: MongoClient | undefined;
@@ -37,9 +31,6 @@ export default async function refresh(_req: NowRequest, res: NowResponse) {
   } finally {
     if (mongoClient) {
       mongoClient.close();
-    }
-    if (localIftttServer) {
-      localIftttServer.close();
     }
   }
 }
