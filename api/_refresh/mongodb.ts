@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { Repository } from '../_shared/mongodb';
+import { Repository } from '../_shared/repositories';
 
 export async function allRepositories(
   mongoClient: MongoClient,

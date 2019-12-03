@@ -1,14 +1,14 @@
-import { Repository } from './mongodb';
+export interface Repository {
+  name: string;
+  status: 'success' | 'running' | 'skipped' | 'pending' | 'failed';
+}
 
-export type Status = 'success' | 'running' | 'pending' | 'failed';
+export type RepositoriesStatus = 'success' | 'pending' | 'failed';
 
 export function getRepositoriesStatus(
   repositories: readonly Repository[],
-): Status {
+): RepositoriesStatus {
   if (repositories.length === 0) {
-    return 'success';
-  }
-  if (repositories.every(({ status }) => status === 'success')) {
     return 'success';
   }
   if (
@@ -18,5 +18,8 @@ export function getRepositoriesStatus(
   ) {
     return 'pending';
   }
-  return 'failed';
+  if (repositories.some(({ status }) => status === 'failed')) {
+    return 'failed';
+  }
+  return 'success';
 }

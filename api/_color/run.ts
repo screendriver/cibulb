@@ -5,9 +5,9 @@ import * as Sentry from '@sentry/node';
 import { Config } from '../_shared/config';
 import { isWebhookRequestBody, WebhookRequestBody } from './body';
 import { isBranchAllowed } from './branches';
-import { connect, Repository } from '../_shared/mongodb';
+import { connect } from '../_shared/mongodb';
 import { updateDb } from './mongodb';
-import { getRepositoriesStatus } from '../_shared/repositories';
+import { getRepositoriesStatus, Repository } from '../_shared/repositories';
 import { callIftttWebhook } from '../_shared/ifttt';
 
 interface Result {

@@ -1,12 +1,11 @@
 import { GotFn } from 'got';
 import { URL } from 'url';
 import { Config } from './config';
-import { Status } from './repositories';
 import { Server } from 'http';
+import { RepositoriesStatus } from './repositories';
 
 const statusTriggerMap = {
   success: 'ci_build_success',
-  running: 'ci_build_pending',
   pending: 'ci_build_pending',
   failed: 'ci_build_failure',
 };
@@ -19,7 +18,7 @@ export async function startLocalIftttServer(): Promise<Server> {
 }
 
 export async function callIftttWebhook(
-  status: Status,
+  status: RepositoriesStatus,
   config: Config,
   got: GotFn,
 ): Promise<string> {

@@ -1,6 +1,8 @@
 import { assert } from 'chai';
-import { Repository } from '../../../api/_shared/mongodb';
-import { getRepositoriesStatus } from '../../../api/_shared/repositories';
+import {
+  getRepositoriesStatus,
+  Repository,
+} from '../../../api/_shared/repositories';
 
 suite('repositories', function() {
   test('returns "success" when repositories are empty', function() {
@@ -44,5 +46,14 @@ suite('repositories', function() {
     ];
     const status = getRepositoriesStatus(repositories);
     assert.equal(status, 'failed');
+  });
+
+  test('returns "success" when one repository is in status "skipped"', function() {
+    const repositories: Repository[] = [
+      { name: 'repoA', status: 'success' },
+      { name: 'repoB', status: 'skipped' },
+    ];
+    const status = getRepositoriesStatus(repositories);
+    assert.equal(status, 'success');
   });
 });

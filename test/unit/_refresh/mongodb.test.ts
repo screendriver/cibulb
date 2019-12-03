@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import sinon from 'sinon';
-import { Repository } from '../../../api/_shared/mongodb';
 import { allRepositories } from '../../../api/_refresh/mongodb';
+import { Repository } from '../../../api/_shared/repositories';
 
 function createMongoClient(repositoriesToReturn: Repository[] = []) {
   return {

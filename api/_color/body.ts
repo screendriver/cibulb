@@ -1,10 +1,10 @@
-import { Status } from '../_shared/repositories';
+import { Repository } from '../_shared/repositories';
 
 export interface WebhookRequestBody {
   object_attributes: {
     id: number;
     ref: string;
-    status: Status;
+    status: Repository['status'];
   };
   project: {
     path_with_namespace: string;

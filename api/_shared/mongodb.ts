@@ -1,10 +1,4 @@
 import { MongoClient } from 'mongodb';
-import { Status } from './repositories';
-
-export interface Repository {
-  name: string;
-  status: Status;
-}
 
 export async function startMongoDbMemoryServer(): Promise<string> {
   const { MongoMemoryServer } = await import('mongodb-memory-server');

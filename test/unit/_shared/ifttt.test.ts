@@ -29,14 +29,6 @@ suite('ifttt', function() {
     sinon.assert.calledWith(got, iftttUrl);
   });
 
-  test('call IFTTT webhook with "running" status', async function() {
-    const got = sinon.fake.resolves({ body: '' });
-    await callIftttWebhook('running', config, got as GotFn);
-
-    const iftttUrl = createIftttUrl('ci_build_pending');
-    sinon.assert.calledWith(got, iftttUrl);
-  });
-
   test('call IFTTT webhook with "pending" status', async function() {
     const got = sinon.fake.resolves({ body: '' });
     await callIftttWebhook('pending', config, got as GotFn);
