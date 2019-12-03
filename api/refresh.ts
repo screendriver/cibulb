@@ -18,7 +18,6 @@ export default async function refresh(_req: NowRequest, res: NowResponse) {
   let mongoClient: MongoClient | undefined;
   try {
     mongoClient = await connect(MongoClient, config.mongoDbUri);
-    log.info('Reading all repositories from MongoDB');
     const repositories = await allRepositories(mongoClient);
     const overallStatus = getRepositoriesStatus(repositories);
     log.info(`Calling IFTTT webhook with "${overallStatus}" status`);
