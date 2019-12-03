@@ -16,6 +16,7 @@ export function connect(
   mongoDbUri: string,
 ): Promise<MongoClient> {
   return mongoClient.connect(mongoDbUri, {
+    useUnifiedTopology: true,
     useNewUrlParser: true,
   });
 }

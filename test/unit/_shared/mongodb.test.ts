@@ -9,6 +9,7 @@ suite('mongodb', function() {
     const dbUri = 'mongodb://localhost';
     await connect(client as any, dbUri);
     sinon.assert.calledWith(client.connect, dbUri, {
+      useUnifiedTopology: true,
       useNewUrlParser: true,
     });
   });
