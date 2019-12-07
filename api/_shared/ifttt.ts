@@ -1,5 +1,4 @@
-import { GotFn } from 'got';
-import { URL } from 'url';
+import { Got } from 'got';
 import { Config } from './config';
 import { RepositoriesStatus } from './repositories';
 
@@ -12,12 +11,11 @@ const statusTriggerMap = {
 export async function callIftttWebhook(
   status: RepositoriesStatus,
   config: Config,
-  got: GotFn,
+  got: Got,
 ): Promise<string> {
-  const iftttUrl = new URL(
+  const body = await got(
     `trigger/${statusTriggerMap[status]}/with/key/${config.iftttKey}`,
-    config.iftttBaseUrl,
+    { resolveBodyOnly: true, prefixUrl: config.iftttBaseUrl },
   );
-  const { body } = await got(iftttUrl);
   return body;
 }
