@@ -50,12 +50,12 @@ function createColorFunctionService() {
 
 function doNetworkRequest(url: string) {
   return got.post(url, {
-    json: true,
     throwHttpErrors: false,
+    retry: 0,
     headers: {
       'x-gitlab-token': 'my-secret',
     },
-    body: {
+    json: {
       object_attributes: {
         id: 123,
         ref: 'master',
