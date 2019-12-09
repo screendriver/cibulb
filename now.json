@@ -6,13 +6,19 @@
   "routes": [
     {
       "src": "/api/color",
+      "dest": "/api/color.ts",
       "methods": ["POST"],
-      "dest": "/api/color.ts"
+      "headers": {
+        "Access-Control-Allow-Origin": "https://postwoman.io"
+      }
     },
     {
       "src": "/api/refresh",
+      "dest": "/api/refresh.ts",
       "methods": ["GET"],
-      "dest": "/api/refresh.ts"
+      "headers": {
+        "Access-Control-Allow-Origin": "https://postwoman.io"
+      }
     },
     {
       "src": "/api/(.*)",
