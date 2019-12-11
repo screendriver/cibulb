@@ -17,5 +17,5 @@
     "lib": ["es2020"]
   },
   "exclude": ["node_modules"],
-  "include": ["api", "test"]
+  "include": ["api", "src", "test"]
 }
