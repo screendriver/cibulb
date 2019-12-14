@@ -16,7 +16,8 @@
   ],
   "plugins": ["@typescript-eslint", "mocha"],
   "env": {
-    "node": true
+    "node": true,
+    "mocha": true
   },
   "rules": {
     "require-atomic-updates": "off",
