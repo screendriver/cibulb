@@ -12,9 +12,9 @@
     "compile": "tsc",
     "lint": "eslint --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
-    "test:integration": "mocha test/integration/**/*.test.*",
-    "test:unit": "mocha test/unit/**/*.test.*",
-    "test:unit:coverage": "nyc mocha test/unit/**/*.test.*"
+    "test:integration": "mocha 'test/integration/**/*.test.*'",
+    "test:unit": "mocha 'test/unit/**/*.test.*'",
+    "test:unit:coverage": "nyc mocha 'test/unit/**/*.test.*'"
   },
   "dependencies": {
     "@sentry/node": "5.10.2",
