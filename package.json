@@ -10,6 +10,7 @@
   },
   "scripts": {
     "compile": "tsc",
+    "build": "rollup --config",
     "lint": "eslint --ext ts api test",
     "copy:paste:detector": "jscpd src test typings",
     "test:integration": "mocha 'test/integration/**/*.test.*'",
