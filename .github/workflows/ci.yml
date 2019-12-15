@@ -39,13 +39,10 @@ jobs:
         with:
           token: ${{secrets.CODECOV_TOKEN}}
           file: target/coverage/clover.xml
-      - name: Production deploy to ZEIT Now
+      - name: Deploy to Amazon Web Services
         if: github.ref == 'refs/heads/master'
-        run: yarn now -t $NOW_TOKEN -e GITLAB_SECRET_TOKEN -e IFTTT_BASE_URL -e IFTTT_KEY -e MONGO_URI -e SENTRY_DSN --prod
+        run: yarn cdk deploy --ci --require-approval never
         env:
-          NOW_TOKEN: ${{ secrets.NOW_TOKEN }}
-          GITLAB_SECRET_TOKEN: ${{ secrets.GITLAB_SECRET_TOKEN }}
-          IFTTT_BASE_URL: ${{ secrets.IFTTT_BASE_URL }}
-          IFTTT_KEY: ${{ secrets.IFTTT_KEY }}
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
