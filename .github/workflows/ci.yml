@@ -27,7 +27,9 @@ jobs:
           yarn lint
           yarn copy:paste:detector
       - name: Compile source code
-        run: yarn compile
+        run: |
+          yarn compile
+          yarn build
       - name: Run tests
         run: |
           yarn test:unit:coverage
