@@ -15,7 +15,7 @@ export default [
   {
     input: 'src/color.ts',
     output: {
-      file: 'target/color-bundle.js',
+      file: 'target/lambda/color.js',
       format,
     },
     plugins,
@@ -23,7 +23,7 @@ export default [
   {
     input: 'src/refresh.ts',
     output: {
-      file: 'target/refresh-bundle.js',
+      file: 'target/lambda/refresh.js',
       format,
     },
     plugins,

@@ -8,20 +8,17 @@ export class CiBulbCdkStack extends cdk.Stack {
 
     const colorHandler = new lambda.Function(this, 'ColorHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('target'),
-      handler: 'color-bundle.handler',
+      code: lambda.Code.fromAsset('target/lambda/'),
+      handler: 'color.handler',
     });
 
     const refreshHandler = new lambda.Function(this, 'RefreshHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      code: lambda.Code.asset('target'),
-      handler: 'refresh-bundle.handler',
+      code: lambda.Code.fromAsset('target/lambda/'),
+      handler: 'refresh.handler',
     });
 
-    const api = new apigateway.LambdaRestApi(this, 'CibulbApi', {
-      handler: colorHandler,
-      proxy: false,
-    });
+    const api = new apigateway.RestApi(this, 'CibulbApi');
 
     const colorIntegration = new apigateway.LambdaIntegration(colorHandler);
     const color = api.root.addResource('color');
