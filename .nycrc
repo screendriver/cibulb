@@ -10,7 +10,7 @@
     "api/_color/run.ts",
     "api/refresh.ts"
   ],
-  "require": ["ts-node/register/transpile-only"],
+  "require": ["esm", "ts-node/register/transpile-only"],
   "reporter": [
     "lcov",
     "text",
