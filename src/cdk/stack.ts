@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigateway from '@aws-cdk/aws-apigateway';
+import * as dynamodb from '@aws-cdk/aws-dynamodb';
 
 export class CiBulbCdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -38,5 +39,9 @@ export class CiBulbCdkStack extends cdk.Stack {
     const refreshIntegration = new apigateway.LambdaIntegration(refreshHandler);
     const refresh = api.root.addResource('refresh');
     refresh.addMethod('GET', refreshIntegration);
+
+    new dynamodb.Table(this, 'CiBulbTable', {
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+    });
   }
 }
