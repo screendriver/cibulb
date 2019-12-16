@@ -10,12 +10,18 @@ export class CiBulbCdkStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'color.handler',
+      environment: {
+        SENTRY_DSN: process.env.SENTRY_DSN ?? '',
+      },
     });
 
     const refreshHandler = new lambda.Function(this, 'RefreshHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'refresh.handler',
+      environment: {
+        SENTRY_DSN: process.env.SENTRY_DSN ?? '',
+      },
     });
 
     const api = new apigateway.RestApi(this, 'CibulbApi');
