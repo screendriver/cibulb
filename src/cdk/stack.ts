@@ -6,22 +6,23 @@ export class CiBulbCdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const environment = {
+      GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN ?? '',
+      SENTRY_DSN: process.env.SENTRY_DSN ?? '',
+    };
+
     const colorHandler = new lambda.Function(this, 'ColorHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'color.handler',
-      environment: {
-        SENTRY_DSN: process.env.SENTRY_DSN ?? '',
-      },
+      environment,
     });
 
     const refreshHandler = new lambda.Function(this, 'RefreshHandler', {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'refresh.handler',
-      environment: {
-        SENTRY_DSN: process.env.SENTRY_DSN ?? '',
-      },
+      environment,
     });
 
     const api = new apigateway.RestApi(this, 'CibulbApi');
