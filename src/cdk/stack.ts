@@ -7,7 +7,8 @@ export class CiBulbCdkStack extends cdk.Stack {
     super(scope, id, props);
 
     const environment = {
-      GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN ?? '',
+      IFTTT_BASE_URL: process.env.IFTTT_BASE_URL ?? '',
+      IFTTT_KEY: process.env.IFTTT_KEY ?? '',
       SENTRY_DSN: process.env.SENTRY_DSN ?? '',
     };
 
@@ -15,7 +16,10 @@ export class CiBulbCdkStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'color.handler',
-      environment,
+      environment: {
+        ...environment,
+        GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN ?? '',
+      },
     });
 
     const refreshHandler = new lambda.Function(this, 'RefreshHandler', {
