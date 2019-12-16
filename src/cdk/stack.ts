@@ -7,10 +7,18 @@ export class CiBulbCdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const dynamoTable = new dynamodb.Table(this, 'repositories', {
+      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      tableName: 'repositories',
+      removalPolicy: cdk.RemovalPolicy.DESTROY, // NOT recommended for production code
+    });
+
     const environment = {
       IFTTT_BASE_URL: process.env.IFTTT_BASE_URL ?? '',
       IFTTT_KEY: process.env.IFTTT_KEY ?? '',
       SENTRY_DSN: process.env.SENTRY_DSN ?? '',
+      DYNAMO_DB_TABLE_NAME: dynamoTable.tableName,
+      DYNAMO_DB_PRIMARY_KEY: 'id',
     };
 
     const colorHandler = new lambda.Function(this, 'ColorHandler', {
@@ -30,6 +38,9 @@ export class CiBulbCdkStack extends cdk.Stack {
       environment,
     });
 
+    dynamoTable.grantReadWriteData(colorHandler);
+    dynamoTable.grantReadData(refreshHandler);
+
     const api = new apigateway.RestApi(this, 'CibulbApi');
 
     const colorIntegration = new apigateway.LambdaIntegration(colorHandler);
@@ -39,9 +50,5 @@ export class CiBulbCdkStack extends cdk.Stack {
     const refreshIntegration = new apigateway.LambdaIntegration(refreshHandler);
     const refresh = api.root.addResource('refresh');
     refresh.addMethod('GET', refreshIntegration);
-
-    new dynamodb.Table(this, 'CiBulbTable', {
-      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-    });
   }
 }
