@@ -33,6 +33,24 @@
     "@aws-cdk/aws-lambda" "1.18.0"
     "@aws-cdk/core" "1.18.0"
 
+"@aws-cdk/aws-applicationautoscaling@1.18.0":
+  version "1.18.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-applicationautoscaling/-/aws-applicationautoscaling-1.18.0.tgz#78e9a6ba08f56adc4b30d69a07817eab5bf74c0d"
+  integrity sha512-hZFmj1gSQFvRB3hAj6X/ttGtLq2paT3IvSIlYWKZabnyosWfFYfLObsShjgdKp/BrrRago6PzCCQcYHUK7dxBg==
+  dependencies:
+    "@aws-cdk/aws-autoscaling-common" "1.18.0"
+    "@aws-cdk/aws-cloudwatch" "1.18.0"
+    "@aws-cdk/aws-iam" "1.18.0"
+    "@aws-cdk/core" "1.18.0"
+
+"@aws-cdk/aws-autoscaling-common@1.18.0":
+  version "1.18.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-autoscaling-common/-/aws-autoscaling-common-1.18.0.tgz#612c7feacbda01ff8de369ecd45b9d00490ef047"
+  integrity sha512-nr6oI9qVo4tGXKfcI3PHxzOn2dhkL8gGjxCLNDUCFkugUr3XpmfboCEM0Amn1A1gqgES/3D7fVbOLaxtxU2WZg==
+  dependencies:
+    "@aws-cdk/aws-iam" "1.18.0"
+    "@aws-cdk/core" "1.18.0"
+
 "@aws-cdk/aws-certificatemanager@1.18.0":
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-certificatemanager/-/aws-certificatemanager-1.18.0.tgz#45ad15789fddce5fd55e487811b9bf53b600e81d"
@@ -61,6 +79,15 @@
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-cloudwatch/-/aws-cloudwatch-1.18.0.tgz#4e6eac36aef860334ba251f00d69183593b7d1e5"
   integrity sha512-/Lgp/Q/2CSNWnf3DpcNkg+OfZ3BOkRp8gBJUMMgY0mYSRcXyDj9jy2CC1RrYj1G9R2tcyGxlplLoEndtqIiBcA==
   dependencies:
+    "@aws-cdk/aws-iam" "1.18.0"
+    "@aws-cdk/core" "1.18.0"
+
+"@aws-cdk/aws-dynamodb@1.18.0":
+  version "1.18.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-dynamodb/-/aws-dynamodb-1.18.0.tgz#dd6617963ba73bc43abbfecf90fdebef6040f178"
+  integrity sha512-LUTNaZ5J894kT88MNKWkqQFxxfjDj9AV7qle1U7lIxq18B9At9O0pNY74ayZF7TZQlPk3ra9Cu5fjFeKpx0Ukg==
+  dependencies:
+    "@aws-cdk/aws-applicationautoscaling" "1.18.0"
     "@aws-cdk/aws-iam" "1.18.0"
     "@aws-cdk/core" "1.18.0"
 
