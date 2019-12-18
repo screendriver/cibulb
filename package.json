@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@sentry/node": "5.11.1",
+    "aws-sdk": "2.593.0",
     "got": "10.3.0",
     "loglevel": "1.6.6",
     "micro": "9.3.4",
