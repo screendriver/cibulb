@@ -10,6 +10,8 @@ export class CiBulbCdkStack extends cdk.Stack {
     const dynamoTable = new dynamodb.Table(this, 'repositories', {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       tableName: 'repositories',
+      readCapacity: 1,
+      writeCapacity: 1,
       removalPolicy: cdk.RemovalPolicy.DESTROY, // NOT recommended for production code
     });
 
