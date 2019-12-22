@@ -8,7 +8,11 @@ import { terser } from 'rollup-plugin-terser';
 const plugins = [
   typescript(),
   resolve({ preferBuiltins: true }),
-  commonjs(),
+  commonjs({
+    namedExports: {
+      'aws-sdk/clients/dynamodb': ['DocumentClient'],
+    },
+  }),
   json(),
   terser(),
 ];
