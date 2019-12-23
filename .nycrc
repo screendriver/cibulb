@@ -4,7 +4,6 @@
   "report-dir": "target/coverage",
   "cache-dir": "target/.cache",
   "exclude-after-remap": false,
-  "extension": [".ts"],
   "include": ["api/**/*.ts"],
   "exclude": [
     "api/color.ts",
