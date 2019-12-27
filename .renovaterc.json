@@ -10,6 +10,7 @@
   "nvm": {
     "enabled": false
   },
+  "ignoreDeps": ["aws-sdk"],
   "packageRules": [
     {
       "depTypeList": ["dependencies", "devDependencies"],
