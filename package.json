@@ -26,6 +26,9 @@
     "mongodb": "3.5.2",
     "tslib": "1.10.0"
   },
+  "peerDependencies": {
+    "aws-sdk": "2.536.0"
+  },
   "devDependencies": {
     "@aws-cdk/assert": "1.18.0",
     "@aws-cdk/aws-apigateway": "1.18.0",
