@@ -15,6 +15,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
   },
+  externals: /^aws-sdk?./,
   module: {
     rules: [
       {
