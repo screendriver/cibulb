@@ -2,6 +2,8 @@ import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as apigateway from '@aws-cdk/aws-apigateway';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
+import * as sns from '@aws-cdk/aws-sns';
+import * as snsSubs from '@aws-cdk/aws-sns-subscriptions';
 
 export class CiBulbCdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -51,6 +53,11 @@ export class CiBulbCdkStack extends cdk.Stack {
 
     dynamoTable.grantReadWriteData(colorHandler);
     dynamoTable.grantReadData(refreshHandler);
+
+    const topic = new sns.Topic(this, 'IftttTopic', {
+      displayName: 'IFTTT Webhooks Topic',
+    });
+    topic.addSubscription(new snsSubs.LambdaSubscription(iftttHandler));
 
     const api = new apigateway.RestApi(this, 'CibulbApi');
 
