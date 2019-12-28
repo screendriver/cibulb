@@ -16,8 +16,6 @@ export class CiBulbCdkStack extends cdk.Stack {
     });
 
     const environment = {
-      IFTTT_BASE_URL: process.env.IFTTT_BASE_URL ?? '',
-      IFTTT_KEY: process.env.IFTTT_KEY ?? '',
       SENTRY_DSN: process.env.SENTRY_DSN ?? '',
       DYNAMO_DB_TABLE_NAME: dynamoTable.tableName,
       DYNAMO_DB_PRIMARY_KEY: 'id',
@@ -38,6 +36,17 @@ export class CiBulbCdkStack extends cdk.Stack {
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'refresh.handler',
       environment,
+    });
+
+    const iftttHandler = new lambda.Function(this, 'IftttHandler', {
+      runtime: lambda.Runtime.NODEJS_12_X,
+      code: lambda.Code.fromAsset('target/lambda/'),
+      handler: 'ifttt.handler',
+      environment: {
+        SENTRY_DSN: process.env.SENTRY_DSN ?? '',
+        IFTTT_BASE_URL: process.env.IFTTT_BASE_URL ?? '',
+        IFTTT_KEY: process.env.IFTTT_KEY ?? '',
+      },
     });
 
     dynamoTable.grantReadWriteData(colorHandler);
