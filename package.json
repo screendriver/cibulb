@@ -11,7 +11,7 @@
   "scripts": {
     "compile": "tsc",
     "build": "webpack",
-    "lint": "eslint --ext ts api test",
+    "lint": "eslint --ext ts src test",
     "copy:paste:detector": "jscpd src test typings",
     "test:integration": "mocha 'test/integration/**/*.test.*'",
     "test:unit": "mocha 'test/unit/**/*.test.*'",
