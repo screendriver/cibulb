@@ -9,7 +9,7 @@
     "node": "12.x"
   },
   "scripts": {
-    "compile": "tsc",
+    "compile": "tsc --build",
     "build": "webpack",
     "lint": "eslint --ext ts src test",
     "copy:paste:detector": "jscpd src test typings",
