@@ -19,7 +19,7 @@ export class CiBulbCdkStack extends cdk.Stack {
       displayName: 'IFTTT Webhooks Topic',
     });
 
-    const colorHandler = new lambda.Function(this, 'ColorHandler', {
+    const colorFunction = new lambda.Function(this, 'ColorFunction', {
       ...lambdaRuntime,
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'color.handler',
@@ -32,7 +32,7 @@ export class CiBulbCdkStack extends cdk.Stack {
       },
     });
 
-    const refreshHandler = new lambda.Function(this, 'RefreshHandler', {
+    const refreshFunction = new lambda.Function(this, 'RefreshFunction', {
       ...lambdaRuntime,
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'refresh.handler',
@@ -44,7 +44,7 @@ export class CiBulbCdkStack extends cdk.Stack {
       },
     });
 
-    const iftttHandler = new lambda.Function(this, 'IftttHandler', {
+    const iftttFunction = new lambda.Function(this, 'IftttFunction', {
       ...lambdaRuntime,
       code: lambda.Code.fromAsset('target/lambda/'),
       handler: 'ifttt.handler',
@@ -55,7 +55,7 @@ export class CiBulbCdkStack extends cdk.Stack {
       },
     });
 
-    const dynamoTable = new dynamodb.Table(this, 'Repositories', {
+    const dynamoTable = new dynamodb.Table(this, 'RepositoriesTable', {
       partitionKey: {
         name: dynamoDbPrimaryKey.DYNAMO_DB_PRIMARY_KEY,
         type: dynamodb.AttributeType.STRING,
@@ -64,20 +64,22 @@ export class CiBulbCdkStack extends cdk.Stack {
       readCapacity: 1,
       writeCapacity: 1,
     });
-    dynamoTable.grantReadWriteData(colorHandler);
-    dynamoTable.grantReadData(refreshHandler);
+    dynamoTable.grantReadWriteData(colorFunction);
+    dynamoTable.grantReadData(refreshFunction);
 
-    topic.addSubscription(new snsSubs.LambdaSubscription(iftttHandler));
-    topic.grantPublish(colorHandler);
-    topic.grantPublish(refreshHandler);
+    topic.addSubscription(new snsSubs.LambdaSubscription(iftttFunction));
+    topic.grantPublish(colorFunction);
+    topic.grantPublish(refreshFunction);
 
     const api = new apigateway.RestApi(this, 'CibulbApi');
 
-    const colorIntegration = new apigateway.LambdaIntegration(colorHandler);
+    const colorIntegration = new apigateway.LambdaIntegration(colorFunction);
     const color = api.root.addResource('color');
     color.addMethod('POST', colorIntegration);
 
-    const refreshIntegration = new apigateway.LambdaIntegration(refreshHandler);
+    const refreshIntegration = new apigateway.LambdaIntegration(
+      refreshFunction,
+    );
     const refresh = api.root.addResource('refresh');
     refresh.addMethod('GET', refreshIntegration);
   }
