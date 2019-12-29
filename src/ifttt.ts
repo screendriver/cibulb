@@ -1,7 +1,8 @@
-import { SNSHandler } from 'aws-lambda';
-import got from 'got';
+import { SNSHandler, SNSEventRecord } from 'aws-lambda';
+import flow from 'lodash.flow';
+import gotLib, { Got } from 'got';
 
-function triggerName(message: string) {
+export function triggerName(message: string) {
   switch (message) {
     case 'success':
       return 'ci_build_success';
@@ -13,14 +14,26 @@ function triggerName(message: string) {
   }
 }
 
+export function firstMessage(records: SNSEventRecord[]): string {
+  const [message] = records.map(record => record.Sns.Message);
+  return message ?? '';
+}
+
+export function createIftttTrigger(trigger: string) {
+  return async (got: Got, iftttKey: string, iftttBaseUrl: string) => {
+    await got(`trigger/${trigger}/with/key/${iftttKey}`, {
+      prefixUrl: iftttBaseUrl,
+    });
+  };
+}
+
 export const handler: SNSHandler = async event => {
   const iftttKey = process.env.IFTTT_KEY ?? '';
   const iftttBaseUrl = process.env.IFTTT_BASE_URL ?? '';
-  const message = event.Records.reduce(
-    (_previousValue, currentValue) => currentValue.Sns.Message,
-    '',
-  );
-  await got(`trigger/${triggerName(message)}/with/key/${iftttKey}`, {
-    prefixUrl: iftttBaseUrl,
-  });
+  const iftttTrigger = flow(
+    firstMessage,
+    triggerName,
+    createIftttTrigger,
+  )(event.Records);
+  await iftttTrigger(gotLib, iftttKey, iftttBaseUrl);
 };
