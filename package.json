@@ -13,7 +13,6 @@
     "build": "webpack",
     "lint": "eslint --ext ts src test",
     "copy:paste:detector": "jscpd src test typings",
-    "test:integration": "mocha 'test/integration/**/*.test.*'",
     "test:unit": "mocha 'test/unit/**/*.test.*'",
     "test:unit:coverage": "nyc mocha 'test/unit/**/*.test.*'"
   },
