@@ -1,10 +1,12 @@
 import { Handler } from 'aws-lambda';
+import SNS from 'aws-sdk/clients/sns';
 
-export const handler: Handler = event => {
-  console.log('request:', JSON.stringify(event, undefined, 2));
-  return Promise.resolve({
+export const handler: Handler = async () => {
+  await new SNS()
+    .publish({ TopicArn: process.env.TOPIC_ARN!, Message: 'success' })
+    .promise();
+  return {
     statusCode: 200,
-    headers: { 'Content-Type': 'text/plain' },
-    body: `Hello, CDK! You've hit ${event.path}\n`,
-  });
+    body: 'Hello World!',
+  };
 };
