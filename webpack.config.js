@@ -5,6 +5,7 @@ module.exports = {
   target: 'node',
   entry: {
     color: './src/color.ts',
+    ifttt: './src/ifttt.ts',
     refresh: './src/refresh.ts',
   },
   output: {
