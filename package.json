@@ -23,7 +23,6 @@
     "lodash.flow": "3.5.0",
     "loglevel": "1.6.6",
     "micro": "9.3.4",
-    "mongodb": "3.5.2",
     "tslib": "1.10.0"
   },
   "peerDependencies": {
@@ -43,8 +42,6 @@
     "@types/lodash.flow": "3.5.6",
     "@types/micro": "7.3.3",
     "@types/mocha": "5.2.7",
-    "@types/mongodb": "3.3.14",
-    "@types/mongodb-memory-server": "1.8.0",
     "@types/sinon": "7.5.1",
     "@types/test-listen": "1.1.0",
     "@typescript-eslint/eslint-plugin": "2.17.0",
@@ -59,7 +56,6 @@
     "esm": "3.2.20",
     "jscpd": "2.0.16",
     "mocha": "7.0.1",
-    "mongodb-memory-server": "6.2.4",
     "now": "16.7.3",
     "nyc": "15.0.0",
     "prettier": "1.19.1",
