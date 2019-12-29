@@ -56,7 +56,7 @@ suite('ifttt', function() {
   });
 
   test('createIftttTrigger() calls IFTTT with the correct URL', async function() {
-    const got = sinon.fake.resolves('bbbbccc');
+    const got = sinon.fake.resolves('');
     const iftttKey = 'my-key';
     const iftttBaseUrl = 'http://example.com';
     const trigger = 'ci_build_success';
@@ -64,6 +64,7 @@ suite('ifttt', function() {
     await iftttTrigger((got as unknown) as Got, iftttKey, iftttBaseUrl);
     sinon.assert.calledWith(got, `trigger/${trigger}/with/key/${iftttKey}`, {
       prefixUrl: iftttBaseUrl,
+      resolveBodyOnly: true,
     });
   });
 });

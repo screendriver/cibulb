@@ -1,6 +1,9 @@
 import { SNSHandler, SNSEventRecord } from 'aws-lambda';
 import flow from 'lodash.flow';
 import gotLib, { Got } from 'got';
+import log from 'loglevel';
+
+log.enableAll();
 
 export function triggerName(message: string) {
   switch (message) {
@@ -21,9 +24,11 @@ export function firstMessage(records: SNSEventRecord[]): string {
 
 export function createIftttTrigger(trigger: string) {
   return async (got: Got, iftttKey: string, iftttBaseUrl: string) => {
-    await got(`trigger/${trigger}/with/key/${iftttKey}`, {
+    const response = await got(`trigger/${trigger}/with/key/${iftttKey}`, {
       prefixUrl: iftttBaseUrl,
+      resolveBodyOnly: true,
     });
+    log.info(response);
   };
 }
 
