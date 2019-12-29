@@ -68,6 +68,8 @@ export class CiBulbCdkStack extends cdk.Stack {
     dynamoTable.grantReadData(refreshHandler);
 
     topic.addSubscription(new snsSubs.LambdaSubscription(iftttHandler));
+    topic.grantPublish(colorHandler);
+    topic.grantPublish(refreshHandler);
 
     const api = new apigateway.RestApi(this, 'CibulbApi');
 
