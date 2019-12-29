@@ -9,10 +9,15 @@ const lambdaRuntime = { runtime: lambda.Runtime.NODEJS_12_X };
 const sentryDsn = { SENTRY_DSN: process.env.SENTRY_DSN ?? '' };
 const dynamoDbTableName = { DYNAMO_DB_TABLE_NAME: 'Repositories' };
 const dynamoDbPrimaryKey = { DYNAMO_DB_PRIMARY_KEY: 'Name' };
+const topicArn = (arn: string) => ({ TOPIC_ARN: arn });
 
 export class CiBulbCdkStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const topic = new sns.Topic(this, 'IftttTopic', {
+      displayName: 'IFTTT Webhooks Topic',
+    });
 
     const colorHandler = new lambda.Function(this, 'ColorHandler', {
       ...lambdaRuntime,
@@ -22,6 +27,7 @@ export class CiBulbCdkStack extends cdk.Stack {
         ...sentryDsn,
         ...dynamoDbTableName,
         ...dynamoDbPrimaryKey,
+        ...topicArn(topic.topicArn),
         GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN ?? '',
       },
     });
@@ -34,6 +40,7 @@ export class CiBulbCdkStack extends cdk.Stack {
         ...sentryDsn,
         ...dynamoDbTableName,
         ...dynamoDbPrimaryKey,
+        ...topicArn(topic.topicArn),
       },
     });
 
@@ -60,9 +67,6 @@ export class CiBulbCdkStack extends cdk.Stack {
     dynamoTable.grantReadWriteData(colorHandler);
     dynamoTable.grantReadData(refreshHandler);
 
-    const topic = new sns.Topic(this, 'IftttTopic', {
-      displayName: 'IFTTT Webhooks Topic',
-    });
     topic.addSubscription(new snsSubs.LambdaSubscription(iftttHandler));
 
     const api = new apigateway.RestApi(this, 'CibulbApi');
