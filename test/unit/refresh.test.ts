@@ -1,8 +1,16 @@
 import { assert } from 'chai';
 import { ItemList } from 'aws-sdk/clients/dynamodb';
-import { getRepositoriesStatus, RepositoriesStatus } from '../../src/refresh';
+import SNS from 'aws-sdk/clients/sns';
+import sinon from 'sinon';
+import { Logger } from 'pino';
+import {
+  getRepositoriesStatus,
+  RepositoriesStatus,
+  logOverallStatus,
+  publishSnsTopic,
+} from '../../src/refresh';
 
-suite.only('refresh lambda', function() {
+suite('refresh lambda', function() {
   test('getRepositoriesStatus() returns "success" when item list is undefined', function() {
     const actual = getRepositoriesStatus();
     const expected: RepositoriesStatus = 'success';
@@ -56,5 +64,40 @@ suite.only('refresh lambda', function() {
     const actual = getRepositoriesStatus(itemList);
     const expected: RepositoriesStatus = 'success';
     assert.strictEqual(actual, expected);
+  });
+
+  test('logOverallStatus() returns given overall status', function() {
+    const logger = {
+      info: sinon.fake(),
+    };
+    const actual = logOverallStatus((logger as unknown) as Logger)('success');
+    const expected: RepositoriesStatus = 'success';
+    assert.strictEqual(actual, expected);
+  });
+
+  test('logOverallStatus() logs given overall status', function() {
+    const logger = {
+      info: sinon.fake(),
+    };
+    logOverallStatus((logger as unknown) as Logger)('success');
+    sinon.assert.calledWithExactly(
+      logger.info,
+      'Overall repositories status:',
+      'success',
+    );
+  });
+
+  test('publishSnsTopic() publishes given overall status', async function() {
+    const sns = {
+      publish: sinon.fake.returns({
+        promise: sinon.fake.resolves(undefined),
+      }),
+    };
+    const topicArn = 'test';
+    await publishSnsTopic((sns as unknown) as SNS, topicArn)('success');
+    sinon.assert.calledWithExactly(sns.publish, {
+      TopicArn: topicArn,
+      Message: 'success',
+    });
   });
 });
