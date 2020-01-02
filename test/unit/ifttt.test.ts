@@ -1,6 +1,7 @@
 import { assert } from 'chai';
 import sinon from 'sinon';
 import { SNSEventRecord, SNSMessage } from 'aws-lambda';
+import pino from 'pino';
 import { Got } from 'got';
 import { triggerName, firstMessage, createIftttTrigger } from '../../src/ifttt';
 
@@ -57,11 +58,12 @@ suite('ifttt', function() {
 
   test('createIftttTrigger() calls IFTTT with the correct URL', async function() {
     const got = sinon.fake.resolves('');
+    const logger = pino({ enabled: false });
     const iftttKey = 'my-key';
     const iftttBaseUrl = 'http://example.com';
     const trigger = 'ci_build_success';
     const iftttTrigger = createIftttTrigger(trigger);
-    await iftttTrigger((got as unknown) as Got, iftttKey, iftttBaseUrl);
+    await iftttTrigger((got as unknown) as Got, logger, iftttKey, iftttBaseUrl);
     sinon.assert.calledWith(got, `trigger/${trigger}/with/key/${iftttKey}`, {
       prefixUrl: iftttBaseUrl,
       resolveBodyOnly: true,
