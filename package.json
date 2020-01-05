@@ -14,7 +14,8 @@
     "lint": "eslint --ext ts src test",
     "copy:paste:detector": "jscpd src test typings",
     "test:unit": "TS_NODE_PROJECT=tsconfig.base.json mocha 'test/unit/**/*.test.*'",
-    "test:unit:coverage": "TS_NODE_PROJECT=tsconfig.base.json nyc mocha 'test/unit/**/*.test.*'"
+    "test:unit:coverage": "TS_NODE_PROJECT=tsconfig.base.json nyc mocha 'test/unit/**/*.test.*'",
+    "test:integration": "TS_NODE_PROJECT=tsconfig.base.json mocha 'test/integration/**/*.test.*'"
   },
   "dependencies": {
     "@sentry/node": "5.11.1",
