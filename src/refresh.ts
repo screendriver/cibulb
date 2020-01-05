@@ -6,10 +6,11 @@ import pino, { Logger } from 'pino';
 
 export type RepositoriesStatus = 'success' | 'pending' | 'failed';
 
-async function scanRepositories(tableName: string) {
-  const docClient = new DocumentClient();
-  const scanOutput = await docClient.scan({ TableName: tableName }).promise();
-  return scanOutput.Items;
+function scanRepositories(docClient: DocumentClient) {
+  return async (tableName: string) => {
+    const scanOutput = await docClient.scan({ TableName: tableName }).promise();
+    return scanOutput.Items;
+  };
 }
 
 function checkFailedStatus(itemList: ItemList): RepositoriesStatus {
@@ -51,15 +52,23 @@ export function getRepositoriesStatus(itemList?: ItemList): RepositoriesStatus {
     : getStatusForNonEmptyRepos(itemList);
 }
 
+function getEndpoint(port: number): string | undefined {
+  return process.env.LOCALSTACK_HOSTNAME
+    ? `http://${process.env.LOCALSTACK_HOSTNAME}:${port}`
+    : undefined;
+}
+
 export const handler: APIGatewayProxyHandler = async () => {
   const logger = pino();
-  const tableName = process.env.DYNAMO_DB_TABLE_NAME ?? '';
+  const tableName = process.env.DYNAMODB_TABLE_NAME ?? '';
   const topicArn = process.env.TOPIC_ARN ?? '';
+  const docClient = new DocumentClient({ endpoint: getEndpoint(4569) });
+  const sns = new SNS({ endpoint: getEndpoint(4575) });
   await pPipe(
-    scanRepositories,
+    scanRepositories(docClient),
     getRepositoriesStatus,
     logOverallStatus(logger),
-    publishSnsTopic(new SNS(), topicArn),
+    publishSnsTopic(sns, topicArn),
   )(tableName);
   return {
     statusCode: 200,
