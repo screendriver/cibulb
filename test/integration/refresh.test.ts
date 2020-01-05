@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import Lambda from 'aws-sdk/clients/lambda';
+import AWS, { Credentials, Lambda } from 'aws-sdk';
 import SNS from 'aws-sdk/clients/sns';
 import micro, { json } from 'micro';
 import listen from 'test-listen';
@@ -7,6 +7,10 @@ import { IncomingMessage } from 'http';
 import { createFunction, deleteFunction } from './lambda';
 import { createDynamoDb, deleteDynamoDb } from './dynamodb';
 import { createTopic, deleteTopic } from './sns';
+
+function getHost() {
+  return process.env.HOST ?? 'host.docker.internal';
+}
 
 async function confirmSubscription(req: IncomingMessage, sns: SNS) {
   const { TopicArn, Token } = (await json(req)) as {
@@ -29,6 +33,10 @@ let topicArn: string;
 
 suite('refresh', function() {
   suiteSetup(async function() {
+    AWS.config.update({
+      credentials: new Credentials('myAccessKeyId', 'mySecretAccessKey'),
+      region: 'eu-central-1',
+    });
     topicArn = await createTopic(topic);
     await createFunction(functionName, {
       DYNAMODB_TABLE_NAME: tableName,
@@ -44,7 +52,7 @@ suite('refresh', function() {
   });
 
   test('lambda publishes a "success" SNS message', async function() {
-    this.timeout(4000);
+    this.timeout(20000);
     let snsMessage: string | undefined = undefined;
     const lambda = new Lambda({ endpoint: 'http://localhost:4574' });
     const sns = new SNS({ endpoint: 'http://localhost:4575' });
@@ -59,7 +67,7 @@ suite('refresh', function() {
           return '';
       }
     });
-    const url = await listen(server, 'host.docker.internal');
+    const url = await listen(server, getHost());
     await sns
       .subscribe({ Endpoint: url, Protocol: 'http', TopicArn: topicArn })
       .promise();
