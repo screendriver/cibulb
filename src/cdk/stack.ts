@@ -7,8 +7,8 @@ import { LambdaSubscription } from '@aws-cdk/aws-sns-subscriptions';
 
 const lambdaRuntime = { runtime: Runtime.NODEJS_12_X };
 const sentryDsn = { SENTRY_DSN: process.env.SENTRY_DSN ?? '' };
-const dynamoDbTableName = { DYNAMO_DB_TABLE_NAME: 'Repositories' };
-const dynamoDbPrimaryKey = { DYNAMO_DB_PRIMARY_KEY: 'Name' };
+const dynamoDbTableName = { DYNAMODB_TABLE_NAME: 'Repositories' };
+const dynamoDbPrimaryKey = { DYNAMODB_PRIMARY_KEY: 'Name' };
 const topicArn = (arn: string) => ({ TOPIC_ARN: arn });
 
 export class CiBulbCdkStack extends Stack {
@@ -57,10 +57,10 @@ export class CiBulbCdkStack extends Stack {
 
     const dynamoTable = new Table(this, 'RepositoriesTable', {
       partitionKey: {
-        name: dynamoDbPrimaryKey.DYNAMO_DB_PRIMARY_KEY,
+        name: dynamoDbPrimaryKey.DYNAMODB_PRIMARY_KEY,
         type: AttributeType.STRING,
       },
-      tableName: dynamoDbTableName.DYNAMO_DB_TABLE_NAME,
+      tableName: dynamoDbTableName.DYNAMODB_TABLE_NAME,
       readCapacity: 1,
       writeCapacity: 1,
     });
