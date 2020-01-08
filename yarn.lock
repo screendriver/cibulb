@@ -3050,10 +3050,10 @@ normalize-url@^4.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.5.0.tgz#453354087e6ca96957bd8f5baf753f5982142129"
   integrity sha512-2s47yzUxdexf1OhyRi4Em83iQk0aPvwTddtFz4hnSSw9dCEsLEGf6SwIO8ss/19S9iBb5sJaOuTvTGDeZI00BQ==
 
-now@16.7.1:
-  version "16.7.1"
-  resolved "https://registry.yarnpkg.com/now/-/now-16.7.1.tgz#b936ee398588849d0374bb76196e43b8cbe14738"
-  integrity sha512-iAf6eUaVXc2phDUcM2kYCevhSmk10DRWEraRAUstwUChx14DJRB1Kb65M65Bk13qBXkHIjdfTAH2dR4s1y64+w==
+now@16.7.2:
+  version "16.7.2"
+  resolved "https://registry.yarnpkg.com/now/-/now-16.7.2.tgz#ca6a0208b5a1b8d62b3c1466044d051aeacc0f09"
+  integrity sha512-YNieAvW2vsUDQl+vAXikxrElB4rqcB2TeTU5S6ah5MB6TkYtzo2qkbdjl5mp6j7KuzGWfQHGVywi01rZQYqkog==
 
 nyc@15.0.0:
   version "15.0.0"
