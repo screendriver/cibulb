@@ -78,13 +78,40 @@ jobs:
           yarn build
       - name: Run unit tests
         run: yarn test:unit:coverage
+      - uses: actions/upload-artifact@v1
+        with:
+          name: target
+          path: target
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    needs: [integration-tests, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - uses: actions/download-artifact@v1
+        with:
+          name: target
       - name: Upload code coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
-          token: ${{secrets.CODECOV_TOKEN}}
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: target/coverage/clover.xml
       - name: Deploy to Amazon Web Services
-        if: github.ref == 'refs/heads/master'
         run: yarn cdk deploy --ci --require-approval never
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
