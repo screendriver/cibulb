@@ -1,6 +1,5 @@
 import { assert } from 'chai';
-import AWS, { Credentials, Lambda } from 'aws-sdk';
-import SNS from 'aws-sdk/clients/sns';
+import AWS, { Credentials, Lambda, SNS } from 'aws-sdk';
 import micro, { json } from 'micro';
 import listen from 'test-listen';
 import { IncomingMessage } from 'http';
