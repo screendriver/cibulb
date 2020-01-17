@@ -8,7 +8,7 @@ import {
   RepositoriesStatus,
   logOverallStatus,
   publishSnsTopic,
-} from '../../src/refresh';
+} from '../../../src/lambda/refresh';
 
 suite('refresh lambda', function() {
   test('getRepositoriesStatus() returns "success" when item list is undefined', function() {

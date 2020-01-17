@@ -4,9 +4,9 @@ module.exports = {
   mode: 'production',
   target: 'node',
   entry: {
-    color: './src/color.ts',
-    ifttt: './src/ifttt.ts',
-    refresh: './src/refresh.ts',
+    color: './src/lambda/color.ts',
+    ifttt: './src/lambda/ifttt.ts',
+    refresh: './src/lambda/refresh.ts',
   },
   output: {
     filename: '[name].js',

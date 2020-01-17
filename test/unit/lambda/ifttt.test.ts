@@ -3,7 +3,11 @@ import sinon from 'sinon';
 import { SNSEventRecord, SNSMessage } from 'aws-lambda';
 import pino from 'pino';
 import { Got } from 'got';
-import { triggerName, firstMessage, createIftttTrigger } from '../../src/ifttt';
+import {
+  triggerName,
+  firstMessage,
+  createIftttTrigger,
+} from '../../../src/lambda/ifttt';
 
 function createSNSEventRecord(message: string): SNSEventRecord {
   const snsMessage: Partial<SNSMessage> = {
