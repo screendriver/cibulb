@@ -4,8 +4,7 @@ import SNS from 'aws-sdk/clients/sns';
 import pPipe from 'p-pipe';
 import pino, { Logger } from 'pino';
 import { getEndpoint } from '../endpoint';
-
-export type RepositoriesStatus = 'success' | 'pending' | 'failed';
+import { RepositoriesStatus } from '../repositories';
 
 function scanRepositories(docClient: DocumentClient) {
   return async (tableName: string) => {
