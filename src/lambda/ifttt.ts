@@ -1,7 +1,7 @@
 import { SNSHandler, SNSEventRecord } from 'aws-lambda';
 import flow from 'lodash.flow';
 import gotLib, { Got } from 'got';
-import pino from 'pino';
+import pino, { Logger } from 'pino';
 
 export function triggerName(message: string) {
   switch (message) {
@@ -23,7 +23,7 @@ export function firstMessage(records: SNSEventRecord[]): string {
 export function createIftttTrigger(trigger: string) {
   return async (
     got: Got,
-    logger: pino.Logger,
+    logger: Logger,
     iftttKey: string,
     iftttBaseUrl: string,
   ) => {
