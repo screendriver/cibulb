@@ -3,6 +3,7 @@ import { DocumentClient, ItemList } from 'aws-sdk/clients/dynamodb';
 import SNS from 'aws-sdk/clients/sns';
 import pPipe from 'p-pipe';
 import pino, { Logger } from 'pino';
+import { getEndpoint } from '../endpoint';
 
 export type RepositoriesStatus = 'success' | 'pending' | 'failed';
 
@@ -50,12 +51,6 @@ export function getRepositoriesStatus(itemList?: ItemList): RepositoriesStatus {
   return !itemList || isEmpty(itemList)
     ? 'success'
     : getStatusForNonEmptyRepos(itemList);
-}
-
-function getEndpoint(port: number): string | undefined {
-  return process.env.LOCALSTACK_HOSTNAME
-    ? `http://${process.env.LOCALSTACK_HOSTNAME}:${port}`
-    : undefined;
 }
 
 export const handler: APIGatewayProxyHandler = async () => {
