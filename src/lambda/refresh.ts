@@ -8,7 +8,9 @@ import { RepositoriesStatus } from '../repositories';
 
 function scanRepositories(docClient: DocumentClient) {
   return async (tableName: string) => {
-    const scanOutput = await docClient.scan({ TableName: tableName }).promise();
+    const scanOutput = await docClient
+      .scan({ TableName: tableName, ProjectionExpression: 'Status' })
+      .promise();
     return scanOutput.Items;
   };
 }
