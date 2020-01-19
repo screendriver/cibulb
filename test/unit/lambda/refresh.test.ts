@@ -2,11 +2,8 @@ import { assert } from 'chai';
 import SNS from 'aws-sdk/clients/sns';
 import sinon from 'sinon';
 import { Logger } from 'pino';
-import {
-  RepositoriesStatus,
-  logOverallStatus,
-  publishSnsTopic,
-} from '../../../src/lambda/refresh';
+import { logOverallStatus, publishSnsTopic } from '../../../src/lambda/refresh';
+import { RepositoriesStatus } from '../../../src/repositories';
 
 suite('refresh lambda', function() {
   test('logOverallStatus() returns given overall status', function() {
