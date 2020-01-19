@@ -1,10 +1,8 @@
 import { assert } from 'chai';
-import { ItemList } from 'aws-sdk/clients/dynamodb';
 import SNS from 'aws-sdk/clients/sns';
 import sinon from 'sinon';
 import { Logger } from 'pino';
 import {
-  getRepositoriesStatus,
   RepositoriesStatus,
   logOverallStatus,
   publishSnsTopic,

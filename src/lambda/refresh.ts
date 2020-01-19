@@ -4,16 +4,11 @@ import SNS from 'aws-sdk/clients/sns';
 import pPipe from 'p-pipe';
 import pino, { Logger } from 'pino';
 import { getEndpoint } from '../endpoint';
-import { RepositoriesStatus, getRepositoriesStatus } from '../repositories';
-
-function scanRepositories(docClient: DocumentClient) {
-  return async (tableName: string) => {
-    const scanOutput = await docClient
-      .scan({ TableName: tableName, ProjectionExpression: 'Status' })
-      .promise();
-    return scanOutput.Items;
-  };
-}
+import {
+  RepositoriesStatus,
+  getRepositoriesStatus,
+  scanRepositories,
+} from '../repositories';
 
 export function logOverallStatus(logger: Logger) {
   return (overallStatus: RepositoriesStatus): RepositoriesStatus => {
