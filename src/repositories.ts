@@ -1,35 +1,31 @@
+import { ItemList } from 'aws-sdk/clients/dynamodb';
+
 export interface Repository {
   status: 'success' | 'running' | 'skipped' | 'pending' | 'failed';
 }
 
 export type RepositoriesStatus = 'success' | 'pending' | 'failed';
 
-function checkFailedStatus(
-  repositories: readonly Repository[],
-): RepositoriesStatus {
-  return repositories.some(({ status }) => status === 'failed')
+function checkFailedStatus(itemList: ItemList): RepositoriesStatus {
+  return itemList.some(({ Status }) => Status.S === 'failed')
     ? 'failed'
     : 'success';
 }
 
-function getStatusForNonEmptyRepos(
-  repositories: readonly Repository[],
-): RepositoriesStatus {
-  return repositories.some(
-    ({ status }) => status === 'pending' || status === 'running',
+function getStatusForNonEmptyRepos(itemList: ItemList): RepositoriesStatus {
+  return itemList.some(
+    ({ Status }) => Status.S === 'pending' || Status.S === 'running',
   )
     ? 'pending'
-    : checkFailedStatus(repositories);
+    : checkFailedStatus(itemList);
 }
 
-function isEmpty(repositories: readonly Repository[]): boolean {
-  return repositories.length === 0;
+function isEmpty(itemList: ItemList): boolean {
+  return itemList.length === 0;
 }
 
-export function getRepositoriesStatus(
-  repositories: readonly Repository[],
-): RepositoriesStatus {
-  return isEmpty(repositories)
+export function getRepositoriesStatus(itemList?: ItemList): RepositoriesStatus {
+  return !itemList || isEmpty(itemList)
     ? 'success'
-    : getStatusForNonEmptyRepos(repositories);
+    : getStatusForNonEmptyRepos(itemList);
 }
