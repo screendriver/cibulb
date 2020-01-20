@@ -8,6 +8,7 @@ export const handler: APIGatewayProxyHandler = async () => {
   await sqs
     .sendMessage({
       QueueUrl: queueUrl,
+      MessageGroupId: 'IftttMessageGroup',
       MessageBody: '',
     })
     .promise();

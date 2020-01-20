@@ -48,6 +48,7 @@ async function sendSqsMessage(
     .sendMessage({
       QueueUrl: queueUrl,
       MessageBody: '',
+      MessageGroupId: 'IftttMessageGroup',
     })
     .promise();
   return { statusCode: 204, body: 'No Content' };
