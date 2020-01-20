@@ -1,48 +1,30 @@
-import { SNSHandler, SNSEventRecord } from 'aws-lambda';
-import flow from 'lodash.flow';
-import gotLib, { Got } from 'got';
+import { SQSHandler } from 'aws-lambda';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
+import pPipe from 'p-pipe';
+import gotLib from 'got';
 import pino, { Logger } from 'pino';
+import { getEndpoint } from '../endpoint';
+import { getRepositoriesStatus, scanRepositories } from '../repositories';
+import { triggerName, createIftttTrigger } from '../ifttt';
 
-export function triggerName(message: string) {
-  switch (message) {
-    case 'success':
-      return 'ci_build_success';
-    case 'pending':
-      return 'ci_build_pending';
-    case 'failed':
-    default:
-      return 'ci_build_failure';
-  }
-}
-
-export function firstMessage(records: SNSEventRecord[]): string {
-  const [message] = records.map(record => record.Sns.Message);
-  return message ?? '';
-}
-
-export function createIftttTrigger(trigger: string) {
-  return async (
-    got: Got,
-    logger: Logger,
-    iftttKey: string,
-    iftttBaseUrl: string,
-  ) => {
-    const response = await got(`trigger/${trigger}/with/key/${iftttKey}`, {
-      prefixUrl: iftttBaseUrl,
-      resolveBodyOnly: true,
-    });
+function logResponse(logger: Logger) {
+  return (response: string) => {
     logger.info(response);
   };
 }
 
-export const handler: SNSHandler = async event => {
+export const handler: SQSHandler = () => {
   const logger = pino();
   const iftttKey = process.env.IFTTT_KEY ?? '';
   const iftttBaseUrl = process.env.IFTTT_BASE_URL ?? '';
-  const iftttTrigger = flow(
-    firstMessage,
+  const dynamoDbTableName = process.env.DYNAMODB_TABLE_NAME ?? '';
+  const docClient = new DocumentClient({ endpoint: getEndpoint(4569) });
+  const iftttTrigger = pPipe(
+    scanRepositories(docClient),
+    getRepositoriesStatus,
     triggerName,
-    createIftttTrigger,
-  )(event.Records);
-  await iftttTrigger(gotLib, logger, iftttKey, iftttBaseUrl);
+    createIftttTrigger(gotLib, iftttKey, iftttBaseUrl),
+    logResponse(logger),
+  );
+  return iftttTrigger(dynamoDbTableName);
 };
