@@ -1,22 +1,30 @@
 import { Stack, Construct, StackProps } from '@aws-cdk/core';
 import { Runtime, Function, Code } from '@aws-cdk/aws-lambda';
+import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 import { RestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
-import { Topic } from '@aws-cdk/aws-sns';
-import { LambdaSubscription } from '@aws-cdk/aws-sns-subscriptions';
+import { Queue } from '@aws-cdk/aws-sqs';
 
 const lambdaRuntime = { runtime: Runtime.NODEJS_12_X };
 const sentryDsn = { SENTRY_DSN: process.env.SENTRY_DSN ?? '' };
 const dynamoDbTableName = { DYNAMODB_TABLE_NAME: 'Repositories' };
 const dynamoDbPrimaryKey = { DYNAMODB_PRIMARY_KEY: 'Name' };
-const topicArn = (arn: string) => ({ TOPIC_ARN: arn });
+const queueUrl = (url: string) => ({ QUEUE_URL: url });
 
 export class CiBulbCdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const topic = new Topic(this, 'IftttTopic', {
-      displayName: 'IFTTT Webhooks Topic',
+    const queue = new Queue(this, 'Queue', { fifo: true });
+
+    const dynamoTable = new Table(this, 'RepositoriesTable', {
+      partitionKey: {
+        name: dynamoDbPrimaryKey.DYNAMODB_PRIMARY_KEY,
+        type: AttributeType.STRING,
+      },
+      tableName: dynamoDbTableName.DYNAMODB_TABLE_NAME,
+      readCapacity: 1,
+      writeCapacity: 1,
     });
 
     const colorFunction = new Function(this, 'ColorFunction', {
@@ -27,7 +35,7 @@ export class CiBulbCdkStack extends Stack {
         ...sentryDsn,
         ...dynamoDbTableName,
         ...dynamoDbPrimaryKey,
-        ...topicArn(topic.topicArn),
+        ...queueUrl(queue.queueUrl),
         GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN ?? '',
       },
     });
@@ -40,7 +48,7 @@ export class CiBulbCdkStack extends Stack {
         ...sentryDsn,
         ...dynamoDbTableName,
         ...dynamoDbPrimaryKey,
-        ...topicArn(topic.topicArn),
+        ...queueUrl(queue.queueUrl),
       },
     });
 
@@ -53,23 +61,15 @@ export class CiBulbCdkStack extends Stack {
         IFTTT_BASE_URL: process.env.IFTTT_BASE_URL ?? '',
         IFTTT_KEY: process.env.IFTTT_KEY ?? '',
       },
+      events: [new SqsEventSource(queue)],
     });
 
-    const dynamoTable = new Table(this, 'RepositoriesTable', {
-      partitionKey: {
-        name: dynamoDbPrimaryKey.DYNAMODB_PRIMARY_KEY,
-        type: AttributeType.STRING,
-      },
-      tableName: dynamoDbTableName.DYNAMODB_TABLE_NAME,
-      readCapacity: 1,
-      writeCapacity: 1,
-    });
-    dynamoTable.grantReadWriteData(colorFunction);
-    dynamoTable.grantReadData(refreshFunction);
+    dynamoTable.grantWriteData(colorFunction);
+    dynamoTable.grantReadData(iftttFunction);
 
-    topic.addSubscription(new LambdaSubscription(iftttFunction));
-    topic.grantPublish(colorFunction);
-    topic.grantPublish(refreshFunction);
+    queue.grantSendMessages(colorFunction);
+    queue.grantSendMessages(refreshFunction);
+    queue.grantConsumeMessages(iftttFunction);
 
     const api = new RestApi(this, 'CibulbApi');
 
