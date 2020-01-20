@@ -33,12 +33,12 @@ async function callIfttt(
       TableName: dynamoDbTableName,
       Item: {
         Name: eventBody.project.path_with_namespace,
-        Status: eventBody.object_attributes.status,
+        RepoStatus: eventBody.object_attributes.status,
       },
     })
     .promise();
   const { Items } = await docClient
-    .scan({ TableName: dynamoDbTableName, ProjectionExpression: 'Status' })
+    .scan({ TableName: dynamoDbTableName, ProjectionExpression: 'RepoStatus' })
     .promise();
   const overallStatus = getRepositoriesStatus(Items);
   await sns

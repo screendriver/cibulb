@@ -35,7 +35,7 @@ function fillDynamoDbTable(pipeArgument: CreatePipeArgument) {
   return docClient
     .put({
       TableName: pipeArgument.tableName,
-      Item: { Name: 'my-repository', Status: 'success' },
+      Item: { Name: 'my-repository', RepoStatus: 'success' },
     })
     .promise();
 }

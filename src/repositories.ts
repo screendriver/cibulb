@@ -7,14 +7,15 @@ export interface Repository {
 export type RepositoriesStatus = 'success' | 'pending' | 'failed';
 
 function checkFailedStatus(itemList: ItemList): RepositoriesStatus {
-  return itemList.some(({ Status }) => Status.S === 'failed')
+  return itemList.some(({ RepoStatus }) => RepoStatus.S === 'failed')
     ? 'failed'
     : 'success';
 }
 
 function getStatusForNonEmptyRepos(itemList: ItemList): RepositoriesStatus {
   return itemList.some(
-    ({ Status }) => Status.S === 'pending' || Status.S === 'running',
+    ({ RepoStatus }) =>
+      RepoStatus.S === 'pending' || RepoStatus.S === 'running',
   )
     ? 'pending'
     : checkFailedStatus(itemList);
@@ -33,7 +34,7 @@ export function getRepositoriesStatus(itemList?: ItemList): RepositoriesStatus {
 export function scanRepositories(docClient: DocumentClient) {
   return async (tableName: string) => {
     const scanOutput = await docClient
-      .scan({ TableName: tableName, ProjectionExpression: 'Status' })
+      .scan({ TableName: tableName, ProjectionExpression: 'RepoStatus' })
       .promise();
     return scanOutput.Items;
   };

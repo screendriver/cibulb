@@ -38,9 +38,9 @@ suite('repositories', function() {
 
   test('getRepositoriesStatus() returns "pending" when one item is in status "pending"', function() {
     const itemList: ItemList = [
-      { Status: { S: 'failed' } },
-      { Status: { S: 'pending' } },
-      { Status: { S: 'success' } },
+      { RepoStatus: { S: 'failed' } },
+      { RepoStatus: { S: 'pending' } },
+      { RepoStatus: { S: 'success' } },
     ];
     const actual = getRepositoriesStatus(itemList);
     const expected: RepositoriesStatus = 'pending';
@@ -49,9 +49,9 @@ suite('repositories', function() {
 
   test('getRepositoriesStatus() returns "pending" when one item is in status "running"', function() {
     const itemList: ItemList = [
-      { Status: { S: 'failed' } },
-      { Status: { S: 'running' } },
-      { Status: { S: 'success' } },
+      { RepoStatus: { S: 'failed' } },
+      { RepoStatus: { S: 'running' } },
+      { RepoStatus: { S: 'success' } },
     ];
     const actual = getRepositoriesStatus(itemList);
     const expected: RepositoriesStatus = 'pending';
@@ -60,8 +60,8 @@ suite('repositories', function() {
 
   test('getRepositoriesStatus() returns "failed" when one item is in status "failed"', function() {
     const itemList: ItemList = [
-      { Status: { S: 'success' } },
-      { Status: { S: 'failed' } },
+      { RepoStatus: { S: 'success' } },
+      { RepoStatus: { S: 'failed' } },
     ];
     const actual = getRepositoriesStatus(itemList);
     const expected: RepositoriesStatus = 'failed';
@@ -70,8 +70,8 @@ suite('repositories', function() {
 
   test('getRepositoriesStatus() returns "success" when all item are in status "success"', function() {
     const itemList: ItemList = [
-      { Status: { S: 'success' } },
-      { Status: { S: 'success' } },
+      { RepoStatus: { S: 'success' } },
+      { RepoStatus: { S: 'success' } },
     ];
     const actual = getRepositoriesStatus(itemList);
     const expected: RepositoriesStatus = 'success';
@@ -80,8 +80,8 @@ suite('repositories', function() {
 
   test('getRepositoriesStatus() returns "success" when one repository is in status "skipped"', function() {
     const itemList: ItemList = [
-      { Status: { S: 'success' } },
-      { Status: { S: 'skipped' } },
+      { RepoStatus: { S: 'success' } },
+      { RepoStatus: { S: 'skipped' } },
     ];
     const actual = getRepositoriesStatus(itemList);
     const expected: RepositoriesStatus = 'success';
@@ -98,7 +98,7 @@ suite('repositories', function() {
     await scanRepositories(generatedDocClient)('TestTable');
     sinon.assert.calledWith(scan, {
       TableName: 'TestTable',
-      ProjectionExpression: 'Status',
+      ProjectionExpression: 'RepoStatus',
     });
   });
 
