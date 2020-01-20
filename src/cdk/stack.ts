@@ -15,7 +15,10 @@ export class CiBulbCdkStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const queue = new Queue(this, 'Queue', { fifo: true });
+    const queue = new Queue(this, 'Queue', {
+      fifo: true,
+      contentBasedDeduplication: true,
+    });
 
     const dynamoTable = new Table(this, 'RepositoriesTable', {
       partitionKey: {

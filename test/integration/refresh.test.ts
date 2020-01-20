@@ -13,10 +13,15 @@ suite('refresh', function() {
       region: 'eu-central-1',
     });
     sqs = new SQS({ endpoint: 'http://localhost:4576' });
-    const queue = await sqs.createQueue({ QueueName: 'TestQueue' }).promise();
+    const queue = await sqs
+      .createQueue({
+        QueueName: 'TestQueue.fifo',
+        Attributes: { FifoQueue: 'true', ContentBasedDeduplication: 'true' },
+      })
+      .promise();
     queueUrl = queue.QueueUrl ?? '';
     await createFunction(functionName, {
-      QUEUE_URL: 'http://172.17.0.1:4576/queue/TestQueue',
+      QUEUE_URL: 'http://172.17.0.1:4576/queue/TestQueue.fifo',
     });
   });
 
@@ -29,11 +34,7 @@ suite('refresh', function() {
     this.timeout(20000);
     const lambda = new Lambda({ endpoint: 'http://localhost:4574' });
     await lambda.invoke({ FunctionName: functionName }).promise();
-    const message = await sqs
-      .receiveMessage({
-        QueueUrl: queueUrl,
-      })
-      .promise();
+    const message = await sqs.receiveMessage({ QueueUrl: queueUrl }).promise();
     const messages = message.Messages ?? [];
     assert.strictEqual(messages[0].Body, '');
   });
