@@ -8,7 +8,6 @@ import { Queue } from '@aws-cdk/aws-sqs';
 const lambdaRuntime = { runtime: Runtime.NODEJS_12_X };
 const sentryDsn = { SENTRY_DSN: process.env.SENTRY_DSN ?? '' };
 const dynamoDbTableName = { DYNAMODB_TABLE_NAME: 'Repositories' };
-const dynamoDbPrimaryKey = { DYNAMODB_PRIMARY_KEY: 'Name' };
 const queueUrl = (url: string) => ({ QUEUE_URL: url });
 
 export class CiBulbCdkStack extends Stack {
@@ -22,7 +21,7 @@ export class CiBulbCdkStack extends Stack {
 
     const dynamoTable = new Table(this, 'RepositoriesTable', {
       partitionKey: {
-        name: dynamoDbPrimaryKey.DYNAMODB_PRIMARY_KEY,
+        name: 'Name',
         type: AttributeType.STRING,
       },
       tableName: dynamoDbTableName.DYNAMODB_TABLE_NAME,
@@ -37,7 +36,6 @@ export class CiBulbCdkStack extends Stack {
       environment: {
         ...sentryDsn,
         ...dynamoDbTableName,
-        ...dynamoDbPrimaryKey,
         ...queueUrl(queue.queueUrl),
         GITLAB_SECRET_TOKEN: process.env.GITLAB_SECRET_TOKEN ?? '',
       },
@@ -50,7 +48,6 @@ export class CiBulbCdkStack extends Stack {
       environment: {
         ...sentryDsn,
         ...dynamoDbTableName,
-        ...dynamoDbPrimaryKey,
         ...queueUrl(queue.queueUrl),
       },
     });
@@ -61,6 +58,7 @@ export class CiBulbCdkStack extends Stack {
       handler: 'ifttt.handler',
       environment: {
         ...sentryDsn,
+        ...dynamoDbTableName,
         IFTTT_BASE_URL: process.env.IFTTT_BASE_URL ?? '',
         IFTTT_KEY: process.env.IFTTT_KEY ?? '',
       },
