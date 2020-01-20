@@ -9,7 +9,7 @@ export const handler: APIGatewayProxyHandler = async () => {
     .sendMessage({
       QueueUrl: queueUrl,
       MessageGroupId: 'IftttMessageGroup',
-      MessageBody: '',
+      MessageBody: 'Call IFTTT',
     })
     .promise();
   return {

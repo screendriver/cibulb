@@ -47,7 +47,7 @@ async function sendSqsMessage(
   await sqs
     .sendMessage({
       QueueUrl: queueUrl,
-      MessageBody: '',
+      MessageBody: 'Call IFTTT',
       MessageGroupId: 'IftttMessageGroup',
     })
     .promise();

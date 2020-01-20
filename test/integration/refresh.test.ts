@@ -30,12 +30,12 @@ suite('refresh', function() {
     await sqs.deleteQueue({ QueueUrl: queueUrl }).promise();
   });
 
-  test('lambda sends a SQS message without a message body', async function() {
+  test('lambda sends a SQS message with a message body', async function() {
     this.timeout(20000);
     const lambda = new Lambda({ endpoint: 'http://localhost:4574' });
     await lambda.invoke({ FunctionName: functionName }).promise();
     const message = await sqs.receiveMessage({ QueueUrl: queueUrl }).promise();
     const messages = message.Messages ?? [];
-    assert.strictEqual(messages[0].Body, '');
+    assert.strictEqual(messages[0].Body, 'Call IFTTT');
   });
 });
