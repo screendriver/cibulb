@@ -1,12 +1,11 @@
 import { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import pino, { Logger } from 'pino';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import SNS from 'aws-sdk/clients/sns';
+import SQS from 'aws-sdk/clients/sqs';
 import { assertHasEventBody, parseEventBody, WebhookEventBody } from '../body';
 import { readGitlabToken } from '../headers';
 import { isBranchAllowed } from '../branch';
 import { getEndpoint } from '../endpoint';
-import { getRepositoriesStatus } from '../repositories';
 
 function wrongBranch(
   eventBody: WebhookEventBody,
@@ -21,13 +20,11 @@ function wrongBranch(
   };
 }
 
-async function callIfttt(
-  eventBody: WebhookEventBody,
+async function putItemInDynamoDB(
   docClient: DocumentClient,
   dynamoDbTableName: string,
-  sns: SNS,
-  snsTopicArn: string,
-): Promise<APIGatewayProxyResult> {
+  eventBody: WebhookEventBody,
+) {
   await docClient
     .put({
       TableName: dynamoDbTableName,
@@ -37,12 +34,21 @@ async function callIfttt(
       },
     })
     .promise();
-  const { Items } = await docClient
-    .scan({ TableName: dynamoDbTableName, ProjectionExpression: 'RepoStatus' })
-    .promise();
-  const overallStatus = getRepositoriesStatus(Items);
-  await sns
-    .publish({ TopicArn: snsTopicArn, Message: overallStatus })
+}
+
+async function sendSqsMessage(
+  eventBody: WebhookEventBody,
+  docClient: DocumentClient,
+  dynamoDbTableName: string,
+  sqs: SQS,
+  queueUrl: string,
+): Promise<APIGatewayProxyResult> {
+  await putItemInDynamoDB(docClient, dynamoDbTableName, eventBody);
+  await sqs
+    .sendMessage({
+      QueueUrl: queueUrl,
+      MessageBody: '',
+    })
     .promise();
   return { statusCode: 204, body: 'No Content' };
 }
@@ -68,11 +74,11 @@ function verifyBranch(
   logger: Logger,
   docClient: DocumentClient,
   dynamoDbTableName: string,
-  sns: SNS,
-  snsTopicArn: string,
+  sqs: SQS,
+  queueUrl: string,
 ): APIGatewayProxyResult | Promise<APIGatewayProxyResult> {
   return isBranchAllowed(eventBody.object_attributes.ref)
-    ? callIfttt(eventBody, docClient, dynamoDbTableName, sns, snsTopicArn)
+    ? sendSqsMessage(eventBody, docClient, dynamoDbTableName, sqs, queueUrl)
     : wrongBranch(eventBody, logger);
 }
 
@@ -82,9 +88,9 @@ interface RunDependencies {
   gitLabSecretToken: string;
   eventBody: WebhookEventBody;
   dynamoDbTableName: string;
-  snsTopicArn: string;
   docClient: DocumentClient;
-  sns: SNS;
+  sqs: SQS;
+  queueUrl: string;
 }
 
 function run({
@@ -94,8 +100,8 @@ function run({
   eventBody,
   docClient,
   dynamoDbTableName,
-  sns,
-  snsTopicArn,
+  sqs,
+  queueUrl,
 }: RunDependencies): APIGatewayProxyResult | Promise<APIGatewayProxyResult> {
   return isSecretValid(gitLabToken, gitLabSecretToken)
     ? verifyBranch(
@@ -103,8 +109,8 @@ function run({
         logger,
         docClient,
         dynamoDbTableName,
-        sns,
-        snsTopicArn,
+        sqs,
+        queueUrl,
       )
     : forbidden(logger);
 }
@@ -118,9 +124,9 @@ export const handler: APIGatewayProxyHandler = event => {
   const gitLabToken = readGitlabToken(headers);
   const gitLabSecretToken = process.env.GITLAB_SECRET_TOKEN ?? '';
   const dynamoDbTableName = process.env.DYNAMODB_TABLE_NAME ?? '';
-  const snsTopicArn = process.env.TOPIC_ARN ?? '';
+  const queueUrl = process.env.QUEUE_URL ?? '';
   const docClient = new DocumentClient({ endpoint: getEndpoint(4569) });
-  const sns = new SNS({ endpoint: getEndpoint(4575) });
+  const sqs = new SQS({ endpoint: getEndpoint(4576) });
   return Promise.resolve(
     run({
       gitLabToken,
@@ -128,9 +134,9 @@ export const handler: APIGatewayProxyHandler = event => {
       eventBody,
       logger,
       dynamoDbTableName,
-      snsTopicArn,
       docClient,
-      sns,
+      sqs,
+      queueUrl,
     }),
   );
 };
