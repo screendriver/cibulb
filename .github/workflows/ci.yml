@@ -18,7 +18,7 @@ jobs:
           START_WEB: 0
         options: >-
           --volume /var/run/docker.sock:/var/run/docker.sock
-          --health-cmd "awslocal sns list-topics"
+          --health-cmd "awslocal sqs list-queues"
           --health-interval 10s
           --health-timeout 5s
           --health-start-period 15s
