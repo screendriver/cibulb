@@ -31,6 +31,7 @@
   "devDependencies": {
     "@aws-cdk/assert": "1.21.1",
     "@aws-cdk/aws-apigateway": "1.21.1",
+    "@aws-cdk/aws-certificatemanager": "1.21.1",
     "@aws-cdk/aws-cloudwatch": "1.21.1",
     "@aws-cdk/aws-dynamodb": "1.21.1",
     "@aws-cdk/aws-lambda": "1.21.1",
