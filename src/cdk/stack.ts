@@ -8,7 +8,7 @@ import {
 } from '@aws-cdk/aws-apigateway';
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
 import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
-import { ApiGateway } from '@aws-cdk/aws-route53-targets';
+import { ApiGatewayDomain } from '@aws-cdk/aws-route53-targets';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Queue } from '@aws-cdk/aws-sqs';
 import {
@@ -105,7 +105,7 @@ export class CiBulbCdkStack extends Stack {
         zoneName: domainName.domainName,
         hostedZoneId: domain.domainNameAliasHostedZoneId,
       }),
-      target: RecordTarget.fromAlias(new ApiGateway(api)),
+      target: RecordTarget.fromAlias(new ApiGatewayDomain(domain)),
     });
 
     const colorIntegration = new LambdaIntegration(colorFunction);
