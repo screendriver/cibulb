@@ -7,6 +7,8 @@ import {
   DomainName,
 } from '@aws-cdk/aws-apigateway';
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
+import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
+import { ApiGateway } from '@aws-cdk/aws-route53-targets';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Queue } from '@aws-cdk/aws-sqs';
 import {
@@ -97,6 +99,14 @@ export class CiBulbCdkStack extends Stack {
 
     const domain = new DomainName(this, 'CiBulbDomainName', domainName);
     domain.addBasePathMapping(api, { basePath: 'cibulb' });
+
+    new ARecord(this, 'CustomDomainAliasRecord', {
+      zone: HostedZone.fromHostedZoneAttributes(this, 'CiBulbHostedZone', {
+        zoneName: domainName.domainName,
+        hostedZoneId: domain.domainNameAliasHostedZoneId,
+      }),
+      target: RecordTarget.fromAlias(new ApiGateway(api)),
+    });
 
     const colorIntegration = new LambdaIntegration(colorFunction);
     api.root.addResource('color').addMethod('POST', colorIntegration);
