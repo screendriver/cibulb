@@ -4,7 +4,11 @@ import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 import { RestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Queue } from '@aws-cdk/aws-sqs';
-import { Dashboard, GraphWidget } from '@aws-cdk/aws-cloudwatch';
+import {
+  Dashboard,
+  GraphWidget,
+  SingleValueWidget,
+} from '@aws-cdk/aws-cloudwatch';
 
 const lambdaRuntime = { runtime: Runtime.NODEJS_12_X };
 const sentryDsn = { SENTRY_DSN: process.env.SENTRY_DSN ?? '' };
@@ -85,8 +89,19 @@ export class CiBulbCdkStack extends Stack {
       dashboardName: 'CiBulb',
     });
     dashboard.addWidgets(
+      new SingleValueWidget({
+        title: 'Lambda invocations',
+        width: 14,
+        setPeriodToTimeRange: true,
+        metrics: [
+          colorFunction.metricInvocations({ statistic: 'Sum' }),
+          refreshFunction.metricInvocations({ statistic: 'Sum' }),
+          iftttFunction.metricInvocations({ statistic: 'Sum' }),
+        ],
+      }),
       new GraphWidget({
         title: 'Messages received',
+        width: 10,
         left: [
           queue.metricNumberOfMessagesReceived({
             statistic: 'Sum',
