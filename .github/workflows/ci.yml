@@ -117,6 +117,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
+          AWS_API_DOMAIN_NAME: ${{ secrets.AWS_API_DOMAIN_NAME }}
           GITLAB_SECRET_TOKEN: ${{ secrets.GITLAB_SECRET_TOKEN }}
           IFTTT_BASE_URL: ${{ secrets.IFTTT_BASE_URL }}
           IFTTT_KEY: ${{ secrets.IFTTT_KEY }}

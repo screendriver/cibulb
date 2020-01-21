@@ -1,7 +1,12 @@
 import { Stack, Construct, StackProps } from '@aws-cdk/core';
 import { Runtime, Function, Code } from '@aws-cdk/aws-lambda';
 import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
-import { RestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
+import {
+  RestApi,
+  LambdaIntegration,
+  DomainName,
+} from '@aws-cdk/aws-apigateway';
+import { Certificate } from '@aws-cdk/aws-certificatemanager';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Queue } from '@aws-cdk/aws-sqs';
 import {
@@ -77,7 +82,21 @@ export class CiBulbCdkStack extends Stack {
     queue.grantSendMessages(refreshFunction);
     queue.grantConsumeMessages(iftttFunction);
 
+    const certificate = Certificate.fromCertificateArn(
+      this,
+      'Certificate',
+      process.env.AWS_CERTIFICATE_ARN ?? '',
+    );
+
+    const domainName = {
+      domainName: process.env.AWS_API_DOMAIN_NAME ?? '',
+      certificate,
+    };
+
     const api = new RestApi(this, 'CibulbApi');
+
+    const domain = new DomainName(this, 'CiBulbDomainName', domainName);
+    domain.addBasePathMapping(api, { basePath: 'cibulb' });
 
     const colorIntegration = new LambdaIntegration(colorFunction);
     api.root.addResource('color').addMethod('POST', colorIntegration);
