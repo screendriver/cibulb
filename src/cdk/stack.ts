@@ -7,7 +7,7 @@ import {
   DomainName,
 } from '@aws-cdk/aws-apigateway';
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
-import { ARecord, HostedZone, RecordTarget } from '@aws-cdk/aws-route53';
+import { HostedZone, ARecord, RecordTarget } from '@aws-cdk/aws-route53';
 import { ApiGatewayDomain } from '@aws-cdk/aws-route53-targets';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Queue } from '@aws-cdk/aws-sqs';
@@ -90,21 +90,20 @@ export class CiBulbCdkStack extends Stack {
       process.env.AWS_CERTIFICATE_ARN ?? '',
     );
 
-    const domainName = {
-      domainName: process.env.AWS_API_DOMAIN_NAME ?? '',
-      certificate,
-    };
-
     const api = new RestApi(this, 'CibulbApi');
 
-    const domain = new DomainName(this, 'CiBulbDomainName', domainName);
+    const domain = new DomainName(this, 'CiBulbDomainName', {
+      domainName: process.env.AWS_API_DOMAIN_NAME ?? '',
+      certificate,
+    });
     domain.addBasePathMapping(api, { basePath: 'cibulb' });
 
+    const zone = new HostedZone(this, 'CiBulbHostedZone', {
+      zoneName: domain.domainName,
+    });
+
     new ARecord(this, 'CustomDomainAliasRecord', {
-      zone: HostedZone.fromHostedZoneAttributes(this, 'CiBulbHostedZone', {
-        zoneName: domainName.domainName,
-        hostedZoneId: domain.domainNameAliasHostedZoneId,
-      }),
+      zone,
       target: RecordTarget.fromAlias(new ApiGatewayDomain(domain)),
     });
 
