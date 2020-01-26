@@ -14,15 +14,15 @@ suite('headers', function() {
     assert.strictEqual(actual, '');
   });
 
-  test('returns an empty string when "x-gitlab-token" is not present', function() {
+  test('returns an empty string when "X-Gitlab-Token" is not present', function() {
     const headers = createHeaders();
     const actual = readGitlabToken(headers);
     assert.strictEqual(actual, '');
   });
 
-  test('returns "x-gitlab-token" from request headers', function() {
+  test('returns "X-Gitlab-Token" from request headers', function() {
     const headers = createHeaders({
-      'x-gitlab-token': 'foo',
+      'X-Gitlab-Token': 'foo',
     });
     const actual = readGitlabToken(headers);
     assert.strictEqual(actual, 'foo');
