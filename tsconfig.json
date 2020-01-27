@@ -1,21 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "outDir": "target",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "sourceMap": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "incremental": true,
-    "lib": ["es2020"]
-  },
-  "exclude": ["node_modules"],
-  "include": ["api", "test"]
+  "files": [],
+  "references": [
+    { "path": "./src" },
+    { "path": "./test/integration" },
+    { "path": "./test/unit" }
+  ]
 }

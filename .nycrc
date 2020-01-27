@@ -4,13 +4,11 @@
   "report-dir": "target/coverage",
   "cache-dir": "target/.cache",
   "exclude-after-remap": false,
-  "include": ["api/**/*.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": [
-    "api/color.ts",
-    "api/_color/run.ts",
-    "api/refresh.ts"
+    "src/cdk/"
   ],
-  "require": ["ts-node/register/transpile-only"],
+  "require": ["esm", "ts-node/register/transpile-only"],
   "reporter": [
     "lcov",
     "text",

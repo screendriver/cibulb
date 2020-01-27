@@ -1,0 +1,3 @@
+{
+  "app": "node --require esm target/src/cdk/bin.js"
+}
