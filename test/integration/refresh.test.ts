@@ -36,6 +36,6 @@ suite('refresh', function() {
     await lambda.invoke({ FunctionName: functionName }).promise();
     const message = await sqs.receiveMessage({ QueueUrl: queueUrl }).promise();
     const messages = message.Messages ?? [];
-    assert.strictEqual(messages[0].Body, 'Call IFTTT');
+    assert.isTrue(messages[0].Body?.startsWith('Call IFTTT'));
   });
 });

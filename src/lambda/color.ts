@@ -3,7 +3,7 @@ import pino, { Logger } from 'pino';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import SQS from 'aws-sdk/clients/sqs';
 import { assertHasEventBody, parseEventBody, WebhookEventBody } from '../body';
-import { readGitlabToken } from '../headers';
+import { readGitlabToken, readRequestTracing } from '../headers';
 import { isBranchAllowed } from '../branch';
 import { getEndpoint } from '../endpoint';
 
@@ -42,13 +42,14 @@ async function sendSqsMessage(
   dynamoDbTableName: string,
   sqs: SQS,
   queueUrl: string,
+  requestTracingId: string,
 ): Promise<APIGatewayProxyResult> {
   await putItemInDynamoDB(docClient, dynamoDbTableName, eventBody);
   await sqs
     .sendMessage({
       QueueUrl: queueUrl,
-      MessageBody: 'Call IFTTT',
       MessageGroupId: 'IftttMessageGroup',
+      MessageBody: `Call IFTTT - ${requestTracingId}`,
     })
     .promise();
   return { statusCode: 204, body: 'No Content' };
@@ -77,9 +78,17 @@ function verifyBranch(
   dynamoDbTableName: string,
   sqs: SQS,
   queueUrl: string,
+  requestTracingId: string,
 ): APIGatewayProxyResult | Promise<APIGatewayProxyResult> {
   return isBranchAllowed(eventBody.object_attributes.ref)
-    ? sendSqsMessage(eventBody, docClient, dynamoDbTableName, sqs, queueUrl)
+    ? sendSqsMessage(
+        eventBody,
+        docClient,
+        dynamoDbTableName,
+        sqs,
+        queueUrl,
+        requestTracingId,
+      )
     : wrongBranch(eventBody, logger);
 }
 
@@ -92,6 +101,7 @@ interface RunDependencies {
   docClient: DocumentClient;
   sqs: SQS;
   queueUrl: string;
+  requestTracingId: string;
 }
 
 function run({
@@ -103,6 +113,7 @@ function run({
   dynamoDbTableName,
   sqs,
   queueUrl,
+  requestTracingId,
 }: RunDependencies): APIGatewayProxyResult | Promise<APIGatewayProxyResult> {
   return isSecretValid(gitLabToken, gitLabSecretToken)
     ? verifyBranch(
@@ -112,6 +123,7 @@ function run({
         dynamoDbTableName,
         sqs,
         queueUrl,
+        requestTracingId,
       )
     : forbidden(logger);
 }
@@ -123,6 +135,7 @@ export const handler: APIGatewayProxyHandler = event => {
   const eventBody = parseEventBody(body);
   logRepositoryName(logger, eventBody);
   const gitLabToken = readGitlabToken(headers);
+  const requestTracingId = readRequestTracing(headers);
   const gitLabSecretToken = process.env.GITLAB_SECRET_TOKEN ?? '';
   const dynamoDbTableName = process.env.DYNAMODB_TABLE_NAME ?? '';
   const queueUrl = process.env.QUEUE_URL ?? '';
@@ -138,6 +151,7 @@ export const handler: APIGatewayProxyHandler = event => {
       docClient,
       sqs,
       queueUrl,
+      requestTracingId,
     }),
   );
 };
