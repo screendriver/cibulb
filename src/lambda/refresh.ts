@@ -2,8 +2,11 @@ import { APIGatewayProxyHandler } from 'aws-lambda';
 import SQS from 'aws-sdk/clients/sqs';
 import { readRequestTracing } from '../headers';
 import { getEndpoint } from '../endpoint';
+import { init, sentryHandler } from '../sentry';
 
-export const handler: APIGatewayProxyHandler = async event => {
+init();
+
+export const handler = sentryHandler<APIGatewayProxyHandler>(async event => {
   const queueUrl = process.env.QUEUE_URL ?? '';
   const { headers } = event;
   const sqs = new SQS({ endpoint: getEndpoint(4576) });
@@ -18,4 +21,4 @@ export const handler: APIGatewayProxyHandler = async event => {
     statusCode: 200,
     body: '',
   };
-};
+});
