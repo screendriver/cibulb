@@ -8,7 +8,7 @@ export function init() {
 export function sentryHandler<T extends Handler>(lambdaHandler: T): Handler {
   return async (event, context, callback) => {
     try {
-      return lambdaHandler(event, context, callback);
+      return await lambdaHandler(event, context, callback);
     } catch (error) {
       Sentry.captureException(error);
       await Sentry.flush(2000);
