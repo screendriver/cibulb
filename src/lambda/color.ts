@@ -1,4 +1,4 @@
-import { APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
+import { APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda';
 import pino, { Logger } from 'pino';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import SQS from 'aws-sdk/clients/sqs';
@@ -6,6 +6,7 @@ import { assertHasEventBody, parseEventBody, WebhookEventBody } from '../body';
 import { readGitlabToken, readRequestTracing } from '../headers';
 import { isBranchAllowed } from '../branch';
 import { getEndpoint } from '../endpoint';
+import { init, sentryHandler } from '../sentry';
 
 function wrongBranch(
   eventBody: WebhookEventBody,
@@ -128,7 +129,9 @@ function run({
     : forbidden(logger);
 }
 
-export const handler: APIGatewayProxyHandler = event => {
+init();
+
+export const handler = sentryHandler<APIGatewayProxyHandler>(async event => {
   const { body, headers } = event;
   assertHasEventBody(body);
   const logger = pino();
@@ -154,4 +157,4 @@ export const handler: APIGatewayProxyHandler = event => {
       requestTracingId,
     }),
   );
-};
+});

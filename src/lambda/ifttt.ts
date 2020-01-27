@@ -6,6 +6,7 @@ import pino, { Logger } from 'pino';
 import { getEndpoint } from '../endpoint';
 import { getRepositoriesStatus, scanRepositories } from '../repositories';
 import { triggerName, createIftttTrigger } from '../ifttt';
+import { init, sentryHandler } from '../sentry';
 
 function logResponse(logger: Logger) {
   return (response: string) => {
@@ -13,7 +14,9 @@ function logResponse(logger: Logger) {
   };
 }
 
-export const handler: SQSHandler = () => {
+init();
+
+export const handler = sentryHandler<SQSHandler>(async () => {
   const logger = pino();
   const iftttKey = process.env.IFTTT_KEY ?? '';
   const iftttBaseUrl = process.env.IFTTT_BASE_URL ?? '';
@@ -27,4 +30,4 @@ export const handler: SQSHandler = () => {
     logResponse(logger),
   );
   return iftttTrigger(dynamoDbTableName);
-};
+});
