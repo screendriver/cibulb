@@ -4,6 +4,7 @@ import { SqsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 import { RestApi, LambdaIntegration } from '@aws-cdk/aws-apigateway';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
 import { Queue } from '@aws-cdk/aws-sqs';
+import { Dashboard, GraphWidget } from '@aws-cdk/aws-cloudwatch';
 
 const lambdaRuntime = { runtime: Runtime.NODEJS_12_X };
 const sentryDsn = { SENTRY_DSN: process.env.SENTRY_DSN ?? '' };
@@ -79,5 +80,19 @@ export class CiBulbCdkStack extends Stack {
 
     const refreshIntegration = new LambdaIntegration(refreshFunction);
     api.root.addResource('refresh').addMethod('GET', refreshIntegration);
+
+    const dashboard = new Dashboard(this, 'Dashboard', {
+      dashboardName: 'CiBulb',
+    });
+    dashboard.addWidgets(
+      new GraphWidget({
+        title: 'Messages received',
+        left: [
+          queue.metricNumberOfMessagesReceived({
+            statistic: 'Sum',
+          }),
+        ],
+      }),
+    );
   }
 }
