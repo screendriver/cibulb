@@ -37,6 +37,7 @@
     "@aws-cdk/aws-lambda": "1.21.1",
     "@aws-cdk/aws-lambda-event-sources": "1.21.1",
     "@aws-cdk/aws-route53": "1.21.1",
+    "@aws-cdk/aws-route53-targets": "1.21.1",
     "@aws-cdk/aws-sqs": "1.21.1",
     "@types/aws-lambda": "8.10.37",
     "@types/chai": "4.2.7",
