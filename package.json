@@ -59,7 +59,7 @@
     "eslint-config-prettier": "6.9.0",
     "eslint-plugin-mocha": "6.2.2",
     "eslint-plugin-prettier": "3.1.2",
-    "esm": "3.2.20",
+    "esm": "3.2.25",
     "jscpd": "2.0.16",
     "jszip": "3.2.2",
     "micro": "9.3.4",
