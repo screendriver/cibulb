@@ -1,4 +1,4 @@
-import { ItemList, DocumentClient } from 'aws-sdk/clients/dynamodb';
+import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 
 export interface Repository {
   status: 'success' | 'running' | 'skipped' | 'pending' | 'failed';
@@ -6,26 +6,31 @@ export interface Repository {
 
 export type RepositoriesStatus = 'success' | 'pending' | 'failed';
 
-function checkFailedStatus(itemList: ItemList): RepositoriesStatus {
-  return itemList.some(({ RepoStatus }) => RepoStatus.S === 'failed')
+function checkFailedStatus(
+  itemList: DocumentClient.ItemList,
+): RepositoriesStatus {
+  return itemList.some(({ RepoStatus }) => RepoStatus === 'failed')
     ? 'failed'
     : 'success';
 }
 
-function getStatusForNonEmptyRepos(itemList: ItemList): RepositoriesStatus {
+function getStatusForNonEmptyRepos(
+  itemList: DocumentClient.ItemList,
+): RepositoriesStatus {
   return itemList.some(
-    ({ RepoStatus }) =>
-      RepoStatus.S === 'pending' || RepoStatus.S === 'running',
+    ({ RepoStatus }) => RepoStatus === 'pending' || RepoStatus === 'running',
   )
     ? 'pending'
     : checkFailedStatus(itemList);
 }
 
-function isEmpty(itemList: ItemList): boolean {
+function isEmpty(itemList: DocumentClient.ItemList): boolean {
   return itemList.length === 0;
 }
 
-export function getRepositoriesStatus(itemList?: ItemList): RepositoriesStatus {
+export function getRepositoriesStatus(
+  itemList?: DocumentClient.ItemList,
+): RepositoriesStatus {
   return !itemList || isEmpty(itemList)
     ? 'success'
     : getStatusForNonEmptyRepos(itemList);
