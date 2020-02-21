@@ -780,10 +780,10 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@types/aws-lambda@8.10.42":
-  version "8.10.42"
-  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.42.tgz#03a7fbb7f74925816c0697d98275bb78d166722e"
-  integrity sha512-MxZLTiVE+ieUSuL47M0Y7OzdfwLZHY63dvOo756NvyYlG9xxFWFkUIINmDWjCt/2DJfcq3J6+9dVsYt17Le5yA==
+"@types/aws-lambda@8.10.43":
+  version "8.10.43"
+  resolved "https://registry.yarnpkg.com/@types/aws-lambda/-/aws-lambda-8.10.43.tgz#2c95cf26d0526965c41851c1e60867ba3133c027"
+  integrity sha512-1S9N2qJ94A6bGYuxDqU/Jh1DHYEXOq3yEV21coTXCtBb1PDP/cj+849wN97s/y51KcY72lrf4BgSEmJr5ckVhw==
 
 "@types/babel-types@*", "@types/babel-types@^7.0.0":
   version "7.0.7"
@@ -884,10 +884,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.1.tgz#238eb34a66431b71d2aaddeaa7db166f25971a0d"
   integrity sha512-Zq8gcQGmn4txQEJeiXo/KiLpon8TzAl0kmKH4zdWctPj05nWwp1ClMdAVEloqrQKfaC48PNLdgN/aVaLqUrluA==
 
-"@types/node@13.7.2":
-  version "13.7.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.2.tgz#50375b95b5845a34efda2ffb3a087c7becbc46c6"
-  integrity sha512-uvilvAQbdJvnSBFcKJ2td4016urcGvsiR+N4dHGU87ml8O2Vl6l+ErOi9w0kXSPiwJ1AYlIW+0pDXDWWMOiWbw==
+"@types/node@13.7.4":
+  version "13.7.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.4.tgz#76c3cb3a12909510f52e5dc04a6298cdf9504ffd"
+  integrity sha512-oVeL12C6gQS/GAExndigSaLxTrKpQPxewx9bOcwfvJiJge4rr7wNaph4J+ns5hrmIV2as5qxqN8YKthn9qh0jw==
 
 "@types/pino-std-serializers@*":
   version "2.4.0"
