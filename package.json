@@ -47,7 +47,7 @@
     "@types/micro": "7.3.3",
     "@types/mocha": "7.0.2",
     "@types/node": "13.9.0",
-    "@types/pino": "5.15.5",
+    "@types/pino": "5.17.0",
     "@types/sinon": "7.5.2",
     "@types/test-listen": "1.1.0",
     "@typescript-eslint/eslint-plugin": "2.22.0",
