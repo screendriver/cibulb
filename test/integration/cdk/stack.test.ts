@@ -3,8 +3,8 @@ import { expect as expectCDK, haveResource } from '@aws-cdk/assert';
 import * as cdk from '@aws-cdk/core';
 import { CiBulbCdkStack } from '../../../src/cdk/stack';
 
-suite('cdk stack', function() {
-  test('SQS content resource', function() {
+suite('cdk stack', function () {
+  test('SQS content resource', function () {
     const app = new cdk.App();
     const stack = new CiBulbCdkStack(app, 'TestStack');
     expectCDK(stack).to(
@@ -15,7 +15,7 @@ suite('cdk stack', function() {
     );
   });
 
-  test('DynamoDB content resource', function() {
+  test('DynamoDB content resource', function () {
     const app = new cdk.App();
     const stack = new CiBulbCdkStack(app, 'TestStack');
     expectCDK(stack).to(
@@ -41,7 +41,7 @@ suite('cdk stack', function() {
     );
   });
 
-  test('color lambda content resource', function() {
+  test('color lambda content resource', function () {
     const app = new cdk.App();
     const stack = new CiBulbCdkStack(app, 'TestStack');
     expectCDK(stack).to(
@@ -52,7 +52,7 @@ suite('cdk stack', function() {
     );
   });
 
-  test('refresh lambda content resource', function() {
+  test('refresh lambda content resource', function () {
     const app = new cdk.App();
     const stack = new CiBulbCdkStack(app, 'TestStack');
     expectCDK(stack).to(
@@ -63,7 +63,7 @@ suite('cdk stack', function() {
     );
   });
 
-  test('ifttt lambda content resource', function() {
+  test('ifttt lambda content resource', function () {
     const app = new cdk.App();
     const stack = new CiBulbCdkStack(app, 'TestStack');
     expectCDK(stack).to(
@@ -74,7 +74,7 @@ suite('cdk stack', function() {
     );
   });
 
-  test('API Gateway', function() {
+  test('API Gateway', function () {
     const app = new cdk.App();
     const stack = new CiBulbCdkStack(app, 'TestStack');
     expectCDK(stack).to(

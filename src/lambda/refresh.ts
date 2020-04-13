@@ -6,7 +6,7 @@ import { init, sentryHandler } from '../sentry';
 
 init();
 
-export const handler = sentryHandler<APIGatewayProxyHandler>(async event => {
+export const handler = sentryHandler<APIGatewayProxyHandler>(async (event) => {
   const queueUrl = process.env.QUEUE_URL ?? '';
   const { headers } = event;
   const sqs = new SQS({ endpoint: getEndpoint(4576) });

@@ -22,21 +22,21 @@ const docClient = define<DocumentClient>({
   update: sinon.fake(),
 });
 
-suite('repositories', function() {
-  test('getRepositoriesStatus() returns "success" when item list is undefined', function() {
+suite('repositories', function () {
+  test('getRepositoriesStatus() returns "success" when item list is undefined', function () {
     const actual = getRepositoriesStatus();
     const expected: RepositoriesStatus = 'success';
     assert.strictEqual(actual, expected);
   });
 
-  test('getRepositoriesStatus() returns "success" when item list is empty', function() {
+  test('getRepositoriesStatus() returns "success" when item list is empty', function () {
     const itemList: DocumentClient.ItemList = [];
     const actual = getRepositoriesStatus(itemList);
     const expected: RepositoriesStatus = 'success';
     assert.strictEqual(actual, expected);
   });
 
-  test('getRepositoriesStatus() returns "pending" when one item is in status "pending"', function() {
+  test('getRepositoriesStatus() returns "pending" when one item is in status "pending"', function () {
     const itemList: DocumentClient.ItemList = [
       { RepoStatus: 'failed' },
       { RepoStatus: 'pending' },
@@ -47,7 +47,7 @@ suite('repositories', function() {
     assert.strictEqual(actual, expected);
   });
 
-  test('getRepositoriesStatus() returns "pending" when one item is in status "running"', function() {
+  test('getRepositoriesStatus() returns "pending" when one item is in status "running"', function () {
     const itemList: DocumentClient.ItemList = [
       { RepoStatus: 'failed' },
       { RepoStatus: 'running' },
@@ -58,7 +58,7 @@ suite('repositories', function() {
     assert.strictEqual(actual, expected);
   });
 
-  test('getRepositoriesStatus() returns "failed" when one item is in status "failed"', function() {
+  test('getRepositoriesStatus() returns "failed" when one item is in status "failed"', function () {
     const itemList: DocumentClient.ItemList = [
       { RepoStatus: 'success' },
       { RepoStatus: 'failed' },
@@ -68,7 +68,7 @@ suite('repositories', function() {
     assert.strictEqual(actual, expected);
   });
 
-  test('getRepositoriesStatus() returns "success" when all item are in status "success"', function() {
+  test('getRepositoriesStatus() returns "success" when all item are in status "success"', function () {
     const itemList: DocumentClient.ItemList = [
       { RepoStatus: 'success' },
       { RepoStatus: 'success' },
@@ -78,7 +78,7 @@ suite('repositories', function() {
     assert.strictEqual(actual, expected);
   });
 
-  test('getRepositoriesStatus() returns "success" when one repository is in status "skipped"', function() {
+  test('getRepositoriesStatus() returns "success" when one repository is in status "skipped"', function () {
     const itemList: DocumentClient.ItemList = [
       { RepoStatus: 'success' },
       { RepoStatus: 'skipped' },
@@ -88,7 +88,7 @@ suite('repositories', function() {
     assert.equal(actual, expected);
   });
 
-  test('scanRepositories() only scans "Status" attribute', async function() {
+  test('scanRepositories() only scans "Status" attribute', async function () {
     const scanOutput = { Items: [] };
     const promise = sinon.fake.resolves(scanOutput);
     const scan = sinon.fake.returns({ promise });
@@ -102,7 +102,7 @@ suite('repositories', function() {
     });
   });
 
-  test('scanRepositories() only returns items', async function() {
+  test('scanRepositories() only returns items', async function () {
     const scanOutput = { Items: [] };
     const promise = sinon.fake.resolves(scanOutput);
     const scan = sinon.fake.returns({ promise });

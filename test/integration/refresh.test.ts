@@ -6,8 +6,8 @@ const functionName = 'refresh';
 let sqs: SQS;
 let queueUrl: string;
 
-suite('refresh', function() {
-  suiteSetup(async function() {
+suite('refresh', function () {
+  suiteSetup(async function () {
     AWS.config.update({
       credentials: new Credentials('myAccessKeyId', 'mySecretAccessKey'),
       region: 'eu-central-1',
@@ -25,12 +25,12 @@ suite('refresh', function() {
     });
   });
 
-  suiteTeardown(async function() {
+  suiteTeardown(async function () {
     await deleteFunction(functionName);
     await sqs.deleteQueue({ QueueUrl: queueUrl }).promise();
   });
 
-  test('lambda sends a SQS message with a message body', async function() {
+  test('lambda sends a SQS message with a message body', async function () {
     this.timeout(20000);
     const lambda = new Lambda({ endpoint: 'http://localhost:4574' });
     await lambda.invoke({ FunctionName: functionName }).promise();
