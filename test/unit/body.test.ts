@@ -17,16 +17,16 @@ const requestBody = define<WebhookEventBody>({
   },
 });
 
-suite('body', function() {
-  test('assertHasEventBody() throws when body is null', function() {
+suite('body', function () {
+  test('assertHasEventBody() throws when body is null', function () {
     assert.throw(() => assertHasEventBody(null));
   });
 
-  test('assertHasEventBody() does not throw when body is not null', function() {
+  test('assertHasEventBody() does not throw when body is not null', function () {
     assert.doesNotThrow(() => assertHasEventBody('test'));
   });
 
-  test('parseEventBody() returns given body as JSON', function() {
+  test('parseEventBody() returns given body as JSON', function () {
     const body = requestBody();
     const actual = parseEventBody(JSON.stringify(body));
     const expected = body;

@@ -131,7 +131,7 @@ function run({
 
 init();
 
-export const handler = sentryHandler<APIGatewayProxyHandler>(async event => {
+export const handler = sentryHandler<APIGatewayProxyHandler>(async (event) => {
   const { body, headers } = event;
   assertHasEventBody(body);
   const logger = pino();

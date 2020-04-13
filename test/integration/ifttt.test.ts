@@ -12,8 +12,8 @@ function getHost() {
 const tableName = 'TestTable';
 const functionName = 'ifttt';
 
-suite('ifttt', function() {
-  suiteSetup(async function() {
+suite('ifttt', function () {
+  suiteSetup(async function () {
     AWS.config.update({
       credentials: new Credentials('myAccessKeyId', 'mySecretAccessKey'),
       region: 'eu-central-1',
@@ -21,15 +21,15 @@ suite('ifttt', function() {
     await createDynamoDb(tableName);
   });
 
-  suiteTeardown(async function() {
+  suiteTeardown(async function () {
     await deleteDynamoDb(tableName);
     await deleteFunction(functionName);
   });
 
-  test('calls IFTTT trigger with data from AWS DynamoDB', async function() {
+  test('calls IFTTT trigger with data from AWS DynamoDB', async function () {
     this.timeout(20000);
     let iftttRequestUrl: string | undefined;
-    const server = micro(req => {
+    const server = micro((req) => {
       iftttRequestUrl = req.url;
       return '';
     });
