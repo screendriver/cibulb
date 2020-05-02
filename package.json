@@ -20,7 +20,7 @@
   "dependencies": {
     "@sentry/node": "5.15.5",
     "aws-sdk": "2.593.0",
-    "got": "10.7.0",
+    "got": "11.0.3",
     "lodash.flow": "3.5.0",
     "pino": "6.2.1",
     "tslib": "1.11.1"
