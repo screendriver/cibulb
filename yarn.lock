@@ -829,12 +829,12 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.4.tgz#38fd73ddfd9b55abb1e1b2ed578cb55bd7b7d339"
   integrity sha512-8+KAKzEvSUdeo+kmqnKrqgeE+LcA0tjYWFY7RPProVYwnqDjukzO+3b6dLD56rYX5TdWejnEOLJYOIeh4CXKuA==
 
-"@types/jszip@3.1.7":
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/@types/jszip/-/jszip-3.1.7.tgz#c45bd72b448b3fb002125282c57c36190247cb34"
-  integrity sha512-+XQKNI5zpxutK05hO67huUTw/2imXCuJWjnFdU63tRES/xXSX1yVR9cv/QAdO6Rii2y2tTHbzjQ4i2apLfuK0Q==
+"@types/jszip@3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@types/jszip/-/jszip-3.4.0.tgz#1406fe8cd6c4ee5921512bb932190dfa2f71214c"
+  integrity sha512-GFHqtQQP3R4NNuvZH3hNCYD0NbyBZ42bkN7kO3NDrU/SnvIZWMS8Bp38XCsRKBT5BXvgm0y1zqpZWp/ZkRzBzg==
   dependencies:
-    "@types/node" "*"
+    jszip "*"
 
 "@types/keyv@*":
   version "3.1.1"
@@ -4125,7 +4125,7 @@ jstransformer@1.0.0:
     is-promise "^2.0.0"
     promise "^7.0.1"
 
-jszip@3.4.0:
+jszip@*, jszip@3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/jszip/-/jszip-3.4.0.tgz#1a69421fa5f0bb9bc222a46bca88182fba075350"
   integrity sha512-gZAOYuPl4EhPTXT0GjhI3o+ZAz3su6EhLrKUoAivcKqyqC7laS5JEv4XWZND9BgcDcF83vI85yGbDmDR6UhrIg==

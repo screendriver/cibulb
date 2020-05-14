@@ -42,7 +42,7 @@
     "@types/aws-lambda": "8.10.51",
     "@types/chai": "4.2.11",
     "@types/got": "9.6.10",
-    "@types/jszip": "3.1.7",
+    "@types/jszip": "3.4.0",
     "@types/lodash.flow": "3.5.6",
     "@types/micro": "7.3.3",
     "@types/mocha": "7.0.2",
