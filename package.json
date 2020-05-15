@@ -41,7 +41,7 @@
     "@aws-cdk/aws-sqs": "1.38.0",
     "@types/aws-lambda": "8.10.51",
     "@types/chai": "4.2.11",
-    "@types/got": "9.6.10",
+    "@types/got": "9.6.11",
     "@types/jszip": "3.4.0",
     "@types/lodash.flow": "3.5.6",
     "@types/micro": "7.3.3",
