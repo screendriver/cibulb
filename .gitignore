@@ -4,7 +4,6 @@
 coverage
 node_modules
 target
-yarn-error.log*
 test-results.xml
 
 # CDK asset staging directory

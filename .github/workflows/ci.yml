@@ -41,12 +41,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: Run integration tests
         timeout-minutes: 15
         run: |
-          yarn build
-          yarn test:integration
+          npm run build
+          npm run test:integration
         env:
           HOST: 172.17.0.1
   build:
@@ -67,17 +67,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - name: Check source code
         run: |
-          yarn lint
-          yarn copy:paste:detector
+          npm run lint
+          npm run copy:paste:detector
       - name: Compile source code
         run: |
-          yarn compile
-          yarn build
+          npm run compile
+          npm run build
       - name: Run unit tests
-        run: yarn test:unit:coverage
+        run: npm run test:unit:coverage
       - uses: actions/upload-artifact@v1
         with:
           name: target
@@ -102,7 +102,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
       - uses: actions/download-artifact@v1
         with:
           name: target
@@ -112,7 +112,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: target/coverage/clover.xml
       - name: Deploy to Amazon Web Services
-        run: yarn cdk deploy --ci --require-approval never
+        run: npx cdk deploy --ci --require-approval never
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
