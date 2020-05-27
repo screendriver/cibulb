@@ -31,15 +31,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v1
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
       - name: Install dependencies
         run: npm ci
       - name: Run integration tests
@@ -57,15 +56,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v1
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
       - name: Install dependencies
         run: npm ci
       - name: Check source code
@@ -92,15 +90,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Get yarn cache
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v1
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
       - name: Install dependencies
         run: npm ci
       - uses: actions/download-artifact@v1
