@@ -22,7 +22,7 @@
     "aws-sdk": "2.593.0",
     "got": "11.1.4",
     "lodash.flow": "3.5.0",
-    "pino": "6.3.0",
+    "pino": "6.3.1",
     "tslib": "2.0.0"
   },
   "peerDependencies": {
