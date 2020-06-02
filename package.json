@@ -18,7 +18,7 @@
     "test:integration": "TS_NODE_PROJECT=tsconfig.base.json mocha 'test/integration/**/*.test.*'"
   },
   "dependencies": {
-    "@sentry/node": "5.15.5",
+    "@sentry/node": "5.16.0",
     "aws-sdk": "2.593.0",
     "got": "11.2.0",
     "lodash.flow": "3.5.0",
