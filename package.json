@@ -39,7 +39,7 @@
     "@aws-cdk/aws-route53": "1.42.1",
     "@aws-cdk/aws-route53-targets": "1.42.1",
     "@aws-cdk/aws-sqs": "1.42.1",
-    "@types/aws-lambda": "8.10.51",
+    "@types/aws-lambda": "8.10.52",
     "@types/chai": "4.2.11",
     "@types/got": "9.6.11",
     "@types/jszip": "3.4.0",
