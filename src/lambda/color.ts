@@ -13,7 +13,7 @@ function wrongBranch(
   logger: Logger,
 ): APIGatewayProxyResult {
   logger.info(
-    `Called from "${eventBody.object_attributes.ref}" instead of "master" branch. Doing nothing.`,
+    `Called from "${eventBody.object_attributes.ref}" instead of main branch. Doing nothing.`,
   );
   return {
     statusCode: 204,

@@ -18,6 +18,14 @@ suite('branch', function () {
     assert.isTrue(isBranchAllowed('refs/heads/develop'));
   });
 
+  test('return true when branch is "main', function () {
+    assert.isTrue(isBranchAllowed('main'));
+  });
+
+  test('return true when branch is "refs/heads/main', function () {
+    assert.isTrue(isBranchAllowed('refs/heads/main'));
+  });
+
   test('return false when branch is "foo"', function () {
     assert.isFalse(isBranchAllowed('foo'));
   });
