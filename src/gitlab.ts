@@ -7,3 +7,7 @@ export function readGitLabTokenFromHeaders(
   }
   return '';
 }
+
+export function isSecretValid(gitLabToken: string, gitLabSecretToken: string) {
+  return gitLabToken === gitLabSecretToken;
+}

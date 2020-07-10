@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { readGitLabTokenFromHeaders } from '../../src/gitlab';
+import { readGitLabTokenFromHeaders, isSecretValid } from '../../src/gitlab';
 
 suite('gitlab', function () {
   test('readGitLabTokenFromHeaders() returns an empty string when "x-gitlab-token" is not present', function () {
@@ -14,5 +14,15 @@ suite('gitlab', function () {
     };
     const actual = readGitLabTokenFromHeaders(headers);
     assert.strictEqual(actual, 'foo');
+  });
+
+  test('isSecretValid() returns true when secret is valid', function () {
+    const isValid = isSecretValid('my-secret', 'my-secret');
+    assert.isTrue(isValid);
+  });
+
+  test('isSecretValid() returns false when secret is not valid', function () {
+    const isValid = isSecretValid('my-secret', 'wrong-secret');
+    assert.isFalse(isValid);
   });
 });
