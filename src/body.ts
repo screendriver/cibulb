@@ -14,6 +14,13 @@ export interface WebhookEventBody {
   };
 }
 
+export function isWebhookEventBody(body?: unknown): body is WebhookEventBody {
+  if (typeof body === 'object' && body !== null) {
+    return 'object_attributes' in body && 'project' in body;
+  }
+  return false;
+}
+
 export function assertHasEventBody(
   body: string | null,
 ): asserts body is string {
