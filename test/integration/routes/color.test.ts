@@ -7,13 +7,24 @@ import koaLogger from 'koa-pino-logger';
 import bodyParser from 'koa-bodyparser';
 import listen from 'test-listen';
 import got from 'got';
+import redis, { RedisClient } from 'redis';
+import { promisify } from 'util';
 import {
   verifyGitLabToken,
   verifyWebhookEventBody,
   verifyBranch,
+  changeColor,
   MiddlewareState,
 } from '../../../src/routes/color';
 import { WebhookEventBody } from '../../../src/body';
+
+async function createRedisClient() {
+  const redisClient = redis.createClient();
+  await new Promise((resolve) => {
+    redisClient.on('connect', resolve);
+  });
+  return redisClient;
+}
 
 function createWebhookEventBody(branch = 'master'): WebhookEventBody {
   return {
@@ -23,7 +34,7 @@ function createWebhookEventBody(branch = 'master'): WebhookEventBody {
       status: 'success',
     },
     project: {
-      path_with_namespace: '',
+      path_with_namespace: 'my/project',
     },
   };
 }
@@ -42,23 +53,38 @@ const setTestBodyMiddleware: Middleware = (ctx) => {
 };
 
 function withServer(
-  test: (url: string) => void | Promise<void>,
+  test: (url: string, redisClient: RedisClient) => void | Promise<void>,
   ...middleware: Middleware[]
 ): Func {
   return async () => {
+    const redisClient = await createRedisClient();
     const app = new Koa();
     const router = new Router();
-    router.post('/color', ...middleware);
+    router.post(
+      '/color',
+      async (ctx, next) => {
+        ctx.state.redisClient = redisClient;
+        await next();
+      },
+      ...middleware,
+    );
+    app.use(koaLogger({ enabled: false }));
     app.use(bodyParser());
     app.use(router.routes());
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const server = http.createServer(app.callback());
     const baseUrl = await listen(server);
     const requestUrl = new URL('/color', baseUrl);
+    app.context.redisClient = redisClient;
     try {
-      await test(requestUrl.href);
+      await test(requestUrl.href, redisClient);
     } finally {
       server.close();
+      await new Promise((resolve) => {
+        redisClient.flushall(() => {
+          redisClient.quit(resolve);
+        });
+      });
     }
   };
 }
@@ -170,10 +196,26 @@ suite('/color route', function () {
         const expected = 400;
         assert.equal(actual, expected);
       },
-      koaLogger({ enabled: false }),
       setContextStateMiddleware('featureA'),
       verifyBranch,
       setTestBodyMiddleware,
+    ),
+  );
+
+  test(
+    'changeColor middleware',
+    withServer(
+      async (requestUrl, redisClient) => {
+        const getAsync = promisify(redisClient.get).bind(redisClient);
+        await got.post(requestUrl, { throwHttpErrors: false });
+        const actual = await getAsync('my/project');
+        const expected = 'success';
+        assert.equal(actual, expected);
+      },
+      setContextStateMiddleware(),
+      (ctx, next) => {
+        changeColor(ctx.state.redisClient)(ctx, next);
+      },
     ),
   );
 });

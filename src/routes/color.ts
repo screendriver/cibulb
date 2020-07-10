@@ -1,5 +1,7 @@
 import { Middleware } from '@koa/router';
-import { pipe, curry } from 'rambda';
+import curry from 'lodash/curry';
+import flow from 'lodash/flow';
+import { RedisClient } from 'redis';
 import { isWebhookEventBody, WebhookEventBody } from '../body';
 import { readGitLabTokenFromHeaders, isSecretValid } from '../gitlab';
 import { isBranchAllowed } from '../branch';
@@ -11,7 +13,7 @@ export interface MiddlewareState {
 export const verifyGitLabToken: Middleware = async (ctx, next) => {
   const gitLabSecretToken = process.env.GITLAB_SECRET_TOKEN ?? '';
   const curriedIsSecretValid = curry(isSecretValid);
-  const isValid = pipe(
+  const isValid = flow(
     readGitLabTokenFromHeaders,
     curriedIsSecretValid(gitLabSecretToken),
   )(ctx.headers);
@@ -46,3 +48,22 @@ export const verifyBranch: Middleware<MiddlewareState> = async (ctx, next) => {
     ctx.throw(400, 'Invalid Git branch');
   }
 };
+
+export function changeColor(
+  redisClient: RedisClient,
+): Middleware<MiddlewareState> {
+  return (ctx, next) => {
+    const { webhookEvent } = ctx.state;
+    redisClient.set(
+      webhookEvent.project.path_with_namespace,
+      webhookEvent.object_attributes.status,
+      (error) => {
+        if (error) {
+          ctx.log.error('Error while writing to Redis', error);
+        } else {
+          next();
+        }
+      },
+    );
+  };
+}
