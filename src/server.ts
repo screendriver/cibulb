@@ -3,13 +3,13 @@ import Router from '@koa/router';
 import koaLogger from 'koa-pino-logger';
 import bodyParser from 'koa-bodyparser';
 import pino from 'pino';
-import { color } from './routes/color';
+import { verifyGitLabToken, verifyWebhookEventBody } from './routes/color';
 
 const logger = pino();
 const app = new Koa();
 const router = new Router();
 
-router.post('/color', color);
+router.post('/color', verifyGitLabToken, verifyWebhookEventBody);
 
 app.use(koaLogger({ logger }));
 app.use(bodyParser());
