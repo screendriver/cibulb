@@ -70,7 +70,6 @@
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-mocha": "6.3.0",
     "eslint-plugin-prettier": "3.1.4",
-    "esm": "3.2.25",
     "jscpd": "3.2.1",
     "jszip": "3.5.0",
     "micro": "9.3.4",
