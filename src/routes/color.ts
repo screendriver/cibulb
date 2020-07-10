@@ -4,7 +4,7 @@ import { isWebhookEventBody, WebhookEventBody } from '../body';
 import { readGitLabTokenFromHeaders, isSecretValid } from '../gitlab';
 import { isBranchAllowed } from '../branch';
 
-interface MiddlewareState {
+export interface MiddlewareState {
   webhookEvent: WebhookEventBody;
 }
 
@@ -34,5 +34,15 @@ export const verifyWebhookEventBody: Middleware<MiddlewareState> = async (
     await next();
   } else {
     ctx.throw(400, 'Invalid JSON body');
+  }
+};
+
+export const verifyBranch: Middleware<MiddlewareState> = async (ctx, next) => {
+  const { ref } = ctx.state.webhookEvent.object_attributes;
+  if (isBranchAllowed(ref)) {
+    await next();
+  } else {
+    ctx.log.info(`Called from "${ref}" instead of main branch. Doing nothing.`);
+    ctx.throw(400, 'Invalid Git branch');
   }
 };

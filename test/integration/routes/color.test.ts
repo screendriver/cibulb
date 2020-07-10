@@ -3,16 +3,41 @@ import { assert } from 'chai';
 import http from 'http';
 import Koa from 'koa';
 import Router, { Middleware } from '@koa/router';
+import koaLogger from 'koa-pino-logger';
 import bodyParser from 'koa-bodyparser';
 import listen from 'test-listen';
 import got from 'got';
 import {
   verifyGitLabToken,
   verifyWebhookEventBody,
+  verifyBranch,
+  MiddlewareState,
 } from '../../../src/routes/color';
 import { WebhookEventBody } from '../../../src/body';
 
-const testMiddleware: Middleware = (ctx) => {
+function createWebhookEventBody(branch = 'master'): WebhookEventBody {
+  return {
+    object_attributes: {
+      id: 1,
+      ref: branch,
+      status: 'success',
+    },
+    project: {
+      path_with_namespace: '',
+    },
+  };
+}
+
+function setContextStateMiddleware(
+  branch = 'master',
+): Middleware<MiddlewareState> {
+  return async (ctx, next) => {
+    ctx.state.webhookEvent = createWebhookEventBody(branch);
+    await next();
+  };
+}
+
+const setTestBodyMiddleware: Middleware = (ctx) => {
   ctx.body = 'test passed';
 };
 
@@ -57,22 +82,13 @@ suite('/color route', function () {
     'verifyWebhookEventBody middleware calls next middleware when request was correct',
     withServer(
       async (requestUrl) => {
-        const json: WebhookEventBody = {
-          object_attributes: {
-            id: 1,
-            ref: '',
-            status: 'success',
-          },
-          project: {
-            path_with_namespace: '',
-          },
-        };
+        const json = createWebhookEventBody();
         const actual = await got.post(requestUrl, { json }).text();
         const expected = 'test passed';
         assert.equal(actual, expected);
       },
       verifyWebhookEventBody,
-      testMiddleware,
+      setTestBodyMiddleware,
     ),
   );
 
@@ -125,7 +141,39 @@ suite('/color route', function () {
         delete process.env.GITLAB_SECRET_TOKEN;
       },
       verifyGitLabToken,
-      testMiddleware,
+      setTestBodyMiddleware,
+    ),
+  );
+
+  test(
+    'verifyBranch middleware calls next middleware when Git branch is valid',
+    withServer(
+      async (requestUrl) => {
+        const actual = await got.post(requestUrl).text();
+        const expected = 'test passed';
+        assert.equal(actual, expected);
+      },
+      setContextStateMiddleware(),
+      verifyBranch,
+      setTestBodyMiddleware,
+    ),
+  );
+
+  test(
+    'verifyBranch middleware returns HTTP 401 when Git branch is not valid',
+    withServer(
+      async (requestUrl) => {
+        const result = await got.post(requestUrl, {
+          throwHttpErrors: false,
+        });
+        const actual = result.statusCode;
+        const expected = 400;
+        assert.equal(actual, expected);
+      },
+      koaLogger({ enabled: false }),
+      setContextStateMiddleware('featureA'),
+      verifyBranch,
+      setTestBodyMiddleware,
     ),
   );
 });
