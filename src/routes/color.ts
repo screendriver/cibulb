@@ -1,7 +1,7 @@
 import { Middleware } from '@koa/router';
 import curry from 'lodash/curry';
 import flow from 'lodash/flow';
-import { RedisClient } from 'redis';
+import { Redis } from 'ioredis';
 import { isWebhookEventBody, WebhookEventBody } from '../body';
 import { readGitLabTokenFromHeaders, isSecretValid } from '../gitlab';
 import { isBranchAllowed } from '../branch';
@@ -49,21 +49,19 @@ export const verifyBranch: Middleware<MiddlewareState> = async (ctx, next) => {
   }
 };
 
-export function changeColor(
-  redisClient: RedisClient,
-): Middleware<MiddlewareState> {
-  return (ctx, next) => {
+export function changeColor(redis: Redis): Middleware<MiddlewareState> {
+  return async (ctx, next) => {
     const { webhookEvent } = ctx.state;
-    redisClient.set(
-      webhookEvent.project.path_with_namespace,
-      webhookEvent.object_attributes.status,
-      (error) => {
-        if (error) {
-          ctx.log.error('Error while writing to Redis', error);
-        } else {
-          next();
-        }
-      },
-    );
+    try {
+      await redis.set(
+        webhookEvent.project.path_with_namespace,
+        webhookEvent.object_attributes.status,
+      );
+      await next();
+    } catch (error) {
+      const message = 'Error while writing to Redis';
+      ctx.log.error(message, error);
+      ctx.throw(502, message);
+    }
   };
 }
