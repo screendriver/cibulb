@@ -7,23 +7,27 @@ import {
   verifyGitLabToken,
   verifyWebhookEventBody,
   verifyBranch,
-  changeColor,
+  saveStatusInRedis,
 } from './routes/color';
-import { createRedisClient } from './redis';
+import { triggerIfttt } from './ifttt';
+import { createRedis } from './redis';
 
 async function startServer() {
   const logger = pino();
   const app = new Koa();
   const router = new Router();
-  const redisClient = await createRedisClient(logger);
+  const redis = await createRedis(logger);
 
   router.post(
     '/color',
     verifyGitLabToken,
     verifyWebhookEventBody,
     verifyBranch,
-    changeColor(redisClient),
+    saveStatusInRedis(redis),
+    triggerIfttt(redis),
   );
+
+  router.get('/refresh', triggerIfttt(redis));
 
   app.use(koaLogger({ logger }));
   app.use(bodyParser());

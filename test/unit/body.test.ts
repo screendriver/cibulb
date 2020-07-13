@@ -1,22 +1,5 @@
 import { assert } from 'chai';
-import { define, random } from 'cooky-cutter';
-import {
-  isWebhookEventBody,
-  assertHasEventBody,
-  parseEventBody,
-  WebhookEventBody,
-} from '../../src/body';
-
-const requestBody = define<WebhookEventBody>({
-  object_attributes: {
-    id: random(),
-    ref: '',
-    status: 'success',
-  },
-  project: {
-    path_with_namespace: '',
-  },
-});
+import { isWebhookEventBody } from '../../src/body';
 
 suite('body', function () {
   test('isWebhookEventBody() returns false when body is undefined', function () {
@@ -52,20 +35,5 @@ suite('body', function () {
     };
     const actual = isWebhookEventBody(body);
     assert.isTrue(actual);
-  });
-
-  test('assertHasEventBody() throws when body is null', function () {
-    assert.throw(() => assertHasEventBody(null));
-  });
-
-  test('assertHasEventBody() does not throw when body is not null', function () {
-    assert.doesNotThrow(() => assertHasEventBody('test'));
-  });
-
-  test('parseEventBody() returns given body as JSON', function () {
-    const body = requestBody();
-    const actual = parseEventBody(JSON.stringify(body));
-    const expected = body;
-    assert.deepEqual(actual, expected);
   });
 });

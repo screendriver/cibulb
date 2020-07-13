@@ -1,47 +1,22 @@
 import { assert } from 'chai';
-import sinon from 'sinon';
-import { Got } from 'got';
-import { triggerName, createIftttTrigger } from '../../src/ifttt';
-import { RepositoriesStatus } from '../../src/repositories';
+import { mapStatusToTriggerName } from '../../src/ifttt';
 
 suite('ifttt', function () {
-  test('triggerName() gets correct name for "success" message', function () {
-    const actual = triggerName('success');
+  test('mapStatusToTriggerName() maps "success" to "ci_build_success"', function () {
+    const actual = mapStatusToTriggerName('success');
     const expected = 'ci_build_success';
-    assert.strictEqual(actual, expected);
+    assert.equal(actual, expected);
   });
 
-  test('triggerName() gets correct name for "pending" message', function () {
-    const actual = triggerName('pending');
+  test('mapStatusToTriggerName() maps "pending" to "ci_build_pending"', function () {
+    const actual = mapStatusToTriggerName('pending');
     const expected = 'ci_build_pending';
-    assert.strictEqual(actual, expected);
+    assert.equal(actual, expected);
   });
 
-  test('triggerName() gets correct name for "failed" message', function () {
-    const actual = triggerName('failed');
+  test('mapStatusToTriggerName() maps "failed" to "ci_build_failure"', function () {
+    const actual = mapStatusToTriggerName('failed');
     const expected = 'ci_build_failure';
-    assert.strictEqual(actual, expected);
-  });
-
-  test('triggerName() gets correct name for unknown message', function () {
-    const actual = triggerName(('unknown' as unknown) as RepositoriesStatus);
-    const expected = 'ci_build_failure';
-    assert.strictEqual(actual, expected);
-  });
-
-  test('createIftttTrigger() calls the right IFTTT URL', async function () {
-    const got = sinon.fake.resolves('');
-    const iftttKey = 'my-key';
-    const iftttBaseUrl = 'http://example.com';
-    const trigger = createIftttTrigger(
-      (got as unknown) as Got,
-      iftttKey,
-      iftttBaseUrl,
-    );
-    await trigger('do_it');
-    sinon.assert.calledWith(got, `trigger/do_it/with/key/my-key`, {
-      prefixUrl: iftttBaseUrl,
-      resolveBodyOnly: true,
-    });
+    assert.equal(actual, expected);
   });
 });

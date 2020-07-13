@@ -49,7 +49,7 @@ export const verifyBranch: Middleware<MiddlewareState> = async (ctx, next) => {
   }
 };
 
-export function changeColor(redis: Redis): Middleware<MiddlewareState> {
+export function saveStatusInRedis(redis: Redis): Middleware<MiddlewareState> {
   return async (ctx, next) => {
     const { webhookEvent } = ctx.state;
     try {

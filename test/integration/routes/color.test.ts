@@ -1,29 +1,16 @@
-import { suite, test, Func } from 'mocha';
+import { suite, test } from 'mocha';
 import { assert } from 'chai';
-import http from 'http';
-import Koa from 'koa';
-import Router, { Middleware } from '@koa/router';
-import koaLogger from 'koa-pino-logger';
-import bodyParser from 'koa-bodyparser';
-import listen from 'test-listen';
+import { Middleware } from '@koa/router';
 import got from 'got';
-import Redis from 'ioredis';
+import { withServer } from '../server';
 import {
   verifyGitLabToken,
   verifyWebhookEventBody,
   verifyBranch,
-  changeColor,
+  saveStatusInRedis,
   MiddlewareState,
 } from '../../../src/routes/color';
 import { WebhookEventBody } from '../../../src/body';
-
-async function createRedis() {
-  const redis = new Redis();
-  await new Promise((resolve) => {
-    redis.on('connect', resolve);
-  });
-  return redis;
-}
 
 function createWebhookEventBody(branch = 'master'): WebhookEventBody {
   return {
@@ -50,39 +37,6 @@ function setContextStateMiddleware(
 const setTestBodyMiddleware: Middleware = (ctx) => {
   ctx.body = 'test passed';
 };
-
-function withServer(
-  test: (url: string, redis: Redis.Redis) => void | Promise<void>,
-  ...middleware: Middleware[]
-): Func {
-  return async () => {
-    const redis = await createRedis();
-    const app = new Koa();
-    const router = new Router();
-    router.post(
-      '/color',
-      async (ctx, next) => {
-        ctx.state.redis = redis;
-        await next();
-      },
-      ...middleware,
-    );
-    app.use(koaLogger({ enabled: false }));
-    app.use(bodyParser());
-    app.use(router.routes());
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    const server = http.createServer(app.callback());
-    const baseUrl = await listen(server);
-    const requestUrl = new URL('/color', baseUrl);
-    try {
-      await test(requestUrl.href, redis);
-    } finally {
-      server.close();
-      await redis.flushall();
-      await redis.quit();
-    }
-  };
-}
 
 suite('/color route', function () {
   test(
@@ -198,7 +152,7 @@ suite('/color route', function () {
   );
 
   test(
-    'changeColor middleware',
+    'saveStatusInRedis middleware',
     withServer(
       async (requestUrl, redis) => {
         await got.post(requestUrl, { throwHttpErrors: false });
@@ -208,7 +162,7 @@ suite('/color route', function () {
       },
       setContextStateMiddleware(),
       (ctx, next) => {
-        changeColor(ctx.state.redis)(ctx, next);
+        return saveStatusInRedis(ctx.state.redis)(ctx, next);
       },
     ),
   );
