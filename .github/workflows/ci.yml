@@ -3,67 +3,22 @@ name: CI
 on: push
 
 jobs:
-  integration-tests:
-    runs-on: ubuntu-latest
-    services:
-      localstack:
-        image: localstack/localstack
-        ports:
-          - 4567-4597:4567-4597
-        env:
-          SERVICES: apigateway,lambda,dynamodb,sqs
-          DEFAULT_REGION: eu-central-1
-          DOCKER_HOST: unix:///var/run/docker.sock
-          LAMBDA_EXECUTOR: docker
-          START_WEB: 0
-        options: >-
-          --volume /var/run/docker.sock:/var/run/docker.sock
-          --health-cmd "awslocal sqs list-queues"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-start-period 15s
-          --health-retries 5
-        volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
-      - name: Install dependencies
-        run: npm ci
-      - name: Run integration tests
-        timeout-minutes: 15
-        run: |
-          npm run build
-          npm run test:integration
-        env:
-          HOST: 172.17.0.1
   build:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:6.0.5-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
       - name: Install dependencies
         run: npm ci
       - name: Check source code
@@ -71,53 +26,15 @@ jobs:
           npm run lint
           npm run copy:paste:detector
       - name: Compile source code
-        run: |
-          npm run compile
-          npm run build
+        run: npm run compile
       - name: Run unit tests
         run: npm run test:unit:coverage
-      - uses: actions/upload-artifact@v1
-        with:
-          name: target
-          path: target
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: [integration-tests, build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.x
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
-      - name: Install dependencies
-        run: npm ci
-      - uses: actions/download-artifact@v1
-        with:
-          name: target
+      - name: Run integration tests
+        run: npm run test:integration
+        env:
+          REDIS_HOST: redis
       - name: Upload code coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: target/coverage/clover.xml
-      - name: Deploy to Amazon Web Services
-        run: npx cdk deploy --ci --require-approval never
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          AWS_CERTIFICATE_ARN: ${{ secrets.AWS_CERTIFICATE_ARN }}
-          AWS_API_DOMAIN_NAME: ${{ secrets.AWS_API_DOMAIN_NAME }}
-          AWS_HOSTED_ZONE_ID: ${{ secrets.AWS_HOSTED_ZONE_ID }}
-          GITLAB_SECRET_TOKEN: ${{ secrets.GITLAB_SECRET_TOKEN }}
-          IFTTT_BASE_URL: ${{ secrets.IFTTT_BASE_URL }}
-          IFTTT_KEY: ${{ secrets.IFTTT_KEY }}
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
