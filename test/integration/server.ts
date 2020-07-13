@@ -10,7 +10,7 @@ import Redis from 'ioredis';
 
 function createRedis(): Promise<Redis.Redis> {
   return new Promise((resolve) => {
-    const redis = new Redis();
+    const redis = new Redis({ host: process.env.REDIS_HOST });
     redis.on('connect', () => resolve(redis));
   });
 }

@@ -9,7 +9,7 @@ export type RepositoryStatus =
   | 'failed';
 
 export function createRedis(logger: Logger): Promise<Redis.Redis> {
-  const redis = new Redis({ host: 'redis' });
+  const redis = new Redis({ host: process.env.REDIS_HOST });
   return new Promise((resolve, reject) => {
     redis.on('connect', () => resolve(redis));
     redis.on('error', (error) => {
