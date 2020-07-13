@@ -5,10 +5,7 @@
   "cache-dir": "target/.cache",
   "exclude-after-remap": false,
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "src/cdk/"
-  ],
-  "require": ["esm", "ts-node/register/transpile-only"],
+  "require": ["ts-node/register/transpile-only"],
   "reporter": [
     "lcov",
     "text",

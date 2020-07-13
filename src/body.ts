@@ -1,27 +1,17 @@
-interface Repository {
-  name: string;
-  status: 'success' | 'running' | 'skipped' | 'pending' | 'failed';
-}
-
 export interface WebhookEventBody {
   object_attributes: {
     id: number;
     ref: string;
-    status: Repository['status'];
+    status: 'success' | 'running' | 'skipped' | 'pending' | 'failed';
   };
   project: {
     path_with_namespace: string;
   };
 }
 
-export function assertHasEventBody(
-  body: string | null,
-): asserts body is string {
-  if (body === null) {
-    throw new TypeError("body can't be null");
+export function isWebhookEventBody(body?: unknown): body is WebhookEventBody {
+  if (typeof body === 'object' && body !== null) {
+    return 'object_attributes' in body && 'project' in body;
   }
-}
-
-export function parseEventBody(body: string): WebhookEventBody {
-  return JSON.parse(body);
+  return false;
 }

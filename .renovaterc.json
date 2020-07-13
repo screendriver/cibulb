@@ -25,12 +25,6 @@
       "automergeType": "branch"
     },
     {
-      "packagePatterns": ["aws-cdk"],
-      "groupName": "AWS CDK packages",
-      "automerge": true,
-      "automergeType": "branch"
-    },
-    {
       "packagePatterns": ["eslint"],
       "groupName": "eslint packages",
       "extends": ["schedule:earlyMondays"],

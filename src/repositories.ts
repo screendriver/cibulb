@@ -1,46 +1,47 @@
-import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-
-export interface Repository {
-  status: 'success' | 'running' | 'skipped' | 'pending' | 'failed';
-}
-
 export type RepositoriesStatus = 'success' | 'pending' | 'failed';
 
+export type RepositoryStatus =
+  | 'success'
+  | 'running'
+  | 'skipped'
+  | 'pending'
+  | 'failed';
+
+function filterNull(
+  statusList: ReadonlyArray<RepositoryStatus | null>,
+): readonly RepositoryStatus[] {
+  return statusList.filter(
+    (status): status is RepositoryStatus => status !== null,
+  );
+}
+
+function isEmpty(statusList: ReadonlyArray<string | null>): boolean {
+  return statusList.length === 0;
+}
+
 function checkFailedStatus(
-  itemList: DocumentClient.ItemList,
+  statusList: readonly RepositoryStatus[],
 ): RepositoriesStatus {
-  return itemList.some(({ RepoStatus }) => RepoStatus === 'failed')
+  return statusList.some((status) => status === 'failed')
     ? 'failed'
     : 'success';
 }
 
-function getStatusForNonEmptyRepos(
-  itemList: DocumentClient.ItemList,
+function checkPending(
+  statusList: readonly RepositoryStatus[],
 ): RepositoriesStatus {
-  return itemList.some(
-    ({ RepoStatus }) => RepoStatus === 'pending' || RepoStatus === 'running',
+  return statusList.some(
+    (status) => status === 'pending' || status === 'running',
   )
     ? 'pending'
-    : checkFailedStatus(itemList);
-}
-
-function isEmpty(itemList: DocumentClient.ItemList): boolean {
-  return itemList.length === 0;
+    : checkFailedStatus(statusList);
 }
 
 export function getRepositoriesStatus(
-  itemList?: DocumentClient.ItemList,
+  statusList: ReadonlyArray<RepositoryStatus | null>,
 ): RepositoriesStatus {
-  return !itemList || isEmpty(itemList)
+  const nonNullStatusList = filterNull(statusList);
+  return isEmpty(nonNullStatusList)
     ? 'success'
-    : getStatusForNonEmptyRepos(itemList);
-}
-
-export function scanRepositories(docClient: DocumentClient) {
-  return async (tableName: string) => {
-    const scanOutput = await docClient
-      .scan({ TableName: tableName, ProjectionExpression: 'RepoStatus' })
-      .promise();
-    return scanOutput.Items;
-  };
+    : checkPending(nonNullStatusList);
 }

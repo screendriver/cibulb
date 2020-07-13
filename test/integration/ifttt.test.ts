@@ -1,48 +1,41 @@
+import { suite, test } from 'mocha';
 import { assert } from 'chai';
-import AWS, { Credentials, Lambda } from 'aws-sdk';
-import micro from 'micro';
+import got from 'got';
+import http from 'http';
+import Koa from 'koa';
 import listen from 'test-listen';
-import { createDynamoDb, deleteDynamoDb } from './dynamodb';
-import { createFunction, deleteFunction } from './lambda';
+import { withServer } from './server';
+import { triggerIfttt } from '../../src/ifttt';
 
-function getHost() {
-  return process.env.HOST ?? 'host.docker.internal';
-}
-
-const tableName = 'TestTable';
-const functionName = 'ifttt';
-
-suite('ifttt', function () {
-  suiteSetup(async function () {
-    AWS.config.update({
-      credentials: new Credentials('myAccessKeyId', 'mySecretAccessKey'),
-      region: 'eu-central-1',
-    });
-    await createDynamoDb(tableName);
-  });
-
-  suiteTeardown(async function () {
-    await deleteDynamoDb(tableName);
-    await deleteFunction(functionName);
-  });
-
-  test('calls IFTTT trigger with data from AWS DynamoDB', async function () {
-    this.timeout(20000);
-    let iftttRequestUrl: string | undefined;
-    const server = micro((req) => {
-      iftttRequestUrl = req.url;
-      return '';
-    });
-    const url = await listen(server, getHost());
-    await createFunction(functionName, {
-      IFTTT_KEY: 'my-key',
-      IFTTT_BASE_URL: url,
-      DYNAMODB_TABLE_NAME: tableName,
-    });
-    const lambda = new Lambda({ endpoint: 'http://localhost:4574' });
-    await lambda.invoke({ FunctionName: functionName }).promise();
-    server.close();
-    const expected = '/trigger/ci_build_success/with/key/my-key';
-    assert.strictEqual(iftttRequestUrl, expected);
-  });
+suite('ifttt middleware', function () {
+  test(
+    '',
+    withServer(
+      async function (requestUrl, redis) {
+        let iftttRequestUrl = '';
+        await redis.set('my-repository', 'success');
+        const app = new Koa();
+        app.use((ctx) => {
+          ctx.status = 200;
+          iftttRequestUrl = ctx.request.url;
+        });
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        const iftttServer = http.createServer(app.callback());
+        const iftttBaseUrl = await listen(iftttServer);
+        process.env.IFTTT_KEY = 'secret-test-key';
+        process.env.IFTTT_BASE_URL = iftttBaseUrl;
+        await got(requestUrl).text();
+        iftttServer.close();
+        delete process.env.IFTTT_KEY;
+        delete process.env.IFTTT_BASE_URL;
+        assert.equal(
+          iftttRequestUrl,
+          '/trigger/ci_build_success/with/key/secret-test-key',
+        );
+      },
+      (ctx, next) => {
+        return triggerIfttt(ctx.state.redis)(ctx, next);
+      },
+    ),
+  );
 });
