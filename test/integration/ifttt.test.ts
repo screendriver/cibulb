@@ -33,9 +33,7 @@ suite('ifttt middleware', function () {
           '/trigger/ci_build_success/with/key/secret-test-key',
         );
       },
-      (ctx, next) => {
-        return triggerIfttt(ctx.state.redis)(ctx, next);
-      },
+      (redis) => triggerIfttt(redis),
     ),
   );
 });

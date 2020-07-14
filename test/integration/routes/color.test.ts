@@ -41,16 +41,19 @@ const setTestBodyMiddleware: Middleware = (ctx) => {
 suite('/color route', function () {
   test(
     'verifyWebhookEventBody middleware returns HTTP 400 when request body is empty',
-    withServer(async (requestUrl) => {
-      const json = {};
-      const result = await got.post(requestUrl, {
-        throwHttpErrors: false,
-        json,
-      });
-      const actual = result.statusCode;
-      const expected = 400;
-      assert.equal(actual, expected);
-    }, verifyWebhookEventBody),
+    withServer(
+      async (requestUrl) => {
+        const json = {};
+        const result = await got.post(requestUrl, {
+          throwHttpErrors: false,
+          json,
+        });
+        const actual = result.statusCode;
+        const expected = 400;
+        assert.equal(actual, expected);
+      },
+      () => verifyWebhookEventBody,
+    ),
   );
 
   test(
@@ -62,40 +65,46 @@ suite('/color route', function () {
         const expected = 'test passed';
         assert.equal(actual, expected);
       },
-      verifyWebhookEventBody,
-      setTestBodyMiddleware,
+      () => verifyWebhookEventBody,
+      () => setTestBodyMiddleware,
     ),
   );
 
   test(
     'verifyGitLabToken middleware returns HTTP 401 when GitLab token is not set',
-    withServer(async (requestUrl) => {
-      process.env.GITLAB_SECRET_TOKEN = 'my-secret';
-      const result = await got.post(requestUrl, {
-        throwHttpErrors: false,
-      });
-      const actual = result.statusCode;
-      const expected = 401;
-      assert.equal(actual, expected);
-      delete process.env.GITLAB_SECRET_TOKEN;
-    }, verifyGitLabToken),
+    withServer(
+      async (requestUrl) => {
+        process.env.GITLAB_SECRET_TOKEN = 'my-secret';
+        const result = await got.post(requestUrl, {
+          throwHttpErrors: false,
+        });
+        const actual = result.statusCode;
+        const expected = 401;
+        assert.equal(actual, expected);
+        delete process.env.GITLAB_SECRET_TOKEN;
+      },
+      () => verifyGitLabToken,
+    ),
   );
 
   test(
     'verifyGitLabToken middleware returns HTTP 401 when GitLab token is wrong',
-    withServer(async (requestUrl) => {
-      process.env.GITLAB_SECRET_TOKEN = 'my-secret';
-      const result = await got.post(requestUrl, {
-        throwHttpErrors: false,
-        headers: {
-          'x-gitlab-token': 'abc',
-        },
-      });
-      const actual = result.statusCode;
-      const expected = 401;
-      assert.equal(actual, expected);
-      delete process.env.GITLAB_SECRET_TOKEN;
-    }, verifyGitLabToken),
+    withServer(
+      async (requestUrl) => {
+        process.env.GITLAB_SECRET_TOKEN = 'my-secret';
+        const result = await got.post(requestUrl, {
+          throwHttpErrors: false,
+          headers: {
+            'x-gitlab-token': 'abc',
+          },
+        });
+        const actual = result.statusCode;
+        const expected = 401;
+        assert.equal(actual, expected);
+        delete process.env.GITLAB_SECRET_TOKEN;
+      },
+      () => verifyGitLabToken,
+    ),
   );
 
   test(
@@ -115,8 +124,8 @@ suite('/color route', function () {
         assert.equal(actual, expected);
         delete process.env.GITLAB_SECRET_TOKEN;
       },
-      verifyGitLabToken,
-      setTestBodyMiddleware,
+      () => verifyGitLabToken,
+      () => setTestBodyMiddleware,
     ),
   );
 
@@ -128,9 +137,9 @@ suite('/color route', function () {
         const expected = 'test passed';
         assert.equal(actual, expected);
       },
-      setContextStateMiddleware(),
-      verifyBranch,
-      setTestBodyMiddleware,
+      () => setContextStateMiddleware(),
+      () => verifyBranch,
+      () => setTestBodyMiddleware,
     ),
   );
 
@@ -145,9 +154,9 @@ suite('/color route', function () {
         const expected = 400;
         assert.equal(actual, expected);
       },
-      setContextStateMiddleware('featureA'),
-      verifyBranch,
-      setTestBodyMiddleware,
+      () => setContextStateMiddleware('featureA'),
+      () => verifyBranch,
+      () => setTestBodyMiddleware,
     ),
   );
 
@@ -160,10 +169,8 @@ suite('/color route', function () {
         const expected = 'success';
         assert.equal(actual, expected);
       },
-      setContextStateMiddleware(),
-      (ctx, next) => {
-        return saveStatusInRedis(ctx.state.redis)(ctx, next);
-      },
+      () => setContextStateMiddleware(),
+      saveStatusInRedis,
     ),
   );
 });
