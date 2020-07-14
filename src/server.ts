@@ -13,7 +13,14 @@ import { triggerIfttt } from './ifttt';
 import { createRedis } from './redis';
 
 async function startServer() {
-  const logger = pino();
+  const logger = pino({
+    timestamp: pino.stdTimeFunctions.isoTime,
+    formatters: {
+      level(label) {
+        return { level: label };
+      },
+    },
+  });
   const app = new Koa();
   const router = new Router();
   const redis = await createRedis(logger);
