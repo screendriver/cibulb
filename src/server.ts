@@ -12,15 +12,16 @@ import {
 import { triggerIfttt } from './ifttt';
 import { createRedis } from './redis';
 
-async function startServer() {
-  const logger = pino({
-    timestamp: pino.stdTimeFunctions.isoTime,
-    formatters: {
-      level(label) {
-        return { level: label };
-      },
+const logger = pino({
+  timestamp: pino.stdTimeFunctions.isoTime,
+  formatters: {
+    level(label) {
+      return { level: label };
     },
-  });
+  },
+});
+
+async function startServer() {
   const app = new Koa();
   const router = new Router();
   const redis = await createRedis(logger);
