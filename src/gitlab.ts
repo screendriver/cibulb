@@ -8,6 +8,9 @@ export function readGitLabTokenFromHeaders(
   return '';
 }
 
-export function isSecretValid(gitLabToken: string, gitLabSecretToken: string) {
+export function isSecretValid(
+  gitLabToken: string,
+  gitLabSecretToken: string,
+): boolean {
   return gitLabToken === gitLabSecretToken;
 }

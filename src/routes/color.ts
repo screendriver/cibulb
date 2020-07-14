@@ -28,10 +28,10 @@ export const verifyWebhookEventBody: Middleware<MiddlewareState> = async (
   ctx,
   next,
 ) => {
-  const { body } = ctx.request;
-  if (isWebhookEventBody(body)) {
+  const { request } = ctx;
+  if (isWebhookEventBody(request.body)) {
     ctx.state = {
-      webhookEvent: body,
+      webhookEvent: request.body,
     };
     await next();
   } else {
