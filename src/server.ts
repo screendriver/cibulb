@@ -45,4 +45,4 @@ async function startServer() {
   });
 }
 
-startServer();
+startServer().catch((error) => logger.error(error));
