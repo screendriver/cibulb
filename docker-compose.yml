@@ -10,6 +10,9 @@ services:
     volumes:
       - ./target/data:/data
     restart: unless-stopped
+  elasticsearch:
+    image: elasticsearch:7.8.0
+    hostname: elasticsearch
   cibulb:
     container_name: cibulb
     build: .
