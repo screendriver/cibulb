@@ -1,5 +1,9 @@
 version: '3.6'
 
+volumes:
+  letsencrypt:
+    external: true
+
 services:
   redis:
     image: redis:6.0.5-alpine
@@ -14,11 +18,15 @@ services:
     container_name: cibulb
     build: .
     ports:
-      - 8080:8080
+      - 8080-8081:8080-8081
     env_file:
       - .env
     environment:
       - NODE_ENV=production
+    volumes:
+      - type: volume
+        source: letsencrypt
+        target: /le-ssl
     depends_on:
       - redis
     restart: unless-stopped

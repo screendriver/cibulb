@@ -1,3 +1,6 @@
+import http from 'http';
+import https from 'https';
+import fs from 'fs';
 import Koa from 'koa';
 import Router from '@koa/router';
 import koaLogger from 'koa-pino-logger';
@@ -40,8 +43,17 @@ async function startServer() {
   app.use(koaLogger({ logger }));
   app.use(bodyParser());
   app.use(router.routes());
-  app.listen(8080, () => {
+  const options: https.ServerOptions = {
+    key: fs.readFileSync(process.env.SSL_KEY_PATH ?? ''),
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH ?? ''),
+  };
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  http.createServer(options, app.callback()).listen(8080, () => {
     logger.info('Server listening on port 8080');
+  });
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  https.createServer(options, app.callback()).listen(8081, () => {
+    logger.info('Server listening on port 8081');
   });
 }
 
