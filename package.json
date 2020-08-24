@@ -38,7 +38,7 @@
     "@types/koa-compose": "3.2.5",
     "@types/koa-pino-logger": "2.1.6",
     "@types/koa__router": "8.0.2",
-    "@types/lodash": "4.14.159",
+    "@types/lodash": "4.14.160",
     "@types/mocha": "8.0.3",
     "@types/node": "12.12.6",
     "@types/pino": "6.3.0",
