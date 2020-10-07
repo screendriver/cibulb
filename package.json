@@ -10,7 +10,7 @@
   },
   "scripts": {
     "compile": "tsc --build",
-    "lint": "eslint --ext ts src test",
+    "lint": "eslint src test --ext '.ts'",
     "copy:paste:detector": "jscpd src test typings",
     "test:unit": "TS_NODE_PROJECT=tsconfig.base.json mocha 'test/unit/**/*.test.*'",
     "test:unit:coverage": "TS_NODE_PROJECT=tsconfig.base.json c8 mocha 'test/unit/**/*.test.*'",
