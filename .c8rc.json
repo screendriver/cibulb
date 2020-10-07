@@ -1,0 +1,14 @@
+{
+  "all": true,
+  "lines": 42,
+  "functions": 57,
+  "statements": 42,
+  "branches": 95,
+  "instrument": true,
+  "extension": [".ts"],
+  "include": ["src/**/*"],
+  "reporter": ["lcov", "text-summary", "json"],
+  "check-coverage": true,
+  "reportDir": "./target/coverage",
+  "tempDirectory": "./target/c8_output"
+}
