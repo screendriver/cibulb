@@ -41,7 +41,7 @@
     "@types/lodash": "4.14.162",
     "@types/mocha": "8.0.3",
     "@types/node": "12.12.68",
-    "@types/pino": "6.3.2",
+    "@types/pino": "6.3.3",
     "@types/sinon": "9.0.8",
     "@types/test-listen": "1.1.0",
     "@typescript-eslint/eslint-plugin": "4.5.0",
