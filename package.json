@@ -55,7 +55,7 @@
     "jscpd": "3.3.21",
     "koa-compose": "4.2.0",
     "mocha": "8.2.1",
-    "prettier": "2.2.0",
+    "prettier": "2.2.1",
     "sinon": "9.2.1",
     "test-listen": "1.1.0",
     "ts-node": "9.0.0",
