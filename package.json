@@ -52,7 +52,7 @@
     "eslint-config-prettier": "7.0.0",
     "eslint-plugin-mocha": "8.0.0",
     "eslint-plugin-prettier": "3.2.0",
-    "jscpd": "3.3.22",
+    "jscpd": "3.3.23",
     "koa-compose": "4.2.0",
     "mocha": "8.2.1",
     "prettier": "2.2.1",
