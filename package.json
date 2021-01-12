@@ -40,7 +40,7 @@
     "@types/koa__router": "8.0.3",
     "@types/lodash": "4.14.167",
     "@types/mocha": "8.2.0",
-    "@types/node": "12.19.12",
+    "@types/node": "12.19.13",
     "@types/pino": "6.3.5",
     "@types/sinon": "9.0.10",
     "@types/test-listen": "1.1.0",
