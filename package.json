@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@koa/router": "10.0.0",
-    "got": "11.8.1",
+    "got": "11.8.2",
     "ioredis": "4.23.0",
     "koa": "2.13.1",
     "koa-bodyparser": "4.3.0",
