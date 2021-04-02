@@ -30,7 +30,7 @@
     "tslib": "2.1.0"
   },
   "devDependencies": {
-    "@types/chai": "4.2.15",
+    "@types/chai": "4.2.16",
     "@types/got": "9.6.11",
     "@types/ioredis": "4.22.2",
     "@types/koa": "2.11.7",
@@ -47,7 +47,7 @@
     "@typescript-eslint/eslint-plugin": "4.20.0",
     "@typescript-eslint/parser": "4.20.0",
     "c8": "7.3.4",
-    "chai": "4.3.3",
+    "chai": "4.3.4",
     "eslint": "7.23.0",
     "eslint-config-prettier": "7.2.0",
     "eslint-plugin-mocha": "8.1.0",
