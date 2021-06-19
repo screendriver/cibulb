@@ -30,7 +30,7 @@
     "tslib": "2.3.0"
   },
   "devDependencies": {
-    "@types/chai": "4.2.18",
+    "@types/chai": "4.2.19",
     "@types/got": "9.6.11",
     "@types/ioredis": "4.26.4",
     "@types/koa": "2.11.7",
