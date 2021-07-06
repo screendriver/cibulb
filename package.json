@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/chai": "4.2.20",
-    "@types/got": "9.6.11",
+    "@types/got": "9.6.12",
     "@types/ioredis": "4.26.4",
     "@types/koa": "2.11.7",
     "@types/koa-bodyparser": "4.3.1",
